@@ -13,7 +13,7 @@ pragma solidity >=0.6.0 <0.9.0;
 pragma experimental ABIEncoderV2;
 
 /// @title IThreeOneThird Interface
-/// @author 31Third <dev@31third.com>, Enzyme Council <security@enzyme.finance>
+/// @author 31Third <dev@31third.com>
 interface IThreeOneThird {
     struct Trade {
         string exchangeName;

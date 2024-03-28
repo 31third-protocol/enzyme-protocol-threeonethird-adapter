@@ -16,7 +16,7 @@ import {IThreeOneThird} from "../../../../../../../external-interfaces/IThreeOne
 import {AssetHelpers} from "../../../../../../../utils/0.8.19/AssetHelpers.sol";
 
 /// @title ThreeOneThirdActionsMixin Contract
-/// @author 31Third <dev@31third.com>, Enzyme Council <security@enzyme.finance>
+/// @author 31Third <dev@31third.com>
 /// @notice Mixin contract for interacting with the ThreeOneThird BatchTrade functions
 abstract contract ThreeOneThirdActionsMixin is AssetHelpers {
     address internal immutable THREE_ONE_THIRD_BATCH_TRADE;

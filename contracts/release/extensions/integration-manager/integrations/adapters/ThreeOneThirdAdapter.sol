@@ -23,7 +23,7 @@ import "../../../../../utils/0.8.19/Uint256ArrayLib.sol";
 import "../../../../../utils/0.8.19/Int256ArrayLib.sol";
 
 /// @title ThreeOneThirdAdapter Contract
-/// @author 31Third <dev@31third.com>, Enzyme Council <security@enzyme.finance>
+/// @author 31Third <dev@31third.com>
 /// @notice Adapter to 31Third BatchTrade Contract
 contract ThreeOneThirdAdapter is AdapterBase, ThreeOneThirdActionsMixin {
     using AddressArrayLib for address[];
