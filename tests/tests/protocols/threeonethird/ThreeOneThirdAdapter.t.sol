@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity 0.8.19;
 
+import {IIntegrationManager as IIntegrationManagerProd} from
+    "contracts/release/extensions/integration-manager/IIntegrationManager.sol";
+
 import {IntegrationTest} from "tests/bases/IntegrationTest.sol";
-import {SpendAssetsHandleType} from "tests/utils/core/AdapterUtils.sol";
 import {UniswapV3Utils} from "tests/tests/protocols/uniswap/UniswapV3Utils.sol";
 import {ECDSALib} from "tests/utils/libs/ECDSALib.sol";
 import {SignatureLib} from "tests/utils/libs/SignatureLib.sol";
@@ -252,7 +254,7 @@ abstract contract ThreeOneThirdAdapterTestBase is IntegrationTest, UniswapV3Util
         // Test parseAssetsForAction encoding
         assertAdapterAssetsForAction({
             _logs: vm.getRecordedLogs(),
-            _spendAssetsHandleType: SpendAssetsHandleType.Transfer,
+            _spendAssetsHandleTypeUint8: uint8(IIntegrationManagerProd.SpendAssetsHandleType.Transfer),
             _spendAssets: toArray(address(vaultAsset1)),
             _maxSpendAssetAmounts: toArray(fromAmount),
             _incomingAssets: toArray(address(externalAsset1)),
@@ -309,7 +311,7 @@ abstract contract ThreeOneThirdAdapterTestBase is IntegrationTest, UniswapV3Util
         // Test parseAssetsForAction encoding
         assertAdapterAssetsForAction({
             _logs: vm.getRecordedLogs(),
-            _spendAssetsHandleType: SpendAssetsHandleType.Transfer,
+            _spendAssetsHandleTypeUint8: uint8(IIntegrationManagerProd.SpendAssetsHandleType.Transfer),
             _spendAssets: toArray(address(vaultAsset1), address(vaultAsset2)),
             _maxSpendAssetAmounts: toArray(fromAmount1, fromAmount2),
             _incomingAssets: toArray(address(externalAsset1), address(externalAsset2)),
@@ -396,7 +398,7 @@ abstract contract ThreeOneThirdAdapterTestBase is IntegrationTest, UniswapV3Util
         // Test parseAssetsForAction encoding
         assertAdapterAssetsForAction({
             _logs: vm.getRecordedLogs(),
-            _spendAssetsHandleType: SpendAssetsHandleType.Transfer,
+            _spendAssetsHandleTypeUint8: uint8(IIntegrationManagerProd.SpendAssetsHandleType.Transfer),
             _spendAssets: toArray(address(vaultAsset1), address(vaultAsset2)), // Trade 2 and 3 spends asset2
             _maxSpendAssetAmounts: toArray(fromAmount1, fromAmount2 + fromAmount3),
             _incomingAssets: toArray(address(externalAsset1), address(externalAsset2), address(externalAsset3)),
@@ -484,7 +486,7 @@ abstract contract ThreeOneThirdAdapterTestBase is IntegrationTest, UniswapV3Util
         // Test parseAssetsForAction encoding
         assertAdapterAssetsForAction({
             _logs: vm.getRecordedLogs(),
-            _spendAssetsHandleType: SpendAssetsHandleType.Transfer,
+            _spendAssetsHandleTypeUint8: uint8(IIntegrationManagerProd.SpendAssetsHandleType.Transfer),
             _spendAssets: toArray(address(vaultAsset1), address(vaultAsset2)),
             _maxSpendAssetAmounts: toArray(
                 fromAmount1, fromAmount2 - toAmount1 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()) / (10000)

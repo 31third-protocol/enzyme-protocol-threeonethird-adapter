@@ -9,11 +9,11 @@
     file that was distributed with this source code.
 */
 
-pragma solidity 0.6.12;
+pragma solidity 0.8.19;
 pragma experimental ABIEncoderV2;
 
 import {IThreeOneThird} from "../../../../../../../external-interfaces/IThreeOneThird.sol";
-import {AssetHelpers} from "../../../../../../../utils/0.6.12/AssetHelpers.sol";
+import {AssetHelpers} from "../../../../../../../utils/0.8.19/AssetHelpers.sol";
 
 /// @title ThreeOneThirdActionsMixin Contract
 /// @author 31Third <dev@31third.com>, Enzyme Council <security@enzyme.finance>
@@ -21,7 +21,7 @@ import {AssetHelpers} from "../../../../../../../utils/0.6.12/AssetHelpers.sol";
 abstract contract ThreeOneThirdActionsMixin is AssetHelpers {
     address internal immutable THREE_ONE_THIRD_BATCH_TRADE;
 
-    constructor(address _batchTrade) public {
+    constructor(address _batchTrade) {
         THREE_ONE_THIRD_BATCH_TRADE = _batchTrade;
     }
 

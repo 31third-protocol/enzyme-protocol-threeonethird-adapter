@@ -9,29 +9,28 @@
     file that was distributed with this source code.
 */
 
-pragma solidity 0.6.12;
+pragma solidity 0.8.19;
 pragma experimental ABIEncoderV2;
 
 import {IThreeOneThird} from "../../../../../external-interfaces/IThreeOneThird.sol";
 import {IAddressListRegistry} from "../../../../../persistent/address-list-registry/IAddressListRegistry.sol";
-import {MathHelpers} from "../../../../../utils/0.6.12/MathHelpers.sol";
+import {MathHelpersLib} from "../../../../../utils/0.8.19/MathHelpersLib.sol";
 import {IIntegrationManager} from "../../IIntegrationManager.sol";
-import {ThreeOneThirdActionsMixin} from "../utils/0.6.12/actions/ThreeOneThirdActionsMixin.sol";
-import {AdapterBase} from "../utils/0.6.12/AdapterBase.sol";
-import "../../../../../utils/0.6.12/AddressArrayLib.sol";
-import "../../../../../utils/0.6.12/Uint256ArrayLib.sol";
-import "../../../../../utils/0.6.12/Int256ArrayLib.sol";
+import {ThreeOneThirdActionsMixin} from "../utils/0.8.19/actions/ThreeOneThirdActionsMixin.sol";
+import {AdapterBase} from "../utils/0.8.19/AdapterBase.sol";
+import "../../../../../utils/0.8.19/AddressArrayLib.sol";
+import "../../../../../utils/0.8.19/Uint256ArrayLib.sol";
+import "../../../../../utils/0.8.19/Int256ArrayLib.sol";
 
 /// @title ThreeOneThirdAdapter Contract
 /// @author 31Third <dev@31third.com>, Enzyme Council <security@enzyme.finance>
 /// @notice Adapter to 31Third BatchTrade Contract
-contract ThreeOneThirdAdapter is AdapterBase, MathHelpers, ThreeOneThirdActionsMixin {
+contract ThreeOneThirdAdapter is AdapterBase, ThreeOneThirdActionsMixin {
     using AddressArrayLib for address[];
     using Int256ArrayLib for int256[];
     using Uint256ArrayLib for uint256[];
 
     constructor(address _integrationManager, address _batchTrade)
-        public
         AdapterBase(_integrationManager)
         ThreeOneThirdActionsMixin(_batchTrade)
     {}
@@ -100,11 +99,11 @@ contract ThreeOneThirdAdapter is AdapterBase, MathHelpers, ThreeOneThirdActionsM
             if (toAssetIndex == type(uint256).max) {
                 assets = assets.addItem(trades[i].to);
                 assetChanges = assetChanges.addItem(
-                    int256(trades[i].minToReceiveBeforeFees.mul(10000 - feeBasisPoints).div(10000))
+                    int256(trades[i].minToReceiveBeforeFees * (10000 - feeBasisPoints) / (10000))
                 );
             } else {
                 assetChanges[toAssetIndex] +=
-                    int256(trades[i].minToReceiveBeforeFees.mul(10000 - feeBasisPoints).div(10000));
+                    int256(trades[i].minToReceiveBeforeFees * (10000 - feeBasisPoints) / (10000));
             }
         }
 
