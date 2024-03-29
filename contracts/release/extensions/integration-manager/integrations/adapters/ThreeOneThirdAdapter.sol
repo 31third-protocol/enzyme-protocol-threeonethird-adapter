@@ -98,9 +98,8 @@ contract ThreeOneThirdAdapter is AdapterBase, ThreeOneThirdActionsMixin {
             uint256 toAssetIndex = assets.findIndex(trades[i].to);
             if (toAssetIndex == type(uint256).max) {
                 assets = assets.addItem(trades[i].to);
-                assetChanges = assetChanges.addItem(
-                    int256(trades[i].minToReceiveBeforeFees * (10000 - feeBasisPoints) / (10000))
-                );
+                assetChanges =
+                    assetChanges.addItem(int256(trades[i].minToReceiveBeforeFees * (10000 - feeBasisPoints) / (10000)));
             } else {
                 assetChanges[toAssetIndex] +=
                     int256(trades[i].minToReceiveBeforeFees * (10000 - feeBasisPoints) / (10000));
