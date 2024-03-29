@@ -124,6 +124,7 @@ IZeroExV4Adapter.sol: ZeroExV4Adapter.abi.json
 ISwellStakingAdapter.sol: SwellStakingAdapter.abi.json
 IDivaStakingAdapter.sol: DivaStakingAdapter.abi.json
 IGenericWrappingAdapterBase.sol: GenericWrappingAdapterBase.abi.json
+IThreeOneThirdAdapter.sol: ThreeOneThirdAdapter.abi.json
 
 # External positions
 IExternalPositionManager.sol: ExternalPositionManager.abi.json
