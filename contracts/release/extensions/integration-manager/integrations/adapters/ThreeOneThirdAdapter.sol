@@ -12,6 +12,8 @@
 pragma solidity 0.8.19;
 pragma experimental ABIEncoderV2;
 
+import {Math} from "openzeppelin-solc-0.8/utils/math/Math.sol";
+
 import {IThreeOneThird} from "../../../../../external-interfaces/IThreeOneThird.sol";
 import {IAddressListRegistry} from "../../../../../persistent/address-list-registry/IAddressListRegistry.sol";
 import {MathHelpersLib} from "../../../../../utils/0.8.19/MathHelpersLib.sol";
@@ -100,11 +102,12 @@ contract ThreeOneThirdAdapter is AdapterBase, ThreeOneThirdActionsMixin {
             uint256 toAssetIndex = assets.findIndex(trades[i].to);
             if (toAssetIndex == type(uint256).max) {
                 assets = assets.addItem(trades[i].to);
-                assetChanges =
-                    assetChanges.addItem(int256(trades[i].minToReceiveBeforeFees * (10000 - feeBasisPoints) / (10000)));
+                assetChanges = assetChanges.addItem(
+                    int256(Math.ceilDiv(trades[i].minToReceiveBeforeFees * (10000 - feeBasisPoints), 10000))
+                );
             } else {
                 assetChanges[toAssetIndex] +=
-                    int256(trades[i].minToReceiveBeforeFees * (10000 - feeBasisPoints) / (10000));
+                    int256(Math.ceilDiv(trades[i].minToReceiveBeforeFees * (10000 - feeBasisPoints), 10000));
             }
         }
 
