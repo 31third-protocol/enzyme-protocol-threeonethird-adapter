@@ -213,8 +213,7 @@ abstract contract ThreeOneThirdAdapterTestBase is IntegrationTest, UniswapV3Util
     }
 
     function __takeOrder(IThreeOneThird.Trade[] memory _trades) private {
-        bytes memory actionArgs =
-            abi.encode(_trades, IThreeOneThird.BatchTradeConfig({checkFeelessWallets: false, revertOnError: true}));
+        bytes memory actionArgs = abi.encode(_trades, false);
 
         vm.prank(fundOwner, fundOwner);
 

@@ -45,10 +45,12 @@ contract ThreeOneThirdAdapter is AdapterBase, ThreeOneThirdActionsMixin {
         external
         postActionIncomingAssetsTransferHandler(_vaultProxy, _assetData)
     {
-        (IThreeOneThird.Trade[] memory trades, IThreeOneThird.BatchTradeConfig memory batchTradeConfig) =
-            __decodeTakeOrderCallArgs(_actionData);
+        (IThreeOneThird.Trade[] memory trades, bool checkFeelessWallets) = __decodeTakeOrderCallArgs(_actionData);
 
-        __threeOneThirdBatchTrade({_trades: trades, _batchTradeConfig: batchTradeConfig});
+        __threeOneThirdBatchTrade({
+            _trades: trades,
+            _batchTradeConfig: IThreeOneThird.BatchTradeConfig(checkFeelessWallets, true)
+        });
     }
 
     /////////////////////////////
@@ -136,11 +138,12 @@ contract ThreeOneThirdAdapter is AdapterBase, ThreeOneThirdActionsMixin {
     /// @dev Decode the trades of a takeOrder call
     /// @param _actionData Encoded trades passed from client side
     /// @return trades_ Decoded trades
+    /// @return checkFeelessWallets_ Determines if a check regarding feeless wallets should be performed
     function __decodeTakeOrderCallArgs(bytes memory _actionData)
         private
         pure
-        returns (IThreeOneThird.Trade[] memory trades_, IThreeOneThird.BatchTradeConfig memory _batchTradeConfig)
+        returns (IThreeOneThird.Trade[] memory trades_, bool checkFeelessWallets_)
     {
-        return abi.decode(_actionData, (IThreeOneThird.Trade[], IThreeOneThird.BatchTradeConfig));
+        return abi.decode(_actionData, (IThreeOneThird.Trade[], bool));
     }
 }
