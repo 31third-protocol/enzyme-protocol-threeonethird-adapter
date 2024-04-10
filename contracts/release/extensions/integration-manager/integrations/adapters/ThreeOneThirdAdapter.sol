@@ -10,7 +10,6 @@
 */
 
 pragma solidity 0.8.19;
-pragma experimental ABIEncoderV2;
 
 import {Math} from "openzeppelin-solc-0.8/utils/math/Math.sol";
 
