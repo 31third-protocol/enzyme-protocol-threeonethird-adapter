@@ -10,7 +10,8 @@
 */
 
 pragma solidity 0.8.19;
-pragma experimental ABIEncoderV2;
+
+import {Math} from "openzeppelin-solc-0.8/utils/math/Math.sol";
 
 import {IThreeOneThird} from "../../../../../external-interfaces/IThreeOneThird.sol";
 import {IAddressListRegistry} from "../../../../../persistent/address-list-registry/IAddressListRegistry.sol";
@@ -45,10 +46,12 @@ contract ThreeOneThirdAdapter is AdapterBase, ThreeOneThirdActionsMixin {
         external
         postActionIncomingAssetsTransferHandler(_vaultProxy, _assetData)
     {
-        (IThreeOneThird.Trade[] memory trades, IThreeOneThird.BatchTradeConfig memory batchTradeConfig) =
-            __decodeTakeOrderCallArgs(_actionData);
+        (IThreeOneThird.Trade[] memory trades, bool checkFeelessWallets) = __decodeTakeOrderCallArgs(_actionData);
 
-        __threeOneThirdBatchTrade({_trades: trades, _batchTradeConfig: batchTradeConfig});
+        __threeOneThirdBatchTrade({
+            _trades: trades,
+            _batchTradeConfig: IThreeOneThird.BatchTradeConfig(checkFeelessWallets, true)
+        });
     }
 
     /////////////////////////////
@@ -98,11 +101,12 @@ contract ThreeOneThirdAdapter is AdapterBase, ThreeOneThirdActionsMixin {
             uint256 toAssetIndex = assets.findIndex(trades[i].to);
             if (toAssetIndex == type(uint256).max) {
                 assets = assets.addItem(trades[i].to);
-                assetChanges =
-                    assetChanges.addItem(int256(trades[i].minToReceiveBeforeFees * (10000 - feeBasisPoints) / (10000)));
+                assetChanges = assetChanges.addItem(
+                    int256(Math.ceilDiv(trades[i].minToReceiveBeforeFees * (10000 - feeBasisPoints), 10000))
+                );
             } else {
                 assetChanges[toAssetIndex] +=
-                    int256(trades[i].minToReceiveBeforeFees * (10000 - feeBasisPoints) / (10000));
+                    int256(Math.ceilDiv(trades[i].minToReceiveBeforeFees * (10000 - feeBasisPoints), 10000));
             }
         }
 
@@ -136,11 +140,12 @@ contract ThreeOneThirdAdapter is AdapterBase, ThreeOneThirdActionsMixin {
     /// @dev Decode the trades of a takeOrder call
     /// @param _actionData Encoded trades passed from client side
     /// @return trades_ Decoded trades
+    /// @return checkFeelessWallets_ Determines if a check regarding feeless wallets should be performed
     function __decodeTakeOrderCallArgs(bytes memory _actionData)
         private
         pure
-        returns (IThreeOneThird.Trade[] memory trades_, IThreeOneThird.BatchTradeConfig memory _batchTradeConfig)
+        returns (IThreeOneThird.Trade[] memory trades_, bool checkFeelessWallets_)
     {
-        return abi.decode(_actionData, (IThreeOneThird.Trade[], IThreeOneThird.BatchTradeConfig));
+        return abi.decode(_actionData, (IThreeOneThird.Trade[], bool));
     }
 }

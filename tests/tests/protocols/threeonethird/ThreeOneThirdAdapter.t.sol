@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity 0.8.19;
 
+import {Math} from "openzeppelin-solc-0.8/utils/math/Math.sol";
+
 import {IIntegrationManager as IIntegrationManagerProd} from
     "contracts/release/extensions/integration-manager/IIntegrationManager.sol";
 
@@ -213,8 +215,7 @@ abstract contract ThreeOneThirdAdapterTestBase is IntegrationTest, UniswapV3Util
     }
 
     function __takeOrder(IThreeOneThird.Trade[] memory _trades) private {
-        bytes memory actionArgs =
-            abi.encode(_trades, IThreeOneThird.BatchTradeConfig({checkFeelessWallets: false, revertOnError: true}));
+        bytes memory actionArgs = abi.encode(_trades, false);
 
         vm.prank(fundOwner, fundOwner);
 
@@ -258,12 +259,14 @@ abstract contract ThreeOneThirdAdapterTestBase is IntegrationTest, UniswapV3Util
             _spendAssets: toArray(address(vaultAsset1)),
             _maxSpendAssetAmounts: toArray(fromAmount),
             _incomingAssets: toArray(address(externalAsset1)),
-            _minIncomingAssetAmounts: toArray(toAmount * (10000 - threeOneThirdBatchTrade.feeBasisPoints()) / (10000))
+            _minIncomingAssetAmounts: toArray(
+                Math.ceilDiv(toAmount * (10000 - threeOneThirdBatchTrade.feeBasisPoints()), (10000))
+                )
         });
 
         assertEq(
             externalAsset1.balanceOf(vaultProxyAddress) - externalAssetBalancePre,
-            toAmount * (10000 - threeOneThirdBatchTrade.feeBasisPoints()) / (10000),
+            Math.ceilDiv(toAmount * (10000 - threeOneThirdBatchTrade.feeBasisPoints()), (10000)),
             "Mismatch between received and expected maker asset amount"
         );
 
@@ -316,14 +319,14 @@ abstract contract ThreeOneThirdAdapterTestBase is IntegrationTest, UniswapV3Util
             _maxSpendAssetAmounts: toArray(fromAmount1, fromAmount2),
             _incomingAssets: toArray(address(externalAsset1), address(externalAsset2)),
             _minIncomingAssetAmounts: toArray(
-                toAmount1 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()) / (10000),
-                toAmount1 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()) / (10000)
+                Math.ceilDiv(toAmount1 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()), (10000)),
+                Math.ceilDiv(toAmount1 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()), (10000))
                 )
         });
 
         assertEq(
             externalAsset1.balanceOf(vaultProxyAddress) - externalAsset1BalancePre,
-            toAmount1 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()) / (10000),
+            Math.ceilDiv(toAmount1 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()), (10000)),
             "Mismatch between received and expected maker asset amount (Trade 1)"
         );
 
@@ -335,7 +338,7 @@ abstract contract ThreeOneThirdAdapterTestBase is IntegrationTest, UniswapV3Util
 
         assertEq(
             externalAsset2.balanceOf(vaultProxyAddress) - externalAsset2BalancePre,
-            toAmount2 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()) / (10000),
+            Math.ceilDiv(toAmount2 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()), (10000)),
             "Mismatch between received and expected maker asset amount (Trade 2)"
         );
 
@@ -403,15 +406,15 @@ abstract contract ThreeOneThirdAdapterTestBase is IntegrationTest, UniswapV3Util
             _maxSpendAssetAmounts: toArray(fromAmount1, fromAmount2 + fromAmount3),
             _incomingAssets: toArray(address(externalAsset1), address(externalAsset2), address(externalAsset3)),
             _minIncomingAssetAmounts: toArray(
-                toAmount1 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()) / (10000),
-                toAmount2 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()) / (10000),
-                toAmount3 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()) / (10000)
+                Math.ceilDiv(toAmount1 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()), (10000)),
+                Math.ceilDiv(toAmount2 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()), (10000)),
+                Math.ceilDiv(toAmount3 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()), (10000))
                 )
         });
 
         assertEq(
             externalAsset1.balanceOf(vaultProxyAddress) - externalAsset1BalancePre,
-            toAmount1 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()) / (10000),
+            Math.ceilDiv(toAmount1 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()), (10000)),
             "Mismatch between received and expected maker asset amount (Trade 1)"
         );
 
@@ -423,7 +426,7 @@ abstract contract ThreeOneThirdAdapterTestBase is IntegrationTest, UniswapV3Util
 
         assertEq(
             externalAsset2.balanceOf(vaultProxyAddress) - externalAsset2BalancePre,
-            toAmount2 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()) / (10000),
+            Math.ceilDiv(toAmount2 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()), (10000)),
             "Mismatch between received and expected maker asset amount (Trade 2)"
         );
 
@@ -435,7 +438,7 @@ abstract contract ThreeOneThirdAdapterTestBase is IntegrationTest, UniswapV3Util
 
         assertGt(
             externalAsset3.balanceOf(vaultProxyAddress) - externalAsset3BalancePre,
-            toAmount3 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()) / (10000),
+            Math.ceilDiv(toAmount3 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()), (10000)),
             "Mismatch between received and expected maker asset amount (Trade 3)"
         );
     }
@@ -489,10 +492,13 @@ abstract contract ThreeOneThirdAdapterTestBase is IntegrationTest, UniswapV3Util
             _spendAssetsHandleTypeUint8: uint8(IIntegrationManagerProd.SpendAssetsHandleType.Transfer),
             _spendAssets: toArray(address(vaultAsset1), address(vaultAsset2)),
             _maxSpendAssetAmounts: toArray(
-                fromAmount1, fromAmount2 - toAmount1 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()) / (10000)
+                fromAmount1,
+                fromAmount2 - Math.ceilDiv(toAmount1 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()), (10000))
                 ),
             _incomingAssets: toArray(address(externalAsset2)),
-            _minIncomingAssetAmounts: toArray(toAmount2 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()) / (10000))
+            _minIncomingAssetAmounts: toArray(
+                Math.ceilDiv(toAmount2 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()), (10000))
+                )
         });
 
         assertEq(
@@ -504,13 +510,13 @@ abstract contract ThreeOneThirdAdapterTestBase is IntegrationTest, UniswapV3Util
         // asset2 is bought in trade 1; the pre trade vault balance of asset2 + 1 is sold in trade 2
         assertEq(
             vaultAsset2.balanceOf(vaultProxyAddress),
-            toAmount1 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()) / (10000) - 1,
+            Math.ceilDiv(toAmount1 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()), (10000)) - 1,
             "Mismatch between received and expected asset amount (Trade 1 incoming; Trade 2 spend)"
         );
 
         assertGt(
             externalAsset2.balanceOf(vaultProxyAddress) - externalAsset2BalancePre,
-            toAmount2 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()) / (10000),
+            Math.ceilDiv(toAmount2 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()), (10000)),
             "Mismatch between received and expected maker asset amount (Trade 2)"
         );
     }

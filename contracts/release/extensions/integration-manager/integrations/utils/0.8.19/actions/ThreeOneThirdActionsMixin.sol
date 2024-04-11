@@ -10,7 +10,6 @@
 */
 
 pragma solidity 0.8.19;
-pragma experimental ABIEncoderV2;
 
 import {IThreeOneThird} from "../../../../../../../external-interfaces/IThreeOneThird.sol";
 import {AssetHelpers} from "../../../../../../../utils/0.8.19/AssetHelpers.sol";
