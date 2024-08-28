@@ -728,7 +728,7 @@ contract CurvePriceFeedTestEthereumV4 is CurvePriceFeedTestEthereumBase {
     }
 }
 
-contract CurvePriceFeArbitrum is CurvePriceFeedTestPolygonBase {
+contract CurvePriceFeedPolygon is CurvePriceFeedTestPolygonBase {
     function setUp() public override {
         __initialize(EnzymeVersion.Current);
     }
