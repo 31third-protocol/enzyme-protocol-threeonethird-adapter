@@ -133,3 +133,7 @@ function __calcNewBalance(uint256 _oldBalance) private
 - Data types should be explicitly defined, e.g., `uint256` instead of `uint`
 
 Should there no explicitly mentioned rule please follow the _[GOLDEN RULE](https://github.com/ethereum/cpp-ethereum/blob/b6218fc1da39994043f1c43185bb24e364382d84/CodingStandards.txt#L3): Follow the style of the existing code when you make changes._
+
+#### Tests
+
+See the [tests README](/tests/README.md) for further conventions used in test suites.
