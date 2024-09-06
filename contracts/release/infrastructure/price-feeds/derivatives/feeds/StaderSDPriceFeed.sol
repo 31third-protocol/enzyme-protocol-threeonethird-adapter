@@ -40,6 +40,7 @@ contract StaderSDPriceFeed is IDerivativePriceFeed {
     /// @return underlyingAmounts_ The amount of each underlying asset for the equivalent derivative amount
     function calcUnderlyingValues(address, uint256 _derivativeAmount)
         external
+        view
         override
         returns (address[] memory underlyings_, uint256[] memory underlyingAmounts_)
     {
