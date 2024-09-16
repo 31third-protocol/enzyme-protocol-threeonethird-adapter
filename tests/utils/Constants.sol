@@ -31,15 +31,18 @@ abstract contract Constants {
     // expected exchange rates, etc.
     // `ETHEREUM_BLOCK_LATEST` can be increased as-needed, and should be used in all tests
     // that should generally continue to pass regardless of block.
-    uint256 internal constant ETHEREUM_BLOCK_LATEST = 20160770; // Jun 24th, 2024
-    // TODO: this can be updated when ETHEREUM_BLOCK_LATEST is updated to a later block
-    uint256 internal constant ETHEREUM_BLOCK_YNETH_FEED_TEMP = 20628100; // Aug 28th, 2024
-    uint256 internal constant ETHEREUM_BLOCK_PENDLE_TIME_SENSITIVE = 20100000; // June 15th, 2024
-    uint256 internal constant ETHEREUM_BLOCK_TERM_FINANCE_TIME_SENSITIVE = 18554000; // Nov 12th, 2023
+    uint256 internal constant ETHEREUM_BLOCK_LATEST = 20711624; // Sep 9th, 2024
+    uint256 internal constant ETHEREUM_BLOCK_TIME_SENSITIVE = 20711624; // Sep 9th, 2024
+    uint256 internal constant ETHEREUM_BLOCK_TIME_SENSITIVE_ONE_INCH_V5 = 19518890; // March 26th, 2024
+    uint256 internal constant ETHEREUM_BLOCK_TIME_SENSITIVE_PENDLE = 20100000; // June 15th, 2024
+    uint256 internal constant ETHEREUM_BLOCK_TIME_SENSITIVE_STAKEWISE = 18656282; // Nov 26th, 2023
+    uint256 internal constant ETHEREUM_BLOCK_TIME_SENSITIVE_TERM_FINANCE = 18554000; // Nov 12th, 2023
 
-    uint256 internal constant POLYGON_BLOCK_LATEST = 54900000; // March 21st, 2024
+    uint256 internal constant POLYGON_BLOCK_LATEST = 61606585; // Sep 9th, 2024
+    uint256 internal constant POLYGON_BLOCK_TIME_SENSITIVE = 54900000; // March 21st, 2024
 
-    uint256 internal constant ARBITRUM_BLOCK_LATEST = 231099000; // July 11th, 2024
+    uint256 internal constant ARBITRUM_BLOCK_LATEST = 251655669; // Sep 9th, 2024
+    uint256 internal constant ARBITRUM_BLOCK_TIME_SENSITIVE = 231099000; // July 11th, 2024
 
     // Network assets
     address internal constant NATIVE_ASSET_ADDRESS = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;

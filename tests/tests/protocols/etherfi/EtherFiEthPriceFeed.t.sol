@@ -14,7 +14,6 @@ import {IValueInterpreter} from "tests/interfaces/internal/IValueInterpreter.sol
 address constant ETHERFI_ETH_ADDRESS = 0x35fA164735182de50811E8e2E824cFb9B6118ac2;
 address constant WRAPPED_ETHERFI_ETH_ADDRESS = 0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee;
 address constant WRAPPED_ETHERFI_ETH_AGGREGATOR = 0x8751F736E94F6CD167e8C5B97E245680FbD9CC36;
-uint256 constant WRAPPED_ETHERFI_ETH_CREATION_BLOCK_TIMESTAMP = 1689005159;
 
 abstract contract EtherFiEthPriceFeedTestBase is IntegrationTest {
     IEtherFiEthPriceFeed internal priceFeed;
@@ -27,7 +26,7 @@ abstract contract EtherFiEthPriceFeedTestBase is IntegrationTest {
         priceFeed = __deployPriceFeed();
     }
 
-    function __renitialize(uint256 _forkBlock) private {
+    function __reinitialize(uint256 _forkBlock) private {
         setUpMainnetEnvironment(_forkBlock);
         priceFeed = __deployPriceFeed();
     }
@@ -61,16 +60,16 @@ abstract contract EtherFiEthPriceFeedTestBase is IntegrationTest {
     // TESTS
 
     function test_calcUnderlyingValuesForSpecificBlock_success() public {
-        __renitialize(20139200); // roll the fork block, and re-deploy
+        __reinitialize(ETHEREUM_BLOCK_TIME_SENSITIVE); // roll the fork block, and re-deploy
 
         __addDerivativeAndUnderlying();
 
-        // EETH/USD price on June 21st 2024. https://www.coingecko.com/en/coins/ether-fi-staked-eth/historical_data
+        // EETH/USD price Sep 9th 2024 https://www.coingecko.com/en/coins/ether-fi-staked-eth/historical_data
         assertValueInUSDForVersion({
             _version: version,
             _asset: ETHERFI_ETH_ADDRESS,
             _amount: assetUnit(IERC20(ETHERFI_ETH_ADDRESS)),
-            _expected: 3478411761024683833154 // 3478.411761024683833154 USD
+            _expected: 2312439021730963767018 // 2312.439021730963767018 USD
         });
     }
 

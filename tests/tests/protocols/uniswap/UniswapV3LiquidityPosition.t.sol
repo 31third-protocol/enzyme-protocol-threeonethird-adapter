@@ -476,7 +476,7 @@ abstract contract CollectTest is TestBase {
         uint256 token1VaultBalanceBeforeCollect = IERC20(token1).balanceOf(vaultProxyAddress);
 
         // Generate some fees to collect
-        uniswapV3DoNRoundTripSwaps({_pool: pool, _nSwaps: 100});
+        uniswapV3DoNRoundTripSwaps({_pool: pool, _nSwaps: 1000});
 
         vm.recordLogs();
 

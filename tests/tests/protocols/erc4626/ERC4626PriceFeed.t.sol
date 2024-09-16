@@ -72,7 +72,7 @@ abstract contract ERC4626PriceFeedTestBase is IntegrationTest {
             underlyingSingleUnit
                 + (underlyingSingleUnit * _allowedDeviationPer365DaysInBps * timePassed)
                     / (365 days * BPS_ONE_HUNDRED_PERCENT),
-            "Deviation to high"
+            "Deviation too high"
         );
     }
 

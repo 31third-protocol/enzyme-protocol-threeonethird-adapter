@@ -797,7 +797,7 @@ abstract contract PendleTestEthereum is PendleTestBase {
     function __initializeEthereum(EnzymeVersion _version, address _pendleMarketAddress, uint32 _pricingDuration)
         internal
     {
-        setUpMainnetEnvironment(ETHEREUM_BLOCK_PENDLE_TIME_SENSITIVE);
+        setUpMainnetEnvironment(ETHEREUM_BLOCK_TIME_SENSITIVE_PENDLE);
 
         __initialize({
             _version: _version,

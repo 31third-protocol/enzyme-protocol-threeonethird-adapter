@@ -13,7 +13,7 @@ contract ChainlinkLikeYnethPriceFeedTest is IntegrationTest {
     IChainlinkAggregator originalWstethEthAggregator = IChainlinkAggregator(wstethAggregator);
 
     function setUp() public override {
-        vm.createSelectFork("mainnet", ETHEREUM_BLOCK_YNETH_FEED_TEMP);
+        vm.createSelectFork("mainnet", ETHEREUM_BLOCK_TIME_SENSITIVE);
 
         ynethAggregator = __deployYnethAggregator();
     }

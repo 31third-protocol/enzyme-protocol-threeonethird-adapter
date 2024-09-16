@@ -29,11 +29,12 @@ abstract contract UniswapV2PoolPriceFeedTestBase is IntegrationTest, UniswapV2Ut
         EnzymeVersion _version,
         uint256 _chainId,
         address _uniswapV2FactoryAddress,
-        address _uniswapV2PoolAddress
+        address _uniswapV2PoolAddress,
+        uint256 _forkBlock
     ) internal {
         version = _version;
 
-        setUpNetworkEnvironment({_chainId: _chainId});
+        setUpNetworkEnvironment({_chainId: _chainId, _forkBlock: _forkBlock});
 
         uniswapV2PoolPriceFeed = __deployPriceFeed({
             _fundDeployerAddress: getFundDeployerAddressForVersion({_version: version}),
@@ -117,7 +118,8 @@ contract EthereumWethUsdcTest is UniswapV2PoolPriceFeedTestBase {
             _version: EnzymeVersion.Current,
             _chainId: ETHEREUM_CHAIN_ID,
             _uniswapV2FactoryAddress: ETHEREUM_UNISWAP_V2_FACTORY,
-            _uniswapV2PoolAddress: ETHEREUM_UNISWAP_V2_POOL_WETH_USDC
+            _uniswapV2PoolAddress: ETHEREUM_UNISWAP_V2_POOL_WETH_USDC,
+            _forkBlock: ETHEREUM_BLOCK_LATEST
         });
     }
 }
@@ -128,7 +130,8 @@ contract EthereumWethUsdcTestV4 is UniswapV2PoolPriceFeedTestBase {
             _version: EnzymeVersion.V4,
             _chainId: ETHEREUM_CHAIN_ID,
             _uniswapV2FactoryAddress: ETHEREUM_UNISWAP_V2_FACTORY,
-            _uniswapV2PoolAddress: ETHEREUM_UNISWAP_V2_POOL_WETH_USDC
+            _uniswapV2PoolAddress: ETHEREUM_UNISWAP_V2_POOL_WETH_USDC,
+            _forkBlock: ETHEREUM_BLOCK_LATEST
         });
     }
 }
@@ -139,7 +142,8 @@ contract PolygonWmaticUsdcTest is UniswapV2PoolPriceFeedTestBase {
             _version: EnzymeVersion.Current,
             _chainId: POLYGON_CHAIN_ID,
             _uniswapV2FactoryAddress: POLYGON_UNISWAP_V2_FACTORY,
-            _uniswapV2PoolAddress: POLYGON_UNISWAP_V2_POOL_WMATIC_USDT
+            _uniswapV2PoolAddress: POLYGON_UNISWAP_V2_POOL_WMATIC_USDT,
+            _forkBlock: POLYGON_BLOCK_TIME_SENSITIVE
         });
     }
 }
@@ -150,7 +154,8 @@ contract PolygonWmaticUsdcTestV4 is UniswapV2PoolPriceFeedTestBase {
             _version: EnzymeVersion.V4,
             _chainId: POLYGON_CHAIN_ID,
             _uniswapV2FactoryAddress: POLYGON_UNISWAP_V2_FACTORY,
-            _uniswapV2PoolAddress: POLYGON_UNISWAP_V2_POOL_WMATIC_USDT
+            _uniswapV2PoolAddress: POLYGON_UNISWAP_V2_POOL_WMATIC_USDT,
+            _forkBlock: POLYGON_BLOCK_TIME_SENSITIVE
         });
     }
 }

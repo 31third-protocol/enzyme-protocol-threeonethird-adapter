@@ -14,4 +14,9 @@ pragma solidity >=0.6.0 <0.9.0;
 /// @notice Minimal interface for interactions with Compound Comptroller
 interface ICompoundV2Comptroller {
     function getCompAddress() external view returns (address comp_);
+
+    function _setCompSpeeds(address[] memory _cTokens, uint256[] memory _supplySpeeds, uint256[] memory _borrowSpeeds)
+        external;
+
+    function admin() external view returns (address admin_);
 }

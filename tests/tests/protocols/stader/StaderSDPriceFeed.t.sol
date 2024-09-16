@@ -10,7 +10,6 @@ import {IValueInterpreter} from "tests/interfaces/internal/IValueInterpreter.sol
 
 address constant STADER_ORACLE_ADDRESS = 0xF64bAe65f6f2a5277571143A24FaaFDFC0C2a737;
 address constant SD_TOKEN_ADDRESS = 0x30D20208d987713f46DFD34EF128Bb16C404D10f;
-uint256 constant FORK_BLOCK = 20139200; // June 21st 2024
 
 abstract contract StaderSDPriceFeedTestBase is IntegrationTest {
     IStaderSDPriceFeed internal priceFeed;
@@ -18,7 +17,7 @@ abstract contract StaderSDPriceFeedTestBase is IntegrationTest {
     EnzymeVersion internal version;
 
     function __initialize(EnzymeVersion _version) internal {
-        setUpMainnetEnvironment(FORK_BLOCK);
+        setUpMainnetEnvironment(ETHEREUM_BLOCK_TIME_SENSITIVE);
         version = _version;
         priceFeed = __deployPriceFeed();
     }
@@ -53,7 +52,7 @@ abstract contract StaderSDPriceFeedTestBase is IntegrationTest {
             _version: version,
             _asset: SD_TOKEN_ADDRESS,
             _amount: assetUnit(IERC20(SD_TOKEN_ADDRESS)),
-            _expected: 679518669667906813 // 0.679518669667906813 USD
+            _expected: 470625024033789758 // 0.470625024033789758 USD
         });
     }
 

@@ -89,7 +89,8 @@ abstract contract TestBase is IntegrationTest {
         uint256 _callbackGasLimit,
         IGMXV2ExchangeRouter _exchangerRouter,
         address _referralStorageAddress,
-        address _uiFeeReceiverAddress
+        address _uiFeeReceiverAddress,
+        uint256 _forkBlock
     ) internal {
         version = _version;
         exchangeRouter = _exchangerRouter;
@@ -98,7 +99,7 @@ abstract contract TestBase is IntegrationTest {
         reader = _reader;
         chainlinkPriceFeedProvider = _chainlinkPriceFeedProvider;
 
-        setUpNetworkEnvironment({_chainId: _chainId});
+        setUpNetworkEnvironment({_chainId: _chainId, _forkBlock: _forkBlock});
         executionFee = assetUnit(wrappedNativeToken) / 5;
 
         uint256 typeId = __deployPositionType({
@@ -1358,7 +1359,6 @@ abstract contract TestBase is IntegrationTest {
                 _account: address(externalPosition)
             })
         });
-
         orderHandler.executeOrder({_orderKey: __getLastOrderKey(), _oracleParams: setPricesParams});
         vm.stopPrank();
     }
@@ -1742,7 +1742,8 @@ abstract contract GMXV2LeverageTradingPositionTestBaseArbitrum is TestBase {
             _referralStorageAddress: ARBITRUM_GMXV2_REFERRAL_STORAGE_ADDRESS,
             _uiFeeReceiverAddress: address(0),
             _chainlinkPriceFeedProvider: ARBITRUM_GMXV2_CHAINLINK_PRICE_FEED_PROVIDER,
-            _version: _version
+            _version: _version,
+            _forkBlock: ARBITRUM_BLOCK_TIME_SENSITIVE
         });
     }
 }

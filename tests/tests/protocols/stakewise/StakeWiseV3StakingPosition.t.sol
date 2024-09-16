@@ -12,10 +12,6 @@ import {IStakeWiseV3KeeperRewards} from "tests/interfaces/external/IStakeWiseV3K
 import {IStakeWiseV3StakingPositionLib} from "tests/interfaces/internal/IStakeWiseV3StakingPositionLib.sol";
 import {IStakeWiseV3StakingPositionParser} from "tests/interfaces/internal/IStakeWiseV3StakingPositionParser.sol";
 
-// We are using a fork block specific to StakeWise to ensure reliability of
-// some complex and time-sensitive actions necessary for testing.
-uint256 constant ETHEREUM_BLOCK_STAKEWISE_TIME_SENSITIVE = 18656282; // Nov 26th, 2023
-
 // ETHEREUM MAINNET CONSTANTS
 address constant STAKEWISE_V3_ACTIVE_VAULT_TOKEN_ETHEREUM_ADDRESS = 0x8A93A876912c9F03F88Bc9114847cf5b63c89f56;
 address constant STAKEWISE_V3_INACTIVE_VAULT_TOKEN_ETHEREUM_ADDRESS = 0xAC0F906E433d58FA868F936E8A43230473652885;
@@ -481,7 +477,7 @@ abstract contract StakeWiseV3StakingPositionTest is IntegrationTest {
 
 contract StakeWiseTestEthereum is StakeWiseV3StakingPositionTest {
     function setUp() public virtual override {
-        setUpMainnetEnvironment(ETHEREUM_BLOCK_STAKEWISE_TIME_SENSITIVE);
+        setUpMainnetEnvironment(ETHEREUM_BLOCK_TIME_SENSITIVE_STAKEWISE);
 
         stakeWiseV3Keeper = IStakeWiseV3KeeperRewards(STAKEWISE_V3_KEEPER_ETHEREUM_ADDRESS);
         stakeWiseV3RegistryAddress = STAKEWISE_V3_VAULT_REGISTRY_ETHEREUM_ADDRESS;

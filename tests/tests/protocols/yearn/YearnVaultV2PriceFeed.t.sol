@@ -34,7 +34,7 @@ abstract contract YearnVaultV2PriceFeedTestBase is IntegrationTest {
         priceFeed = __deployPriceFeed();
     }
 
-    function __renitialize(uint256 _forkBlock) private {
+    function __reinitialize(uint256 _forkBlock) private {
         setUpMainnetEnvironment(_forkBlock);
         priceFeed = __deployPriceFeed();
     }
@@ -58,7 +58,7 @@ abstract contract YearnVaultV2PriceFeedTestBase is IntegrationTest {
     // TESTS
 
     function test_calcUnderlyingValues18Decimals_success() public {
-        __renitialize(18057000);
+        __reinitialize(ETHEREUM_BLOCK_TIME_SENSITIVE);
 
         __prankFundDeployerOwner();
         priceFeed.addDerivatives({
@@ -73,16 +73,17 @@ abstract contract YearnVaultV2PriceFeedTestBase is IntegrationTest {
             _priceFeedAddress: address(priceFeed)
         });
 
+        // Yearn WETH Vault/USD price Sep 9th 2024, check WETH price https://www.coingecko.com/en/coins/weth/historical_data and multiply pricePerShare https://etherscan.io/address/0xa258C4606Ca8206D8aA700cE2143D7db854D168c#readContract#F4
         assertValueInUSDForVersion({
             _version: version,
             _asset: ETHEREUM_YEARN_VAULT_V2_WETH_VAULT,
             _amount: assetUnit(IERC20(ETHEREUM_YEARN_VAULT_V2_WETH_VAULT)),
-            _expected: 1701235600035248949641 // 1701.2356000352488 USD
+            _expected: 2487242465061825884448 // 2487.242465061825884448 USD
         });
     }
 
     function test_calcUnderlyingValuesNon18Decimals_success() public {
-        __renitialize(18056000);
+        __reinitialize(ETHEREUM_BLOCK_TIME_SENSITIVE);
 
         __prankFundDeployerOwner();
         priceFeed.addDerivatives({
@@ -97,11 +98,12 @@ abstract contract YearnVaultV2PriceFeedTestBase is IntegrationTest {
             _priceFeedAddress: address(priceFeed)
         });
 
+        // Yearn USDT Vault/USD price Sep 9th 2024, check USDT price https://www.coingecko.com/en/coins/tether/historical_data and multiply pricePerShare https://etherscan.io/address/0x3B27F92C0e212C671EA351827EDF93DB27cc0c65#readContract#F4
         assertValueInUSDForVersion({
             _version: version,
             _asset: ETHEREUM_YEARN_VAULT_V2_USDT_VAULT,
             _amount: assetUnit(IERC20(ETHEREUM_YEARN_VAULT_V2_USDT_VAULT)),
-            _expected: 1022772823199456796 // 1.0227728231994568 USD
+            _expected: 1074157406393871067 // 1.074157406393871067 USD
         });
     }
 
@@ -135,7 +137,7 @@ abstract contract YearnVaultV2PriceFeedTestBase is IntegrationTest {
             value,
             underlyingSingleUnit
                 + (underlyingSingleUnit * maxDeviationPer365DaysInBps * timePassed) / (365 days * BPS_ONE_HUNDRED_PERCENT),
-            "Deviation to high"
+            "Deviation too high"
         );
     }
 

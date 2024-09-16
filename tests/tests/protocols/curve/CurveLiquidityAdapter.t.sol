@@ -345,7 +345,7 @@ abstract contract CurveAndConvexPoolTest is PoolTestBase {
         uint256 finalIndex = poolAssetAddresses.length - 1;
         uint256[] memory orderedOutgoingAssetAmounts = new uint256[](poolAssetAddresses.length);
         orderedOutgoingAssetAmounts[0] = assetUnit(IERC20(poolAssetAddresses[0])) * 3;
-        orderedOutgoingAssetAmounts[finalIndex] = assetUnit(IERC20(poolAssetAddresses[finalIndex])) * 5;
+        orderedOutgoingAssetAmounts[finalIndex] = assetUnit(IERC20(poolAssetAddresses[finalIndex])) * 4;
         uint256 minIncomingStakingTokenAmount = 123;
 
         address[] memory spendAssetAddresses = toArray(poolAssetAddresses[0], poolAssetAddresses[finalIndex]);

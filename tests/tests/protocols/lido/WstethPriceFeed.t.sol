@@ -24,7 +24,7 @@ abstract contract WstethPriceFeedTestBase is IntegrationTest {
         priceFeed = __deployPriceFeed();
     }
 
-    function __renitialize(uint256 _forkBlock) private {
+    function __reinitialize(uint256 _forkBlock) private {
         setUpMainnetEnvironment(_forkBlock);
         priceFeed = __deployPriceFeed();
     }
@@ -42,14 +42,14 @@ abstract contract WstethPriceFeedTestBase is IntegrationTest {
         addPrimitive({
             _valueInterpreter: IValueInterpreter(getValueInterpreterAddressForVersion(version)),
             _tokenAddress: ETHEREUM_STETH,
-            _skipIfRegistered: true,
+            _skipIfRegistered: false,
             _aggregatorAddress: ETHEREUM_STETH_ETH_AGGREGATOR,
             _rateAsset: IChainlinkPriceFeedMixinProd.RateAsset.ETH
         });
         addDerivative({
             _valueInterpreter: IValueInterpreter(getValueInterpreterAddressForVersion(version)),
             _tokenAddress: ETHEREUM_WSTETH,
-            _skipIfRegistered: true,
+            _skipIfRegistered: false,
             _priceFeedAddress: address(priceFeed)
         });
     }
@@ -57,15 +57,16 @@ abstract contract WstethPriceFeedTestBase is IntegrationTest {
     // TESTS
 
     function test_calcUnderlyingValuesForSpecificBlock_success() public {
-        __renitialize(18050000); // roll the fork block, and re-deploy
+        __reinitialize(ETHEREUM_BLOCK_TIME_SENSITIVE); // roll the fork block, and re-deploy
 
         __addDerivativeAndUnderlying();
 
+        // EETH/USD price Sep 9th 2024 https://www.coingecko.com/en/coins/ether-fi-staked-eth/historical_data
         assertValueInUSDForVersion({
             _version: version,
             _asset: ETHEREUM_WSTETH,
             _amount: assetUnit(IERC20(ETHEREUM_WSTETH)),
-            _expected: 1864247628417228432384 // 1864.247628417228432384 USD
+            _expected: 2722400155739865283903 // 2722.400155739865283704 USD
         });
     }
 
@@ -85,12 +86,12 @@ abstract contract WstethPriceFeedTestBase is IntegrationTest {
         uint256 underlyingSingleUnit = assetUnit(IERC20(ETHEREUM_STETH));
 
         // 1 WSTETH value must be always greater than 1 stETH
-        assertGt(value, underlyingSingleUnit, "Value to low");
+        assertGt(value, underlyingSingleUnit, "Value too low");
         assertLe(
             value,
             underlyingSingleUnit
                 + (underlyingSingleUnit * maxDeviationPer365DaysInBps * timePassed) / (365 days * BPS_ONE_HUNDRED_PERCENT),
-            "Deviation to high"
+            "Deviation too high"
         );
     }
 

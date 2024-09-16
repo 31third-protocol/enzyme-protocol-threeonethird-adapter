@@ -595,6 +595,26 @@ abstract contract RepayBorrowTest is TestBase {
 
 abstract contract ClaimCompTest is TestBase {
     function __test_claimComp_success(address[] memory _cTokens, uint256[] memory _amounts) internal {
+        // resurrect cToken distribution program
+        increaseTokenBalance({
+            _token: IERC20(compToken),
+            _to: address(compoundV2Comptroller),
+            _amount: 10_000 * assetUnit(IERC20(compToken))
+        });
+
+        uint256[] memory distributionSpeeds = new uint256[](_cTokens.length);
+        for (uint256 i = 0; i < _cTokens.length; i++) {
+            distributionSpeeds[i] = 1 ether;
+        }
+
+        vm.prank(compoundV2Comptroller.admin());
+        compoundV2Comptroller._setCompSpeeds({
+            _cTokens: _cTokens,
+            _supplySpeeds: distributionSpeeds,
+            _borrowSpeeds: distributionSpeeds
+        });
+
+        // add collateral to be able to accrue some rewards
         __dealCTokenAndAddCollateral({_cTokens: _cTokens, _amounts: _amounts});
 
         // accrue some rewards during block number increase

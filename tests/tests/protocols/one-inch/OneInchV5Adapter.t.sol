@@ -16,9 +16,6 @@ address constant ETHEREUM_ONE_INCH_EXECUTOR = 0xE37e799D5077682FA0a244D46E5649F7
 address constant POLYGON_ONE_INCH_V5_AGGREGATION_ROUTER_ADDRESS = ETHEREUM_ONE_INCH_V5_AGGREGATION_ROUTER_ADDRESS;
 address constant POLYGON_ONE_INCH_EXECUTOR = ETHEREUM_ONE_INCH_EXECUTOR;
 
-// A specific block is required because we have retrieved data from a particular block
-uint256 constant ETHEREUM_BLOCK_ONE_INCH_V5_TIME_SENSITIVE = 19_518_890; // March 26th, 2024
-
 // "data" in the TakeOrders is taken from the One Inch api https://api.1inch.dev/swap/v5.2
 abstract contract TestBase is IntegrationTest {
     event MultipleOrdersItemFailed(uint256 index, bytes reason);
@@ -446,7 +443,7 @@ abstract contract TestBaseEthereum is TestBase {
             _chainId: ETHEREUM_CHAIN_ID,
             _version: _version,
             _oneInchV5ExchangeAddress: ETHEREUM_ONE_INCH_V5_AGGREGATION_ROUTER_ADDRESS,
-            _forkBlock: ETHEREUM_BLOCK_ONE_INCH_V5_TIME_SENSITIVE
+            _forkBlock: ETHEREUM_BLOCK_TIME_SENSITIVE_ONE_INCH_V5
         });
     }
 

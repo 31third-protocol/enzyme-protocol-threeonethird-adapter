@@ -1,18 +1,30 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity 0.8.19;
 
+import {IChainlinkPriceFeedMixin as IChainlinkPriceFeedMixinProd} from
+    "contracts/release/infrastructure/price-feeds/primitives/IChainlinkPriceFeedMixin.sol";
+
 import {IntegrationTest} from "tests/bases/IntegrationTest.sol";
 import {IChainlinkAggregator} from "tests/interfaces/external/IChainlinkAggregator.sol";
 import {IERC20} from "tests/interfaces/external/IERC20.sol";
 import {ILidoSteth} from "tests/interfaces/external/ILidoSteth.sol";
 
-contract ChainlinkLikeWstethPriceFeedTest is IntegrationTest {
+import {IValueInterpreter} from "tests/interfaces/internal/IValueInterpreter.sol";
+
+abstract contract ChainlinkLikeWstethPriceFeedTest is IntegrationTest {
     IChainlinkAggregator wstethAggregator;
     IChainlinkAggregator originalStethEthAggregator = IChainlinkAggregator(ETHEREUM_STETH_ETH_AGGREGATOR);
 
-    function setUp() public override {
-        vm.createSelectFork("mainnet", ETHEREUM_BLOCK_LATEST);
+    EnzymeVersion internal version;
 
+    function __initialize(EnzymeVersion _version) internal {
+        setUpMainnetEnvironment();
+        version = _version;
+        wstethAggregator = __deployWstethAggregator();
+    }
+
+    function __reinitialize(uint256 _forkBlock) private {
+        setUpMainnetEnvironment(_forkBlock);
         wstethAggregator = __deployWstethAggregator();
     }
 
@@ -27,6 +39,26 @@ contract ChainlinkLikeWstethPriceFeedTest is IntegrationTest {
     }
 
     // TESTS
+
+    function test_calcUnderlyingValuesForSpecificBlock_success() public {
+        __reinitialize(ETHEREUM_BLOCK_TIME_SENSITIVE);
+
+        addPrimitive({
+            _valueInterpreter: IValueInterpreter(getValueInterpreterAddressForVersion(version)),
+            _tokenAddress: ETHEREUM_WSTETH,
+            _skipIfRegistered: false,
+            _aggregatorAddress: address(wstethAggregator),
+            _rateAsset: IChainlinkPriceFeedMixinProd.RateAsset.ETH
+        });
+
+        // WSTETH/USD price on Sep 9th 2024 https://www.coingecko.com/en/coins/wrapped-steth/historical_data
+        assertValueInUSDForVersion({
+            _version: version,
+            _asset: ETHEREUM_WSTETH,
+            _amount: assetUnit(IERC20(ETHEREUM_WSTETH)),
+            _expected: 2722400155739865283704 // 2722.400155739865283704 USD
+        });
+    }
 
     function test_decimals_success() public {
         assertEq(wstethAggregator.decimals(), CHAINLINK_AGGREGATOR_DECIMALS_ETH, "Incorrect decimals");
@@ -51,11 +83,17 @@ contract ChainlinkLikeWstethPriceFeedTest is IntegrationTest {
         assertEq(wstethRoundId, 0, "Non-zero roundId");
         assertEq(wstethAnsweredInRound, 0, "Non-zero roundData");
 
-        // Rate: 1.17 ETH/wstETH, on June 24th, 2024
-        // https://www.coingecko.com/en/coins/wrapped-steth
-        uint256 expectedWstethEthRate = 1.17e18;
-        uint256 halfPercent = WEI_ONE_PERCENT / 2;
-        assertApproxEqRel(uint256(wstethAnswer), expectedWstethEthRate, halfPercent, "Incorrect rate");
+        uint256 wstETHCreationTimestamp = 1613752640; // Feb 19, 2021
+        uint256 timePassed = block.timestamp - wstETHCreationTimestamp;
+        uint256 maxDeviationPer365DaysInBps = 6 * BPS_ONE_PERCENT;
+
+        // 1 WSTETH value must be always greater than 1 ETH
+        assertGt(uint256(wstethAnswer), 1 ether, "Value too low");
+        assertLe(
+            uint256(wstethAnswer),
+            1 ether + (1 ether * maxDeviationPer365DaysInBps * timePassed) / (365 days * BPS_ONE_HUNDRED_PERCENT),
+            "Deviation too high"
+        );
     }
 
     function test_latestRoundData_successWithAlteredRates() public {
@@ -83,5 +121,17 @@ contract ChainlinkLikeWstethPriceFeedTest is IntegrationTest {
 
         (, int256 wstethAnswer,,,) = wstethAggregator.latestRoundData();
         assertEq(uint256(wstethAnswer), expectedEthPerWstethRate, "Incorrect rate");
+    }
+}
+
+contract ChainlinkLikeWstethPriceFeedTestEthereum is ChainlinkLikeWstethPriceFeedTest {
+    function setUp() public override {
+        __initialize(EnzymeVersion.Current);
+    }
+}
+
+contract ChainlinkLikeWstethPriceFeedTestEthereumV4 is ChainlinkLikeWstethPriceFeedTest {
+    function setUp() public override {
+        __initialize(EnzymeVersion.V4);
     }
 }

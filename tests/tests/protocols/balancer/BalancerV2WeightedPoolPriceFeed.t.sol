@@ -190,7 +190,7 @@ abstract contract RegistryTest is TestBase {
 
 contract EthereumTest is ValueTest, RegistryTest {
     function setUp() public override {
-        setUpMainnetEnvironment();
+        setUpMainnetEnvironment(ETHEREUM_BLOCK_TIME_SENSITIVE);
 
         // Price feed config
         intermediaryAsset = getCoreToken("WETH");
@@ -199,9 +199,9 @@ contract EthereumTest is ValueTest, RegistryTest {
         poolFactoryAddress = ETHEREUM_80_BAL_20_WETH_POOL_FACTORY_ADDRESS;
         poolId = ETHEREUM_80_BAL_20_WETH_POOL_ID;
         poolBpt = IERC20(ETHEREUM_80_BAL_20_WETH_POOL_ADDRESS);
-        // $10 on Jun 24th, 2024
+        // $5 on Sep 9th, 2024
         // See: https://app.zerion.io/tokens/B-80BAL-20WETH-0x5c6ee304399dbdb9c8ef030ab642b10820db8f56
-        poolBptExpectedUsdIntegerPrice = 10;
+        poolBptExpectedUsdIntegerPrice = 5;
 
         super.setUp();
     }
@@ -209,7 +209,7 @@ contract EthereumTest is ValueTest, RegistryTest {
 
 contract PolygonTest is ValueTest, RegistryTest {
     function setUp() public override {
-        setUpPolygonEnvironment();
+        setUpPolygonEnvironment(POLYGON_BLOCK_TIME_SENSITIVE);
 
         // Price feed config
         intermediaryAsset = getCoreToken("USD");
