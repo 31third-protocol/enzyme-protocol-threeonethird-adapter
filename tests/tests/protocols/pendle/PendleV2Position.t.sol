@@ -29,6 +29,7 @@ address constant ETHEREUM_PY_YT_LP_ORACLE = 0x9a9Fa8338dd5E5B2188006f1Cd2Ef26d92
 address constant ETHEREUM_ROUTER = 0x888888888889758F76e7103c6CbF23ABbF58F946;
 address constant ETHEREUM_STETH_26DEC2025_MARKET_ADDRESS = 0xC374f7eC85F8C7DE3207a10bB1978bA104bdA3B2;
 address constant ETHEREUM_WEETH_27JUN2024_MARKET_ADDRESS = 0xF32e58F92e60f4b0A37A69b95d642A471365EAe8;
+address constant ETHEREUM_FUSDC_26DEC2024_MARKET_ADDRESS = 0xcB71c2A73fd7588E1599DF90b88de2316585A860;
 
 // ARBITRUM CONSTANTS
 address constant ARBITRUM_MARKET_FACTORY_V3 = 0x2FCb47B58350cD377f94d3821e7373Df60bD9Ced;
@@ -864,6 +865,28 @@ contract PendleStethTestEthereumV4 is PendleTestEthereum {
         __initializeEthereum({
             _version: EnzymeVersion.V4,
             _pendleMarketAddress: ETHEREUM_STETH_26DEC2025_MARKET_ADDRESS,
+            _pricingDuration: 900 // 15 minutes
+        });
+    }
+}
+
+// Pendle FUSDc is a market where the decimals of the yieldToken aren't equal to the decimals of the asset returned by assetInfo
+contract PendleFUsdcTestEthereum is PendleTestEthereum {
+    function setUp() public override {
+        __initializeEthereum({
+            _version: EnzymeVersion.Current,
+            _pendleMarketAddress: ETHEREUM_FUSDC_26DEC2024_MARKET_ADDRESS,
+            _pricingDuration: 900 // 15 minutes
+        });
+    }
+}
+
+// Pendle FUSDc is a market where the decimals of the yieldToken aren't equal to the decimals of the asset returned by assetInfo
+contract PendleFUsdcTestEthereumV4 is PendleTestEthereum {
+    function setUp() public override {
+        __initializeEthereum({
+            _version: EnzymeVersion.V4,
+            _pendleMarketAddress: ETHEREUM_FUSDC_26DEC2024_MARKET_ADDRESS,
             _pricingDuration: 900 // 15 minutes
         });
     }
