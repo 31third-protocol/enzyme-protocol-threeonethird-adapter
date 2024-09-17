@@ -15,11 +15,9 @@ import {BytesArrayLib} from "tests/utils/libs/BytesArrayLib.sol";
 import {IERC20} from "tests/interfaces/external/IERC20.sol";
 import {IKilnStakingContract} from "tests/interfaces/external/IKilnStakingContract.sol";
 
-import {IComptrollerLib} from "tests/interfaces/internal/IComptrollerLib.sol";
-import {IExternalPositionManager} from "tests/interfaces/internal/IExternalPositionManager.sol";
 import {IKilnStakingPositionLib} from "tests/interfaces/internal/IKilnStakingPositionLib.sol";
 import {IKilnStakingPositionParser} from "tests/interfaces/internal/IKilnStakingPositionParser.sol";
-import {IVaultLib} from "tests/interfaces/internal/IVaultLib.sol";
+import {IExternalPositionManager} from "tests/interfaces/internal/IExternalPositionManager.sol";
 
 address constant STAKING_CONTRACT_ADDRESS_ETHEREUM = 0x0816DF553a89c4bFF7eBfD778A9706a989Dd3Ce3;
 
@@ -273,14 +271,14 @@ abstract contract PostStakeTestBase is TestBase {
 /////////////
 
 contract StakeTest is TestBase {
-    function test_failWithInvalidStakingContract() public {
+    function test_stake_failWithInvalidStakingContract() public {
         __delistStakingContract();
 
         vm.expectRevert("__validateStakingContract: Invalid staking contract");
         __stake({_stakingContractAddress: address(stakingContract), _validatorAmount: 1});
     }
 
-    function test_success() public {
+    function test_stake_success() public {
         uint256 preTxVaultWethBal = wethToken.balanceOf(vaultProxyAddress);
 
         uint256 validatorAmount = 5;
@@ -306,18 +304,20 @@ contract StakeTest is TestBase {
         // Assert validators correctly provisioned on Kiln via event emissions.
         // There should be n emissions for n validators.
         bytes[] memory validatorKeys = __parseValidatorKeysFromDepositEvents(logs);
-        assertEq(validatorKeys.length, validatorAmount);
+        assertEq(validatorKeys.length, validatorAmount, "Incorrect validator keys amount");
 
         // Assert vault ETH diff
-        assertEq(wethToken.balanceOf(vaultProxyAddress), preTxVaultWethBal - ethAmount);
+        assertEq(
+            wethToken.balanceOf(vaultProxyAddress), preTxVaultWethBal - ethAmount, "Incorrect vault ETH balance diff"
+        );
 
         // Assert EP storage
-        assertEq(kilnStakingPosition.getValidatorCount(), validatorAmount);
+        assertEq(kilnStakingPosition.getValidatorCount(), validatorAmount, "Incorrect validator count");
     }
 }
 
 contract SweepEthTest is TestBase {
-    function test_success() public {
+    function test_sweepEth_success() public {
         // Send some ETH to the EP
         uint256 ethToSweep = 3 ether;
         vm.deal(address(kilnStakingPosition), ethToSweep);
@@ -341,7 +341,7 @@ contract SweepEthTest is TestBase {
 }
 
 contract PausePositionValueTest is TestBase {
-    function test_failWithAlreadyPaused() public {
+    function test_pausePositionValue_failWithAlreadyPaused() public {
         __pausePositionValue();
 
         // This doesn't match the error correctly without formatError()
@@ -349,7 +349,7 @@ contract PausePositionValueTest is TestBase {
         __pausePositionValue();
     }
 
-    function test_success() public {
+    function test_pausePositionValue_success() public {
         assertFalse(kilnStakingPosition.positionValueIsPaused(), "already paused");
 
         expectEmit(address(kilnStakingPosition));
@@ -371,13 +371,13 @@ contract PausePositionValueTest is TestBase {
 }
 
 contract UnpausePositionValueTest is TestBase {
-    function test_failWithNotPaused() public {
+    function test_unpausePositionValue_failWithNotPaused() public {
         // This doesn't match the error correctly without formatError()
         vm.expectRevert(formatError("__unpausePositionValue: Not paused"));
         __unpausePositionValue();
     }
 
-    function test_success() public {
+    function test_unpausePositionValue_success() public {
         __pausePositionValue();
 
         expectEmit(address(kilnStakingPosition));
@@ -405,7 +405,7 @@ contract ClaimFeesTest is PostStakeTestBase {
     uint256 internal preClaimValidatorCount;
     uint256 internal preClaimVaultWethBal;
 
-    function setUp() public override {
+    function setUp() public virtual override {
         super.setUp();
 
         assertTrue(clRewardAmount < exitedValidatorEthThreshold, "CL rewards greater than exited threshold");
@@ -425,7 +425,7 @@ contract ClaimFeesTest is PostStakeTestBase {
         preClaimVaultWethBal = wethToken.balanceOf(vaultProxyAddress);
     }
 
-    function test_failWithInvalidStakingContract() public {
+    function test_claimFees_failWithInvalidStakingContract() public {
         __delistStakingContract();
 
         vm.expectRevert("__validateStakingContract: Invalid staking contract");
@@ -436,7 +436,7 @@ contract ClaimFeesTest is PostStakeTestBase {
         });
     }
 
-    function test_successWithAll() public {
+    function test_claimFees_successWithAll() public {
         vm.recordLogs();
 
         __claimFees({
@@ -457,13 +457,13 @@ contract ClaimFeesTest is PostStakeTestBase {
         uint256 totalRewards = (clRewardAmount + elRewardAmount) * validatorKeysWithRewards.length;
         uint256 kilnFee = __calcKilnFeeForRewardAmount(totalRewards);
         uint256 netRewards = totalRewards - kilnFee;
-        assertEq(wethToken.balanceOf(vaultProxyAddress), preClaimVaultWethBal + netRewards, "Vault balance");
+        assertEq(wethToken.balanceOf(vaultProxyAddress), preClaimVaultWethBal + netRewards, "Incorrect vault balance");
 
         // Validator count should be unchanged
-        assertEq(kilnStakingPosition.getValidatorCount(), preClaimValidatorCount, "Validator count");
+        assertEq(kilnStakingPosition.getValidatorCount(), preClaimValidatorCount, "Incorrect validator count");
     }
 
-    function test_successWithConsensusLayerNotExited() public {
+    function test_claimFees_successWithConsensusLayerNotExited() public {
         __claimFees({
             _stakingContractAddress: address(stakingContract),
             _publicKeys: validatorKeysWithRewards,
@@ -474,13 +474,13 @@ contract ClaimFeesTest is PostStakeTestBase {
         uint256 totalRewards = clRewardAmount * validatorKeysWithRewards.length;
         uint256 kilnFee = __calcKilnFeeForRewardAmount(totalRewards);
         uint256 netRewards = totalRewards - kilnFee;
-        assertEq(wethToken.balanceOf(vaultProxyAddress), preClaimVaultWethBal + netRewards, "Vault balance");
+        assertEq(wethToken.balanceOf(vaultProxyAddress), preClaimVaultWethBal + netRewards, "Incorrect vault balance");
 
         // Validator count should be unchanged
-        assertEq(kilnStakingPosition.getValidatorCount(), preClaimValidatorCount, "Validator count");
+        assertEq(kilnStakingPosition.getValidatorCount(), preClaimValidatorCount, "Incorrect validator count");
     }
 
-    function test_successWithConsensusLayerExited() public {
+    function test_claimFees_successWithConsensusLayerExited() public {
         // Only tests exited validator detection
 
         // Set up:
@@ -506,11 +506,13 @@ contract ClaimFeesTest is PostStakeTestBase {
 
         // Validator count should be updated
         assertEq(
-            kilnStakingPosition.getValidatorCount(), preClaimValidatorCount - validatorsToRemove, "Validator count"
+            kilnStakingPosition.getValidatorCount(),
+            preClaimValidatorCount - validatorsToRemove,
+            "Incorrect validator count"
         );
     }
 
-    function test_successWithExecutionLayer() public {
+    function test_claimFees_successWithExecutionLayer() public {
         __claimFees({
             _stakingContractAddress: address(stakingContract),
             _publicKeys: validatorKeysWithRewards,
@@ -521,14 +523,14 @@ contract ClaimFeesTest is PostStakeTestBase {
         uint256 totalRewards = elRewardAmount * validatorKeysWithRewards.length;
         uint256 kilnFee = __calcKilnFeeForRewardAmount(totalRewards);
         uint256 netRewards = totalRewards - kilnFee;
-        assertEq(wethToken.balanceOf(vaultProxyAddress), preClaimVaultWethBal + netRewards, "Vault balance");
+        assertEq(wethToken.balanceOf(vaultProxyAddress), preClaimVaultWethBal + netRewards, "Incorrect vault balance");
     }
 }
 
 contract UnstakeTest is PostStakeTestBase {
     bytes[] validatorKeysToUnstake;
 
-    function setUp() public override {
+    function setUp() public virtual override {
         super.setUp();
 
         // Choose two arbitrary validators to unstake
@@ -536,14 +538,14 @@ contract UnstakeTest is PostStakeTestBase {
         validatorKeysToUnstake.push(validatorKeys[2]);
     }
 
-    function test_failWithInvalidStakingContract() public {
+    function test_unstake_failWithInvalidStakingContract() public {
         __delistStakingContract();
 
         vm.expectRevert("__validateStakingContract: Invalid staking contract");
         __unstake({_stakingContractAddress: address(stakingContract), _publicKeys: validatorKeysToUnstake});
     }
 
-    function test_success() public {
+    function test_unstake_success() public {
         vm.recordLogs();
 
         __unstake({_stakingContractAddress: address(stakingContract), _publicKeys: validatorKeysToUnstake});
@@ -568,14 +570,14 @@ contract UnstakeTest is PostStakeTestBase {
 ////////////////////
 
 contract GetManagedAssetsTest is TestBase {
-    function test_failWithPausedPositionValue() public {
+    function test_getManagedAssets_failWithPausedPositionValue() public {
         __pausePositionValue();
 
         vm.expectRevert("getManagedAssets: Valuation paused");
         kilnStakingPosition.getManagedAssets();
     }
 
-    function test_success() public {
+    function test_getManagedAssets_success() public {
         // Stakes twice to confirm deposits are tracked additively
 
         uint256 validatorAmount1 = 3;
@@ -619,5 +621,61 @@ contract GetManagedAssetsTest is TestBase {
             uint256 exitedEthAmount = validatorKeysToExit.length * 32 ether;
             assertEq(amounts, toArray(totalEthAmount - exitedEthAmount));
         }
+    }
+}
+
+contract StakeTestV4 is StakeTest {
+    function setUp() public override {
+        version = EnzymeVersion.V4;
+
+        super.setUp();
+    }
+}
+
+contract SweepEthTestV4 is SweepEthTest {
+    function setUp() public override {
+        version = EnzymeVersion.V4;
+
+        super.setUp();
+    }
+}
+
+contract PausePositionValueTestV4 is PausePositionValueTest {
+    function setUp() public override {
+        version = EnzymeVersion.V4;
+
+        super.setUp();
+    }
+}
+
+contract UnpausePositionValueTestV4 is UnpausePositionValueTest {
+    function setUp() public override {
+        version = EnzymeVersion.V4;
+
+        super.setUp();
+    }
+}
+
+contract ClaimFeesTestV4 is ClaimFeesTest {
+    function setUp() public override {
+        version = EnzymeVersion.V4;
+
+        super.setUp();
+    }
+}
+
+contract UnstakeTestV4 is UnstakeTest {
+    function setUp() public override {
+        version = EnzymeVersion.V4;
+
+        super.setUp();
+    }
+}
+
+contract GetManagedAssetsTestV4 is GetManagedAssetsTest {
+    function setUp() public override {
+        version = EnzymeVersion.V4;
+
+        super.setUp();
     }
 }
