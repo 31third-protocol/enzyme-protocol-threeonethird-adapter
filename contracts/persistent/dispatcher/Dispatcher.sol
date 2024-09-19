@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -17,7 +17,7 @@ import "./IDispatcher.sol";
 import "./IMigrationHookHandler.sol";
 
 /// @title Dispatcher Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice The top-level contract linking multiple releases.
 /// It handles the deployment of new VaultProxy instances,
 /// and the regulation of fund migration from a previous release to the current one.

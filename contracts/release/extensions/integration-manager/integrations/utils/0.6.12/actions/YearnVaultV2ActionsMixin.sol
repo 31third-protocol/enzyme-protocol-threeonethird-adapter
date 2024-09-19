@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -15,7 +15,7 @@ import {IYearnVaultV2} from "../../../../../../../external-interfaces/IYearnVaul
 import {AssetHelpers} from "../../../../../../../utils/0.6.12/AssetHelpers.sol";
 
 /// @title YearnVaultV2ActionsMixin Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Mixin contract for interacting with Yearn v2 vaults
 abstract contract YearnVaultV2ActionsMixin is AssetHelpers {
     /// @dev Helper to lend underlying for yVault shares

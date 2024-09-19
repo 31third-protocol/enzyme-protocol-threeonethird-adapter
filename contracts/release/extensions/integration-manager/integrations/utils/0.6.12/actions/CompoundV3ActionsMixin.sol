@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -16,7 +16,7 @@ import {ICompoundV3CometRewards} from "../../../../../../../external-interfaces/
 import {AssetHelpers} from "../../../../../../../utils/0.6.12/AssetHelpers.sol";
 
 /// @title CompoundV3ActionsMixin Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Mixin contract for interacting with the Compound V3 lending functions
 abstract contract CompoundV3ActionsMixin is AssetHelpers {
     ICompoundV3CometRewards private immutable COMPOUND_V3_REWARDS_CONTRACT;

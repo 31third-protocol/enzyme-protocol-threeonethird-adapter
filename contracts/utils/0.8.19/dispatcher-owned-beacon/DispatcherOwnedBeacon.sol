@@ -2,7 +2,7 @@
 
 /*
     This file is part of the Enzyme Protocol.
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
 */
@@ -14,7 +14,7 @@ import {IDispatcher} from "../../../persistent/dispatcher/IDispatcher.sol";
 import {IDispatcherOwnedBeacon} from "./IDispatcherOwnedBeacon.sol";
 
 /// @title DispatcherOwnedBeacon Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice A Beacon that is owned by the Enzyme Dispatcher's owner
 contract DispatcherOwnedBeacon is IDispatcherOwnedBeacon {
     event ImplementationSet(address implementation);

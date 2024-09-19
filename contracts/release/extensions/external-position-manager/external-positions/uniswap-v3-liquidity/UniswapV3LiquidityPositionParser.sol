@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -18,7 +18,7 @@ import {UniswapV3LiquidityPositionDataDecoder} from "./UniswapV3LiquidityPositio
 pragma solidity 0.7.6;
 
 /// @title UniswapV3LiquidityPositionParser
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Parser for UniswapV3 Liquidity Positions
 contract UniswapV3LiquidityPositionParser is IExternalPositionParser, UniswapV3LiquidityPositionDataDecoder {
     address private immutable UNISWAP_V3_NON_FUNGIBLE_POSITION_MANAGER;

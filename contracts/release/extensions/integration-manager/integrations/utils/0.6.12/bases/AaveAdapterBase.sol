@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -19,7 +19,7 @@ import {IIntegrationManager} from "../../../../IIntegrationManager.sol";
 import {AdapterBase} from "../AdapterBase.sol";
 
 /// @title AaveAdapterBase Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Base contract for Aave V2 and V3 lending adapters
 /// @dev When lending and redeeming, a small `ROUNDING_BUFFER` is subtracted from the min incoming asset amount.
 /// This is a workaround for problematic quirks in `aToken` balance rounding (due to RayMath and rebasing logic),

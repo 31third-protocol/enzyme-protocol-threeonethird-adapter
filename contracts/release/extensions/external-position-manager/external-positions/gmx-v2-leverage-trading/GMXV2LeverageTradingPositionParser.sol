@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -22,7 +22,7 @@ import {IGMXV2LeverageTradingPosition} from "./IGMXV2LeverageTradingPosition.sol
 pragma solidity 0.8.19;
 
 /// @title GMXV2LeverageTradingPositionParser
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Parser for GMXV2 Leverage Trading Positions
 contract GMXV2LeverageTradingPositionParser is IExternalPositionParser {
     address private immutable DATA_STORE_ADDRESS;

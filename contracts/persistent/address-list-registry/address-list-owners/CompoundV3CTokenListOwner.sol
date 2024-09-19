@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -16,7 +16,7 @@ import "../../../external-interfaces/ICompoundV3Configurator.sol";
 import "./utils/0.6.12/AddOnlyAddressListOwnerBase.sol";
 
 /// @title CompoundV3CTokenListOwner Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice The AddressListRegistry owner of a Compound v3 cToken list
 contract CompoundV3CTokenListOwner is AddOnlyAddressListOwnerBase {
     ICompoundV3Configurator private immutable CONFIGURATOR_CONTRACT;

@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -17,7 +17,7 @@ import {UniswapV2ActionsMixin} from "../utils/0.6.12/actions/UniswapV2ActionsMix
 import {AdapterBase} from "../utils/0.6.12/AdapterBase.sol";
 
 /// @title UniswapV2LiquidityAdapter Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Adapter for interacting with Uniswap v2 liquidity provision
 contract UniswapV2LiquidityAdapter is AdapterBase, UniswapV2ActionsMixin {
     address private immutable FACTORY;

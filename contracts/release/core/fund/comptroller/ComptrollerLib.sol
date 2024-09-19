@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -26,7 +26,7 @@ import {IVault} from "../vault/IVault.sol";
 import {IComptroller} from "./IComptroller.sol";
 
 /// @title ComptrollerLib Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice The core logic library shared by all funds
 contract ComptrollerLib is IComptroller {
     using AddressArrayLib for address[];

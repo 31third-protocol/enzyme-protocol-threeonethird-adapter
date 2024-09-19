@@ -2,9 +2,9 @@
 
 /*
     This file is part of the Enzyme Protocol.
-    
-    (c) Enzyme Council <council@enzyme.finance>
-    
+
+    (c) Enzyme Foundation <security@enzyme.finance>
+
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
 */
@@ -22,7 +22,7 @@ import {IExternalPositionManager} from "./IExternalPositionManager.sol";
 import {IExternalPositionParser} from "./IExternalPositionParser.sol";
 
 /// @title ExternalPositionManager
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Extension to handle external position actions for funds
 contract ExternalPositionManager is IExternalPositionManager, ExtensionBase, PermissionedVaultActionMixin {
     event CallOnExternalPositionExecutedForFund(

@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -15,7 +15,7 @@ import {IERC4626} from "openzeppelin-solc-0.8/token/ERC20/extensions/ERC4626.sol
 import {IDerivativePriceFeed} from "../IDerivativePriceFeed.sol";
 
 /// @title ERC4626PriceFeed Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Price source oracle for ERC4626 vaults
 contract ERC4626PriceFeed is IDerivativePriceFeed {
     /// @notice Converts a given amount of a derivative to its underlying asset values

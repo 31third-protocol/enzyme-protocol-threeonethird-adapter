@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -15,7 +15,7 @@ import {AaveV3ActionsMixin} from "../utils/0.6.12/actions/AaveV3ActionsMixin.sol
 import {AaveAdapterBase} from "../utils/0.6.12/bases/AaveAdapterBase.sol";
 
 /// @title AaveV3Adapter Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Adapter for Aave v3 lending
 contract AaveV3Adapter is AaveAdapterBase, AaveV3ActionsMixin {
     constructor(

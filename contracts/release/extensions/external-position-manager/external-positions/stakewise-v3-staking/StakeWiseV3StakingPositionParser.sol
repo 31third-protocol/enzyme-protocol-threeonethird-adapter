@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -18,7 +18,7 @@ import {StakeWiseV3StakingPositionDataDecoder} from "./StakeWiseV3StakingPositio
 pragma solidity 0.8.19;
 
 /// @title StakeWiseV3StakingPositionParser
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Parser for StakeWise V3 Staking Positions
 contract StakeWiseV3StakingPositionParser is StakeWiseV3StakingPositionDataDecoder, IExternalPositionParser {
     IStakeWiseV3VaultsRegistry public immutable STAKEWISE_V3_VAULT_REGISTRY;

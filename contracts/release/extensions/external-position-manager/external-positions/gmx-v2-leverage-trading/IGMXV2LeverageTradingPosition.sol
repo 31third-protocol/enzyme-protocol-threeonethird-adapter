@@ -2,7 +2,7 @@
 
 /*
     This file is part of the Enzyme Protocol.
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
 */
@@ -15,7 +15,7 @@ import {GMXV2LeverageTradingPositionLibBase1} from "./bases/GMXV2LeverageTrading
 pragma solidity >=0.6.0 <0.9.0;
 
 /// @title IGMXV2LeverageTradingPosition Interface
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 interface IGMXV2LeverageTradingPosition is IExternalPosition {
     enum Actions {
         CreateOrder,

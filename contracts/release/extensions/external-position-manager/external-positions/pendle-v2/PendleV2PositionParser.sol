@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -16,7 +16,7 @@ import {PendleV2PositionDataDecoder} from "./PendleV2PositionDataDecoder.sol";
 pragma solidity 0.8.19;
 
 /// @title PendleV2PositionParser
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Parser for Pendle V2 Positions
 contract PendleV2PositionParser is PendleV2PositionDataDecoder, IExternalPositionParser {
     address private constant NATIVE_ASSET_ADDRESS = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;

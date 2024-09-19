@@ -3,7 +3,7 @@
 pragma solidity >=0.6.0 <0.9.0;
 
 /// @title IUniswapV2Pair Interface
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Minimal interface for our interactions with the Uniswap V2's Pair contract
 interface IUniswapV2Pair {
     function getReserves() external view returns (uint112 reserve0_, uint112 reserve1_, uint32 blockTimestampLast_);

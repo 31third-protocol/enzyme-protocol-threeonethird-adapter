@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -17,7 +17,7 @@ import {IExitRateFeeBase} from "./interfaces/IExitRateFeeBase.sol";
 import {FeeBase} from "./FeeBase.sol";
 
 /// @title ExitRateFeeBase Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Calculates a fee based on a rate to be charged to an investor upon exiting a fund
 abstract contract ExitRateFeeBase is IExitRateFeeBase, FeeBase {
     using SafeMath for uint256;

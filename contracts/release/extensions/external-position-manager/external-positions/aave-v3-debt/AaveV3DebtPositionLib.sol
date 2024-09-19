@@ -2,7 +2,7 @@
 
 /*
     This file is part of the Enzyme Protocol.
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
 */
@@ -22,7 +22,7 @@ import {AaveV3DebtPositionDataDecoder} from "./AaveV3DebtPositionDataDecoder.sol
 import {IAaveV3DebtPosition} from "./IAaveV3DebtPosition.sol";
 
 /// @title AaveV3DebtPositionLib Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice An External Position library contract for Aave V3 debt positions
 contract AaveV3DebtPositionLib is
     AaveV3DebtPositionLibBase1,

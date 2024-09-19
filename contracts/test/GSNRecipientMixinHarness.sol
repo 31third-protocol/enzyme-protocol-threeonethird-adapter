@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -14,7 +14,7 @@ pragma solidity 0.8.19;
 import {GSNRecipientMixin} from "../utils/0.8.19/gas-station-network/GSNRecipientMixin.sol";
 
 /// @title GSNRecipientMixinHarness Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 contract GSNRecipientMixinHarness is GSNRecipientMixin {
     constructor(address _addressListRegistry, uint256 _trustedForwardersAddressListId)
         GSNRecipientMixin(_addressListRegistry, _trustedForwardersAddressListId)

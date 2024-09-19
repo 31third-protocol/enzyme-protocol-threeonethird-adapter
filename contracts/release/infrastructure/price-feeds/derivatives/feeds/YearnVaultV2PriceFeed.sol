@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -19,7 +19,7 @@ import {IDerivativePriceFeed} from "../IDerivativePriceFeed.sol";
 import {SingleUnderlyingDerivativeRegistryMixin} from "./utils/SingleUnderlyingDerivativeRegistryMixin.sol";
 
 /// @title YearnVaultV2PriceFeed Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Price source oracle for Yearn Vault V2 shares
 contract YearnVaultV2PriceFeed is IDerivativePriceFeed, SingleUnderlyingDerivativeRegistryMixin {
     using SafeMath for uint256;

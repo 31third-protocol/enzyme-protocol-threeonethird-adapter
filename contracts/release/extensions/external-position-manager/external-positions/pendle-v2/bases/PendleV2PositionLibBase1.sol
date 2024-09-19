@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -12,7 +12,7 @@
 pragma solidity 0.8.19;
 
 /// @title PendleV2PositionLibBase1 Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice A persistent contract containing all required storage variables and
 /// required functions for a PendleV2PositionLib implementation
 /// @dev DO NOT EDIT CONTRACT. If new events or storage are necessary, they should be added to

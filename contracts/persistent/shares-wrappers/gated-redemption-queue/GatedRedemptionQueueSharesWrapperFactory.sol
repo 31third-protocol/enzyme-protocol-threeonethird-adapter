@@ -2,7 +2,7 @@
 
 /*
     This file is part of the Enzyme Protocol.
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
 */
@@ -16,7 +16,7 @@ import "../../dispatcher/IDispatcher.sol";
 import "./IGatedRedemptionQueueSharesWrapper.sol";
 
 /// @title GatedRedemptionQueueSharesWrapperFactory Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice A contract factory for GatedRedemptionQueueSharesWrapper instances
 contract GatedRedemptionQueueSharesWrapperFactory is IBeacon {
     event ImplementationSet(address implementation);

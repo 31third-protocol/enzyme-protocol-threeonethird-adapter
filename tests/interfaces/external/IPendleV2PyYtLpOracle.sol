@@ -2,7 +2,7 @@
 pragma solidity >=0.6.0 <0.9.0;
 
 /// @title IPendleV2PyYtLpOracle Interface
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 interface IPendleV2PyYtLpOracle {
     function getLpToSyRate(address _market, uint32 _duration) external view returns (uint256 rate_);
 

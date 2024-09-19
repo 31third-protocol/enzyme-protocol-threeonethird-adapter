@@ -2,7 +2,7 @@
 
 /*
     This file is part of the Enzyme Protocol.
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
 */
@@ -19,7 +19,7 @@ import {ILiquityDebtPosition} from "./ILiquityDebtPosition.sol";
 import {LiquityDebtPositionDataDecoder} from "./LiquityDebtPositionDataDecoder.sol";
 
 /// @title LiquityDebtPositionLib Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice An External Position library contract for Liquity debt positions
 contract LiquityDebtPositionLib is ILiquityDebtPosition, LiquityDebtPositionDataDecoder {
     using SafeERC20 for IERC20;

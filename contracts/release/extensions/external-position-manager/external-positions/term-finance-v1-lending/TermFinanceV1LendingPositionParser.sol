@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -19,7 +19,7 @@ import {TermFinanceV1LendingPositionDataDecoder} from "./TermFinanceV1LendingPos
 pragma solidity 0.8.19;
 
 /// @title TermFinanceV1LendingPositionParser
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Parser for Term Finance V1 Lending Positions
 contract TermFinanceV1LendingPositionParser is TermFinanceV1LendingPositionDataDecoder, IExternalPositionParser {
     using AddressArrayLib for address[];

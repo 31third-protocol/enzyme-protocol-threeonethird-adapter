@@ -2,7 +2,7 @@
 
 /*
     This file is part of the Enzyme Protocol.
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
 */
@@ -10,7 +10,7 @@
 pragma solidity 0.7.6;
 
 /// @title UniswapV3LiquidityPositionDataDecoder Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Abstract contract containing data decodings for UniswapV3LiquidityPosition payloads
 abstract contract UniswapV3LiquidityPositionDataDecoder {
     /// @dev Helper to decode args used during the AddLiquidity action

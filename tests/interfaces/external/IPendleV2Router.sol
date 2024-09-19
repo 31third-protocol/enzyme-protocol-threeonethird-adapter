@@ -3,7 +3,7 @@
 pragma solidity >=0.6.0 <0.9.0;
 
 /// @title IPendleV2Router Interface
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 interface IPendleV2Router {
     struct ApproxParams {
         uint256 guessMin;

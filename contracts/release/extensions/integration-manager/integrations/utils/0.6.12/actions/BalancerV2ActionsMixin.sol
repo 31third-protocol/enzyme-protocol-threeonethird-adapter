@@ -2,7 +2,7 @@
 
 /*
     This file is part of the Enzyme Protocol.
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
 */
@@ -12,7 +12,7 @@ pragma solidity 0.6.12;
 import {IBalancerV2Vault} from "../../../../../../../external-interfaces/IBalancerV2Vault.sol";
 
 /// @title BalancerV2ActionsMixin Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Mixin contract for interacting with BalancerV2
 abstract contract BalancerV2ActionsMixin {
     IBalancerV2Vault internal immutable BALANCER_VAULT_CONTRACT;

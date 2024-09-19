@@ -2,7 +2,7 @@
 
 /*
     This file is part of the Enzyme Protocol.
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
 */
@@ -14,7 +14,7 @@ import {IPendleV2PrincipalToken} from "../../../../../external-interfaces/IPendl
 import {IPendleV2Router} from "../../../../../external-interfaces/IPendleV2Router.sol";
 
 /// @title PendleV2PositionDataDecoder Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Abstract contract containing data decodings for IPendleV2Position payloads
 abstract contract PendleV2PositionDataDecoder {
     /// @dev Helper to decode args used during the BuyPrincipalToken action

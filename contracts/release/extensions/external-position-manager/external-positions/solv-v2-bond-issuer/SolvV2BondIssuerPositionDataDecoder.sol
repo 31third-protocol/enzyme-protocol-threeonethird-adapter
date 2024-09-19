@@ -2,7 +2,7 @@
 
 /*
     This file is part of the Enzyme Protocol.
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
 */
@@ -14,7 +14,7 @@ import {ISolvV2InitialConvertibleOfferingMarket} from
     "../../../../../external-interfaces/ISolvV2InitialConvertibleOfferingMarket.sol";
 
 /// @title SolvV2BondIssuerPositionDataDecoder Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Abstract contract containing data decodings for SolvV2BondIssuerPosition payloads
 abstract contract SolvV2BondIssuerPositionDataDecoder {
     /// @dev Helper to decode args used during the CreateOffer action

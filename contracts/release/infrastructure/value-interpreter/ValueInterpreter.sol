@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -20,7 +20,7 @@ import {ChainlinkPriceFeedMixin} from "../price-feeds/primitives/ChainlinkPriceF
 import {IValueInterpreter} from "./IValueInterpreter.sol";
 
 /// @title ValueInterpreter Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Interprets price feeds to provide covert value between asset pairs
 contract ValueInterpreter is
     IValueInterpreter,

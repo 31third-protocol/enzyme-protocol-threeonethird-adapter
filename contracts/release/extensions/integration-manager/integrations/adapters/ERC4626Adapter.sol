@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -16,7 +16,7 @@ import {IIntegrationManager} from "../../IIntegrationManager.sol";
 import {AdapterBase} from "../utils/0.8.19/AdapterBase.sol";
 
 /// @title ERC4626Adapter Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Adapter for interacting with ERC4626 vaults
 contract ERC4626Adapter is AdapterBase {
     constructor(address _integrationManager) AdapterBase(_integrationManager) {}

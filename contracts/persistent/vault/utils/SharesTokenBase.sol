@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -12,7 +12,7 @@
 pragma solidity 0.8.19;
 
 /// @title StandardERC20 Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Contains the storage, events, and default logic of an ERC20-compliant contract.
 /// @dev The logic can be overridden by VaultLib implementations.
 /// Adapted from OpenZeppelin 3.2.0.

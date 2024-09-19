@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -16,7 +16,7 @@ import {IERC20} from "../../../../external-interfaces/IERC20.sol";
 import {IChainlinkPriceFeedMixin} from "./IChainlinkPriceFeedMixin.sol";
 
 /// @title ChainlinkPriceFeedMixin Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice A price feed that uses Chainlink oracles as price sources
 abstract contract ChainlinkPriceFeedMixin is IChainlinkPriceFeedMixin {
     event EthUsdAggregatorSet(address prevEthUsdAggregator, address nextEthUsdAggregator);

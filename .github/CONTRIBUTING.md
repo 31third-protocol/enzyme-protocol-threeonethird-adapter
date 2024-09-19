@@ -8,7 +8,7 @@ Currently, all active development happens in a private development repo, which i
 
 We are working on a structure for general community contributions.
 
-In the meantime, those who wish to contribute to Enzyme should reach out to the Enzyme Council with a proposal for how they would like to contribute: [council@enzyme.finance](mailto:council@enzyme.finance)
+In the meantime, those who wish to contribute to Enzyme should reach out to the Enzyme Council with a proposal for how they would like to contribute: [security@enzyme.finance](mailto:security@enzyme.finance)
 
 All pull requests must be made against the private development repo.
 

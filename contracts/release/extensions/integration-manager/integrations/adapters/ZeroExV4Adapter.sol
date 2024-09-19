@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -21,7 +21,7 @@ import {AdapterBase} from "../utils/0.6.12/AdapterBase.sol";
 import {IZeroExV4Adapter} from "./interfaces/IZeroExV4Adapter.sol";
 
 /// @title ZeroExV4Adapter Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Adapter to 0xV4 Exchange Contract
 contract ZeroExV4Adapter is IZeroExV4Adapter, AdapterBase, MathHelpers, ZeroExV4ActionsMixin {
     IAddressListRegistry private immutable ADDRESS_LIST_REGISTRY_CONTRACT;

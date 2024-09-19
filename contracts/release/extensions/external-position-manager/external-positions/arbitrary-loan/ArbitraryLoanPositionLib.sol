@@ -2,7 +2,7 @@
 
 /*
     This file is part of the Enzyme Protocol.
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
 */
@@ -24,7 +24,7 @@ import {IArbitraryLoanPosition} from "./IArbitraryLoanPosition.sol";
 import {ArbitraryLoanPositionDataDecoder} from "./ArbitraryLoanPositionDataDecoder.sol";
 
 /// @title ArbitraryLoanPositionLib Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Library contract for ArbitraryLoanPosition
 /// @dev This contract is intended for loan assets with standard behaviors.
 /// Tokens with non-standard behaviors (e.g., rebasing or fee-on-transfer)

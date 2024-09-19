@@ -2,7 +2,7 @@
 
 /*
     This file is part of the Enzyme Protocol.
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
 */
@@ -27,7 +27,7 @@ import {IPendleV2Position} from "./IPendleV2Position.sol";
 import {PendleV2PositionDataDecoder} from "./PendleV2PositionDataDecoder.sol";
 
 /// @title PendleV2PositionLib Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice An External Position library contract for Pendle V2 Positions
 /// @dev In order to take a particular Pendle V2 position (PT or LP),
 /// the fund owner must first register it on the PendleV2MarketsRegistry contract, via the VaultProxy,

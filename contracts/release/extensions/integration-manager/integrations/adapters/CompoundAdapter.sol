@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -15,7 +15,7 @@ import {ICompoundComptroller} from "../../../../../external-interfaces/ICompound
 import {CompoundAdapterBase} from "../utils/0.6.12/bases/CompoundAdapterBase.sol";
 
 /// @title CompoundAdapter Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Adapter for Compound <https://compound.finance/>
 contract CompoundAdapter is CompoundAdapterBase {
     constructor(address _integrationManager, address _compoundPriceFeed, address _wethToken)

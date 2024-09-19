@@ -2,7 +2,7 @@
 
 /*
     This file is part of the Enzyme Protocol.
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
 */
@@ -21,7 +21,7 @@ import {IDerivativePriceFeed} from "../IDerivativePriceFeed.sol";
 import {IBalancerV2StablePoolPriceFeed} from "./interfaces/IBalancerV2StablePoolPriceFeed.sol";
 
 /// @title BalancerV2StablePoolPriceFeed Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Price source oracle for Balancer Pool Tokens (BPT) of stable pools
 contract BalancerV2StablePoolPriceFeed is
     IBalancerV2StablePoolPriceFeed,

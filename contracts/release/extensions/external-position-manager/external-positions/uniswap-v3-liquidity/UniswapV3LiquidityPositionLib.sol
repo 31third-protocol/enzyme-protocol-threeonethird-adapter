@@ -2,7 +2,7 @@
 
 /*
     This file is part of the Enzyme Protocol.
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
 */
@@ -23,7 +23,7 @@ import {IUniswapV3LiquidityPosition} from "./IUniswapV3LiquidityPosition.sol";
 import {UniswapV3LiquidityPositionDataDecoder} from "./UniswapV3LiquidityPositionDataDecoder.sol";
 
 /// @title UniswapV3LiquidityPositionLib Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice An External Position library contract for uniswap liquidity positions
 contract UniswapV3LiquidityPositionLib is
     IUniswapV3LiquidityPosition,

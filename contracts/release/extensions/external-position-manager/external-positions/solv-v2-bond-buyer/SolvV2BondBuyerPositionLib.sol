@@ -2,7 +2,7 @@
 
 /*
     This file is part of the Enzyme Protocol.
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
 */
@@ -25,7 +25,7 @@ import {ISolvV2BondBuyerPosition} from "./ISolvV2BondBuyerPosition.sol";
 import {SolvV2BondBuyerPositionDataDecoder} from "./SolvV2BondBuyerPositionDataDecoder.sol";
 
 /// @title SolvV2BondBuyerPositionLib Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Library contract for Solv V2 Bond Buyer positions
 contract SolvV2BondBuyerPositionLib is
     ISolvV2BondBuyerPosition,

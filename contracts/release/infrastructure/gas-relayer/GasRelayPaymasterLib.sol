@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -25,7 +25,7 @@ import {IGasRelayPaymaster} from "./IGasRelayPaymaster.sol";
 import {IGasRelayPaymasterDepositor} from "./IGasRelayPaymasterDepositor.sol";
 
 /// @title GasRelayPaymasterLib Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice The core logic library for the "paymaster" contract which refunds GSN relayers
 contract GasRelayPaymasterLib is IGasRelayPaymaster, GasRelayPaymasterLibBase2 {
     // Immutable and constants
@@ -213,12 +213,12 @@ contract GasRelayPaymasterLib is IGasRelayPaymaster, GasRelayPaymasterLibBase2 {
         address parentComptroller = __getComptrollerForVault(_vaultProxy);
         if (_contract == parentComptroller) {
             if (
+                // TODO: remove or reinstate
+                // || _selector == IComptroller.depositToGasRelayPaymaster.selector
                 _selector == IComptroller.callOnExtension.selector
                     || _selector == IComptroller.vaultCallOnContract.selector
                     || _selector == IComptroller.buyBackProtocolFeeShares.selector
-                // TODO: remove or reinstate
-                // || _selector == IComptroller.depositToGasRelayPaymaster.selector
-                || _selector == IComptroller.setAutoProtocolFeeSharesBuyback.selector
+                    || _selector == IComptroller.setAutoProtocolFeeSharesBuyback.selector
             ) {
                 return true;
             }

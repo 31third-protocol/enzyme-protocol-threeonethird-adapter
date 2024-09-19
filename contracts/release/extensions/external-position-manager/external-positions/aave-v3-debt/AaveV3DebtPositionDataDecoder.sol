@@ -2,7 +2,7 @@
 
 /*
     This file is part of the Enzyme Protocol.
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
 */
@@ -10,7 +10,7 @@
 pragma solidity 0.8.19;
 
 /// @title AaveV3DebtPositionDataDecoder Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Abstract contract containing data decodings for AaveV3DebtPosition payloads
 abstract contract AaveV3DebtPositionDataDecoder {
     /// @dev Helper to decode args used during the AddCollateral action

@@ -2,7 +2,7 @@
 
 /*
     This file is part of the Enzyme Protocol.
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
 */
@@ -21,7 +21,7 @@ import {CompoundDebtPositionLibBase1} from "./bases/CompoundDebtPositionLibBase1
 import {ICompoundDebtPosition} from "./ICompoundDebtPosition.sol";
 
 /// @title CompoundDebtPositionLib Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice An External Position library contract for Compound debt positions
 contract CompoundDebtPositionLib is CompoundDebtPositionLibBase1, ICompoundDebtPosition {
     using AddressArrayLib for address[];

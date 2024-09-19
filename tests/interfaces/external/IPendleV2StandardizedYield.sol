@@ -2,7 +2,7 @@
 pragma solidity >=0.6.0 <0.9.0;
 
 /// @title IPendleV2StandardizedYield Interface
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 interface IPendleV2StandardizedYield {
     function accruedRewards(address _user) external view returns (uint256[] memory rewardAmounts_);
 

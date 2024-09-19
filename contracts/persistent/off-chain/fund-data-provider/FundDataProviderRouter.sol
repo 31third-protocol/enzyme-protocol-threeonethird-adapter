@@ -2,7 +2,7 @@
 
 /*
     This file is part of the Enzyme Protocol.
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
 */
@@ -13,7 +13,7 @@ import {IERC20} from "../../../external-interfaces/IERC20.sol";
 import {FundValueCalculatorRouter} from "../fund-value-calculator/FundValueCalculatorRouter.sol";
 
 /// @title FundDataProviderRouter Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice A peripheral contract for routing fund data requests
 /// @dev These are convenience functions intended for off-chain consumption,
 /// some of which involve potentially expensive state transitions

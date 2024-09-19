@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -16,7 +16,7 @@ import {SafeERC20 as OpenZeppelinSafeERC20} from "openzeppelin-solc-0.8/token/ER
 import {IERC20} from "../../../external-interfaces/IERC20.sol";
 
 /// @title WrappedSafeERC20 Library
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Wraps OpenZeppelin's SafeERC20 library to use the local IERC20 interface for inputs
 library WrappedSafeERC20 {
     function safeApprove(IERC20 _token, address _spender, uint256 _value) internal {

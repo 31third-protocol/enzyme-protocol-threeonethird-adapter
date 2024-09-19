@@ -2,7 +2,7 @@
 pragma solidity >=0.6.0 <0.9.0;
 
 /// @title IERC20 Interface
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 interface IERC20 {
     // IERC20 - strict
 

@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -16,7 +16,7 @@ import {IPolicyManager} from "../../IPolicyManager.sol";
 import {AddressListRegistryPolicyBase} from "../utils/0.8.19/AddressListRegistryPolicyBase.sol";
 
 /// @title AllowedRedeemersForSpecificAssetsPolicy Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice A policy that limits users who can redeem shares for specific assets
 contract AllowedRedeemersForSpecificAssetsPolicy is AddressListRegistryPolicyBase {
     constructor(address _policyManager, address _addressListRegistry)

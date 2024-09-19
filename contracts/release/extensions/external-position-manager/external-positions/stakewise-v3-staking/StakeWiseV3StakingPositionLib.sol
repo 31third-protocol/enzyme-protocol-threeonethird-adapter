@@ -2,7 +2,7 @@
 
 /*
     This file is part of the Enzyme Protocol.
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
 */
@@ -18,7 +18,7 @@ import {IStakeWiseV3StakingPosition} from "./IStakeWiseV3StakingPosition.sol";
 import {StakeWiseV3StakingPositionDataDecoder} from "./StakeWiseV3StakingPositionDataDecoder.sol";
 
 /// @title StakeWiseV3StakingPositionLib Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice An External Position library contract for StakeWiseV3 Staking Positions
 contract StakeWiseV3StakingPositionLib is
     IStakeWiseV3StakingPosition,

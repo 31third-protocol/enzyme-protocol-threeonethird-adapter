@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -14,7 +14,7 @@ pragma solidity 0.6.12;
 import {IDerivativePriceFeed} from "../IDerivativePriceFeed.sol";
 
 /// @title RevertingPriceFeed Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Price feed that always reverts on value conversion
 /// @dev Used purely for extraordinary circumstances where we want to prevent value calculations,
 /// while allowing an asset to continue to be in the asset universe

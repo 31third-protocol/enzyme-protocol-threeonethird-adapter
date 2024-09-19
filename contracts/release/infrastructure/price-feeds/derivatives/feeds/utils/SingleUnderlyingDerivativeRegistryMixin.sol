@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -14,7 +14,7 @@ pragma solidity 0.6.12;
 import {FundDeployerOwnerMixin} from "../../../../../utils/0.6.12/FundDeployerOwnerMixin.sol";
 
 /// @title SingleUnderlyingDerivativeRegistryMixin Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Mixin for derivative price feeds that handle multiple derivatives
 /// that each have a single underlying asset
 abstract contract SingleUnderlyingDerivativeRegistryMixin is FundDeployerOwnerMixin {

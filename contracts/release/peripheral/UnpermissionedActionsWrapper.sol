@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -16,7 +16,7 @@ import {IFeeManager} from "../extensions/fee-manager/IFeeManager.sol";
 import {IFee} from "../extensions/fee-manager/IFee.sol";
 
 /// @title UnpermissionedActionsWrapper Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Logic related to wrapping actions that do not need access control
 contract UnpermissionedActionsWrapper {
     address private immutable FEE_MANAGER;

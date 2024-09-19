@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -16,7 +16,7 @@ import {IUniswapV2Factory} from "../../../../external-interfaces/IUniswapV2Facto
 import {IUniswapV2Pair} from "../../../../external-interfaces/IUniswapV2Pair.sol";
 
 /// @title UniswapV2PoolTokenValueCalculator Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Abstract contract for computing the value of Uniswap liquidity pool tokens
 /// @dev Unless otherwise noted, these functions are adapted to our needs and style guide from
 /// an un-merged Uniswap branch:

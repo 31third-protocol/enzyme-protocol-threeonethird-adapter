@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -18,7 +18,7 @@ import {IPendleV2PyYtLpOracle} from "../../../../../../external-interfaces/IPend
 import {IPendleV2MarketRegistry} from "./IPendleV2MarketRegistry.sol";
 
 /// @title PendleV2MarketRegistry Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice A contract for the per-user registration of Pendle v2 markets
 contract PendleV2MarketRegistry is IPendleV2MarketRegistry {
     event MarketForUserUpdated(address indexed user, address indexed marketAddress, uint32 duration);

@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -17,7 +17,7 @@ import {IPolicyManager} from "../../IPolicyManager.sol";
 import {PolicyBase} from "../utils/0.6.12/PolicyBase.sol";
 
 /// @title MinAssetBalancesPostRedemptionPolicy Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice A policy that sets min remaining balance limits on assets specified during specific assets redemption
 contract MinAssetBalancesPostRedemptionPolicy is PolicyBase {
     event MinAssetBalanceAddedForFund(address indexed comptrollerProxy, address indexed asset, uint256 minBalance);

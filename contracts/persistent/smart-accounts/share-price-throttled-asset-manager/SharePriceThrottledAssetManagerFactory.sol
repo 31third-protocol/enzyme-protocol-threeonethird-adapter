@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -15,7 +15,7 @@ import {NonUpgradableProxy} from "../../../utils/0.8.19/NonUpgradableProxy.sol";
 import {ISharePriceThrottledAssetManagerLib} from "./ISharePriceThrottledAssetManagerLib.sol";
 
 /// @title SharePriceThrottledAssetManagerFactory Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice A factory for SharePriceThrottledAssetManager proxy instances
 contract SharePriceThrottledAssetManagerFactory {
     event ProxyDeployed(

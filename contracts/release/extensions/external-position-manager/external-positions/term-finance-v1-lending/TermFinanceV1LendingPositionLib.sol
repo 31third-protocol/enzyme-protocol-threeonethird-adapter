@@ -2,7 +2,7 @@
 
 /*
     This file is part of the Enzyme Protocol.
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
 */
@@ -23,7 +23,7 @@ import {ITermFinanceV1LendingPosition} from "./ITermFinanceV1LendingPosition.sol
 import {TermFinanceV1LendingPositionDataDecoder} from "./TermFinanceV1LendingPositionDataDecoder.sol";
 
 /// @title TermFinanceV1LendingPositionLib Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice An External Position library contract for Term Finance V1 Lending Positions
 /// @dev See "POSITION VALUE" section for notes on pricing mechanism that must be considered by funds
 contract TermFinanceV1LendingPositionLib is

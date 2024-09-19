@@ -2,7 +2,7 @@
 
 /*
     This file is part of the Enzyme Protocol.
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
 */
@@ -15,7 +15,7 @@ import "./interfaces/IGlobalConfig2.sol";
 import "./interfaces/IGlobalConfigLibComptrollerV4.sol";
 
 /// @title GlobalConfigLib Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice The proxiable library contract for GlobalConfigProxy
 /// @dev Only supports releases v4 and higher
 contract GlobalConfigLib is IGlobalConfig2, GlobalConfigLibBase1 {

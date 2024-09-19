@@ -8,7 +8,7 @@ import {CurveGaugeV2RewardsHandlerMixin} from "../utils/0.6.12/actions/CurveGaug
 import {CurveLiquidityAdapterBase} from "../utils/0.6.12/bases/CurveLiquidityAdapterBase.sol";
 
 /// @title CurveLiquidityAdapter Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Adapter for liquidity provision in Curve pools that adhere to pool templates,
 /// as well as some old pools that have almost the same required interface (e.g., 3pool).
 /// Allows staking via Curve gauges.
