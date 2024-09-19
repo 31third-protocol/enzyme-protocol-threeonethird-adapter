@@ -193,9 +193,6 @@ IGasRelayPaymasterFactory.sol: GasRelayPaymasterFactory.abi.json
 # Peripheral
 IDepositWrapper.sol: DepositWrapper.abi.json
 IUnpermissionedActionsWrapper.sol: UnpermissionedActionsWrapper.abi.json
-IArbitraryTokenPhasedSharesWrapperFactory.sol: ArbitraryTokenPhasedSharesWrapperFactory.abi.json
-IArbitraryTokenPhasedSharesWrapperProxy.sol: ArbitraryTokenPhasedSharesWrapperProxy.abi.json
-IArbitraryTokenPhasedSharesWrapperLib.sol: ArbitraryTokenPhasedSharesWrapperLib.abi.json
 
 # Off-chain
 IFundValueCalculator.sol: IFundValueCalculator.abi.json
