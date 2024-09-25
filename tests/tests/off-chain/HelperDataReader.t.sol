@@ -61,7 +61,7 @@ contract HelperDataReaderTest is Test {
     ) private returns (IHelperDataReader) {
         return IHelperDataReader(
             deployCode(
-                "HelperDataReader.sol",
+                "HelperDataReader.sol:HelperDataReader",
                 abi.encode(_fundValueCalculatorRouter, _externalPositionFactory, _policyManager, _feeManager)
             )
         );
@@ -73,7 +73,10 @@ contract HelperDataReaderTest is Test {
         IHelperDataReaderRouter.HelperDataReaderInfo[] memory _helperDataReadersInfo
     ) private returns (IHelperDataReaderRouter) {
         return IHelperDataReaderRouter(
-            deployCode("HelperDataReaderRouter.sol", abi.encode(_dispatcher, _fundDeployers, _helperDataReadersInfo))
+            deployCode(
+                "HelperDataReaderRouter.sol:HelperDataReaderRouter",
+                abi.encode(_dispatcher, _fundDeployers, _helperDataReadersInfo)
+            )
         );
     }
 

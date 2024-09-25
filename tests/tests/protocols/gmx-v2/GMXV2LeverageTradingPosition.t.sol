@@ -1305,7 +1305,7 @@ abstract contract TestBase is IntegrationTest {
                         timestamp: block.timestamp,
                         provider: address(chainlinkPriceFeedProvider)
                     })
-                    )
+                )
             });
         }
 
@@ -1921,12 +1921,12 @@ contract GMXV2LeverageTradingPositionArbitrumTest is GMXV2LeverageTradingPositio
                 ARBITRUM_GMXV2_MARKET_ETH_USD_WETH_USDC,
                 ARBITRUM_GMXV2_MARKET_ETH_USD_WETH_WETH,
                 ARBITRUM_GMXV2_MARKET_BTC_USD_WBTC_WBTC
-                ),
+            ),
             _initialCollateralDeltaAmounts: toArray(
                 100 * assetUnit(IERC20(ARBITRUM_USDC)),
                 2 * assetUnit(IERC20(ARBITRUM_WETH)),
                 assetUnit(IERC20(ARBITRUM_WBTC))
-                ),
+            ),
             _sizeDeltasUsd: toArray(200 * GMX_ONE_UNIT, 20_000 * GMX_ONE_UNIT, 60_000 * GMX_ONE_UNIT)
         });
     }
@@ -1939,16 +1939,16 @@ contract GMXV2LeverageTradingPositionArbitrumTest is GMXV2LeverageTradingPositio
                 ARBITRUM_GMXV2_MARKET_ETH_USD_WETH_WETH,
                 ARBITRUM_GMXV2_MARKET_ETH_USD_WETH_WETH,
                 ARBITRUM_GMXV2_MARKET_BTC_USD_WBTC_WBTC
-                ),
+            ),
             _initialCollateralDeltaAmounts: toArray(
                 assetUnit(IERC20(ARBITRUM_WETH)),
                 2 * assetUnit(IERC20(ARBITRUM_WETH)),
                 4 * assetUnit(IERC20(ARBITRUM_WETH)),
                 assetUnit(IERC20(ARBITRUM_WBTC))
-                ),
+            ),
             _sizeDeltasUsd: toArray(
                 10_000 * GMX_ONE_UNIT, 20_000 * GMX_ONE_UNIT, 40_000 * GMX_ONE_UNIT, 60_000 * GMX_ONE_UNIT
-                )
+            )
         });
     }
 

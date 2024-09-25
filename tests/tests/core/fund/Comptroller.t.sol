@@ -96,7 +96,7 @@ contract ComptrollerTest is IntegrationTest {
             callee: address(core.release.feeManager),
             data: abi.encodeWithSelector(
                 IExtension.setConfigForFund.selector, _testVars.comptrollerConfig.feeManagerConfigData
-                ),
+            ),
             count: 1
         });
 
@@ -105,7 +105,7 @@ contract ComptrollerTest is IntegrationTest {
             callee: address(core.release.policyManager),
             data: abi.encodeWithSelector(
                 IExtension.setConfigForFund.selector, _testVars.comptrollerConfig.policyManagerConfigData
-                ),
+            ),
             count: 1
         });
 
@@ -377,7 +377,7 @@ contract ComptrollerTest is IntegrationTest {
             callee: testVars.extensionAddress,
             data: abi.encodeWithSelector(
                 IExtension.receiveCallFromComptroller.selector, caller, testVars.actionId, testVars.callArgs
-                ),
+            ),
             count: 1
         });
 

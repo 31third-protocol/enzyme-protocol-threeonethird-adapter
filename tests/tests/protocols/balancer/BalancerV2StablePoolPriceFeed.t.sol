@@ -107,7 +107,7 @@ abstract contract ValueTest is TestBase {
             target: address(priceFeed),
             data: abi.encodeWithSelector(
                 priceFeed.calcUnderlyingValues.selector, address(poolBpt), address(poolInvariantProxyAsset), 1
-                )
+            )
         });
         BalancerV2Reenterer reenterer = new BalancerV2Reenterer(reentrantCall);
         increaseTokenBalance(joinAsset, address(reenterer), joinAmount);

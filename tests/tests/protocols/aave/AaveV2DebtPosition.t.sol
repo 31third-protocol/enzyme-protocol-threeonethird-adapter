@@ -598,7 +598,7 @@ contract AaveV2DebtPositionTestEthereum is AaveV2DebtPositionTest {
             _amounts: toArray(
                 1 * assetUnit(IERC20(__getATokenAddress(ETHEREUM_WBTC))),
                 1 * assetUnit(IERC20(__getATokenAddress(ETHEREUM_DAI)))
-                ),
+            ),
             _rewardToken: ETHEREUM_STKAAVE
         });
     }
@@ -722,7 +722,7 @@ contract AaveV2DebtPositionTestPolygon is AaveV2DebtPositionTest {
             _amounts: toArray(
                 1 * assetUnit(IERC20(__getATokenAddress(POLYGON_WBTC))),
                 1 * assetUnit(IERC20(__getATokenAddress(POLYGON_DAI)))
-                ),
+            ),
             _rewardToken: POLYGON_WMATIC
         });
     }

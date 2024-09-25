@@ -91,7 +91,7 @@ abstract contract ParaSwapV5AdapterBaseTest is IntegrationTest {
             _valueInterpreter: core.release.valueInterpreter,
             _tokenAddresses: (
                 toArray(address(outgoingAsset1), address(outgoingAsset2), address(incomingAsset1), address(incomingAsset2))
-                ),
+            ),
             _skipIfRegistered: true
         });
 

@@ -506,20 +506,20 @@ abstract contract CurvePriceFeedTestEthereumBase is CurvePriceFeedTestBase {
                 ETHEREUM_STETH_NG_POOL_ADDRESS,
                 ETHEREUM_META_POOL_ADDRESS,
                 ETHEREUM_BASE_POOL_ADDRESS
-                ),
+            ),
             _reentrantVirtualPrices: toArray(true, false, true, false),
             _lpTokens: toArray(
                 ETHEREUM_AAVE_POOL_LP_TOKEN_ADDRESS,
                 ETHEREUM_STETH_NG_POOL_LP_TOKEN_ADDRESS,
                 ETHEREUM_META_POOL_LP_TOKEN_ADDRESS,
                 ETHEREUM_BASE_POOL_LP_TOKEN_ADDRESS
-                ),
+            ),
             _gaugeTokens: toArray(
                 ETHEREUM_AAVE_POOL_GAUGE_TOKEN_ADDRESS,
                 ETHEREUM_STETH_NG_POOL_GAUGE_TOKEN_ADDRESS,
                 ETHEREUM_META_POOL_GAUGE_TOKEN_ADDRESS,
                 ETHEREUM_BASE_POOL_GAUGE_TOKEN_ADDRESS
-                ),
+            ),
             _validatePools: true
         });
     }
@@ -531,14 +531,14 @@ abstract contract CurvePriceFeedTestEthereumBase is CurvePriceFeedTestBase {
                 ETHEREUM_STETH_NG_POOL_ADDRESS,
                 ETHEREUM_META_POOL_ADDRESS,
                 ETHEREUM_BASE_POOL_ADDRESS
-                ),
+            ),
             _reentrantVirtualPrices: toArray(true, true, true, false),
             _lpTokens: toArray(
                 ETHEREUM_AAVE_POOL_LP_TOKEN_ADDRESS,
                 ETHEREUM_STETH_NG_POOL_LP_TOKEN_ADDRESS,
                 ETHEREUM_META_POOL_LP_TOKEN_ADDRESS,
                 ETHEREUM_BASE_POOL_LP_TOKEN_ADDRESS
-                ),
+            ),
             _gaugeTokens: toArray(address(0), address(0), address(0), address(0)),
             _validatePools: true
         });
@@ -551,20 +551,20 @@ abstract contract CurvePriceFeedTestEthereumBase is CurvePriceFeedTestBase {
                 ETHEREUM_STETH_NG_POOL_ADDRESS,
                 ETHEREUM_META_POOL_ADDRESS,
                 ETHEREUM_BASE_POOL_ADDRESS
-                ),
+            ),
             _reentrantVirtualPrices: toArray(true, true, true, false),
             _lpTokens: toArray(
                 address(createTestToken()),
                 ETHEREUM_BASE_POOL_GAUGE_TOKEN_ADDRESS,
                 ETHEREUM_META_POOL_LP_TOKEN_ADDRESS,
                 ETHEREUM_BASE_POOL_LP_TOKEN_ADDRESS
-                ),
+            ),
             _gaugeTokens: toArray(
                 ETHEREUM_STETH_NG_POOL_GAUGE_TOKEN_ADDRESS,
                 address(createTestToken()),
                 address(createTestToken()),
                 ETHEREUM_AAVE_POOL_LP_TOKEN_ADDRESS
-                ),
+            ),
             _validatePools: false
         });
     }
@@ -576,13 +576,13 @@ abstract contract CurvePriceFeedTestEthereumBase is CurvePriceFeedTestBase {
                 ETHEREUM_STETH_NG_POOL_ADDRESS,
                 ETHEREUM_META_POOL_ADDRESS,
                 ETHEREUM_BASE_POOL_ADDRESS
-                ),
+            ),
             _gaugeTokens: toArray(
                 ETHEREUM_AAVE_POOL_GAUGE_TOKEN_ADDRESS,
                 ETHEREUM_STETH_NG_POOL_GAUGE_TOKEN_ADDRESS,
                 ETHEREUM_META_POOL_GAUGE_TOKEN_ADDRESS,
                 ETHEREUM_BASE_POOL_GAUGE_TOKEN_ADDRESS
-                ),
+            ),
             _validatePools: true
         });
     }
@@ -594,13 +594,13 @@ abstract contract CurvePriceFeedTestEthereumBase is CurvePriceFeedTestBase {
                 ETHEREUM_STETH_NG_POOL_ADDRESS,
                 ETHEREUM_META_POOL_ADDRESS,
                 ETHEREUM_BASE_POOL_ADDRESS
-                ),
+            ),
             _gaugeTokens: toArray(
                 ETHEREUM_STETH_NG_POOL_GAUGE_TOKEN_ADDRESS,
                 ETHEREUM_AAVE_POOL_GAUGE_TOKEN_ADDRESS,
                 address(createTestToken()),
                 address(createTestToken())
-                ),
+            ),
             _validatePools: false
         });
     }
