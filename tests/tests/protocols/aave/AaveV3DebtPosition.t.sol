@@ -12,6 +12,7 @@ import {IAaveAToken} from "tests/interfaces/external/IAaveAToken.sol";
 import {IAaveV3Pool} from "tests/interfaces/external/IAaveV3Pool.sol";
 import {IAaveV3PoolAddressProvider} from "tests/interfaces/external/IAaveV3PoolAddressProvider.sol";
 import {IAaveV3ProtocolDataProvider} from "tests/interfaces/external/IAaveV3ProtocolDataProvider.sol";
+import {IAaveV3RewardsController} from "tests/interfaces/external/IAaveV3RewardsController.sol";
 import {IERC20} from "tests/interfaces/external/IERC20.sol";
 
 import {IAaveV3ATokenListOwner} from "tests/interfaces/internal/IAaveV3ATokenListOwner.sol";
@@ -25,8 +26,10 @@ import {IVaultLib} from "tests/interfaces/internal/IVaultLib.sol";
 import {
     ETHEREUM_POOL_ADDRESS_PROVIDER,
     ETHEREUM_PROTOCOL_DATA_PROVIDER,
+    ETHEREUM_REWARDS_CONTROLLER,
     POLYGON_POOL_ADDRESS_PROVIDER,
-    POLYGON_PROTOCOL_DATA_PROVIDER
+    POLYGON_PROTOCOL_DATA_PROVIDER,
+    POLYGON_REWARDS_CONTROLLER
 } from "./AaveV3Constants.sol";
 import {AaveV3Utils} from "./AaveV3Utils.sol";
 
@@ -45,6 +48,7 @@ abstract contract TestBase is IntegrationTest, AaveV3Utils {
     IAaveV3DebtPositionLib internal aaveV3DebtPosition;
     IAaveV3PoolAddressProvider internal poolAddressProvider;
     IAaveV3ProtocolDataProvider internal protocolDataProvider;
+    IAaveV3RewardsController internal rewardsController;
     IAaveV3Pool internal lendingPool;
 
     function setUp() public virtual override {
@@ -57,6 +61,7 @@ abstract contract TestBase is IntegrationTest, AaveV3Utils {
         uint256 typeId = __deployPositionType({
             _poolAddressProvider: poolAddressProvider,
             _protocolDataProvider: protocolDataProvider,
+            _rewardsController: rewardsController,
             _addressListRegistry: core.persistent.addressListRegistry
         });
 
@@ -76,9 +81,10 @@ abstract contract TestBase is IntegrationTest, AaveV3Utils {
     function __deployLib(
         IAaveV3PoolAddressProvider _poolAddressProvider,
         IAaveV3ProtocolDataProvider _protocolDataProvider,
-        uint16 _referralCode
+        uint16 _referralCode,
+        IAaveV3RewardsController _rewardsController
     ) internal returns (address lib_) {
-        bytes memory args = abi.encode(_protocolDataProvider, _poolAddressProvider, _referralCode);
+        bytes memory args = abi.encode(_protocolDataProvider, _poolAddressProvider, _referralCode, _rewardsController);
 
         return deployCode("AaveV3DebtPositionLib.sol", args);
     }
@@ -95,6 +101,7 @@ abstract contract TestBase is IntegrationTest, AaveV3Utils {
     function __deployPositionType(
         IAaveV3PoolAddressProvider _poolAddressProvider,
         IAaveV3ProtocolDataProvider _protocolDataProvider,
+        IAaveV3RewardsController _rewardsController,
         IAddressListRegistry _addressListRegistry
     ) internal returns (uint256 typeId_) {
         // Deploy Aave V3 Debt type contracts
@@ -102,6 +109,7 @@ abstract contract TestBase is IntegrationTest, AaveV3Utils {
             __deployLib({
                 _poolAddressProvider: _poolAddressProvider,
                 _protocolDataProvider: _protocolDataProvider,
+                _rewardsController: _rewardsController,
                 _referralCode: 0
             })
         );
@@ -202,6 +210,19 @@ abstract contract TestBase is IntegrationTest, AaveV3Utils {
             _externalPositionAddress: address(aaveV3DebtPosition),
             _actionArgs: actionArgs,
             _actionId: uint256(IAaveV3DebtPositionProd.Actions.SetUseReserveAsCollateral)
+        });
+    }
+
+    function __claimRewards(address[] memory _assets, uint256 _amount, address _rewardToken) internal {
+        bytes memory actionArgs = abi.encode(_assets, _amount, _rewardToken);
+
+        vm.prank(fundOwner);
+        callOnExternalPositionForVersion({
+            _version: version,
+            _comptrollerProxyAddress: comptrollerProxyAddress,
+            _externalPositionAddress: address(aaveV3DebtPosition),
+            _actionArgs: actionArgs,
+            _actionId: uint256(IAaveV3DebtPositionProd.Actions.ClaimRewards)
         });
     }
 
@@ -593,6 +614,71 @@ abstract contract SetUseReserveAsCollateral is TestBase {
     }
 }
 
+contract MockedTransferStrategy {
+    function performTransfer(address _to, address _reward, uint256 _amount) external returns (bool success_) {
+        return IERC20(_reward).transfer(_to, _amount);
+    }
+}
+
+abstract contract ClaimRewardsTest is TestBase {
+    /// @param _aTokenCollateral The aToken collateral that had rewards program in the past/present
+    function __test_claimRewards_success(address _aTokenCollateral) internal {
+        __dealATokenAndAddCollateral({
+            _aTokens: toArray(_aTokenCollateral),
+            _amounts: toArray(10 * assetUnit(IERC20(_aTokenCollateral)))
+        });
+
+        // set up reward token distribution
+        address rewardToken = rewardsController.getRewardsByAsset(_aTokenCollateral)[0];
+
+        address mockedTransferStrategy = address(new MockedTransferStrategy());
+
+        // increase reward token balance of the strategy, so it can pay rewards
+        increaseTokenBalance({
+            _token: IERC20(rewardToken),
+            _to: mockedTransferStrategy,
+            _amount: 100_000 * assetUnit(IERC20(rewardToken))
+        });
+
+        address emissionManager = rewardsController.getEmissionManager();
+
+        vm.startPrank(emissionManager);
+        rewardsController.setTransferStrategy({_rewardToken: rewardToken, _transferStrategy: mockedTransferStrategy});
+        rewardsController.setDistributionEnd({
+            _rewardToken: rewardToken,
+            _newDistributionEnd: uint32(block.timestamp + 30 days),
+            _asset: _aTokenCollateral
+        });
+        uint88[] memory newEmissionsPerSecond = new uint88[](1);
+        newEmissionsPerSecond[0] = 1 ether;
+        rewardsController.setEmissionPerSecond({
+            _asset: _aTokenCollateral,
+            _rewards: toArray(rewardToken),
+            _newEmissionsPerSecond: newEmissionsPerSecond
+        });
+        vm.stopPrank();
+
+        // wait some time to accrue rewards
+        skip(14 days);
+
+        uint256 preClaimRewardBalance = IERC20(rewardToken).balanceOf(vaultProxyAddress);
+
+        vm.recordLogs();
+
+        __claimRewards({_assets: toArray(_aTokenCollateral), _amount: type(uint256).max, _rewardToken: rewardToken});
+
+        assertExternalPositionAssetsToReceive({
+            _logs: vm.getRecordedLogs(),
+            _externalPositionManager: IExternalPositionManager(getExternalPositionManagerAddressForVersion(version)),
+            _assets: toArray(rewardToken)
+        });
+
+        uint256 postClaimRewardBalance = IERC20(rewardToken).balanceOf(vaultProxyAddress);
+
+        assertGt(postClaimRewardBalance, preClaimRewardBalance, "Reward was not claimed");
+    }
+}
+
 // Normally in this place there would be tests for getManagedAssets, and getDebtAssets, but in Aave's case it is very straightforward, i.e., there is only one kind of managed asset with one way of calculating it, and same for debt assets.
 // Therefore, we don't need to test it.
 
@@ -602,7 +688,8 @@ abstract contract AaveV3DebtPositionTest is
     RepayBorrowTest,
     BorrowTest,
     AddCollateralTest,
-    RemoveCollateralTest
+    RemoveCollateralTest,
+    ClaimRewardsTest
 {}
 
 contract AaveV3DebtPositionTestEthereum is AaveV3DebtPositionTest {
@@ -611,6 +698,7 @@ contract AaveV3DebtPositionTestEthereum is AaveV3DebtPositionTest {
 
         poolAddressProvider = IAaveV3PoolAddressProvider(ETHEREUM_POOL_ADDRESS_PROVIDER);
         protocolDataProvider = IAaveV3ProtocolDataProvider(ETHEREUM_PROTOCOL_DATA_PROVIDER);
+        rewardsController = IAaveV3RewardsController(ETHEREUM_REWARDS_CONTROLLER);
 
         super.setUp();
 
@@ -749,6 +837,10 @@ contract AaveV3DebtPositionTestEthereum is AaveV3DebtPositionTest {
             _toUnderlying: _toUnderlying
         });
     }
+
+    function test_claimRewards_success() public {
+        __test_claimRewards_success(__getATokenAddress(ETHEREUM_ETH_X));
+    }
 }
 
 contract AaveV3DebtPositionTestPolygon is AaveV3DebtPositionTest {
@@ -757,6 +849,7 @@ contract AaveV3DebtPositionTestPolygon is AaveV3DebtPositionTest {
 
         poolAddressProvider = IAaveV3PoolAddressProvider(POLYGON_POOL_ADDRESS_PROVIDER);
         protocolDataProvider = IAaveV3ProtocolDataProvider(POLYGON_PROTOCOL_DATA_PROVIDER);
+        rewardsController = IAaveV3RewardsController(POLYGON_REWARDS_CONTROLLER);
 
         super.setUp();
 
@@ -894,6 +987,10 @@ contract AaveV3DebtPositionTestPolygon is AaveV3DebtPositionTest {
             _amountsToRemove: amountsToRemove,
             _toUnderlying: _toUnderlying
         });
+    }
+
+    function test_claimRewards_success() public {
+        __test_claimRewards_success(__getATokenAddress(POLYGON_MATIC_X));
     }
 }
 

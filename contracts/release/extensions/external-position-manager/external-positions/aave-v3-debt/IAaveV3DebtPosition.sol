@@ -20,7 +20,8 @@ interface IAaveV3DebtPosition is IExternalPosition {
         Borrow,
         RepayBorrow,
         SetEMode,
-        SetUseReserveAsCollateral
+        SetUseReserveAsCollateral,
+        ClaimRewards
     }
 
     function getDebtTokenForBorrowedAsset(address) external view returns (address);

@@ -61,6 +61,7 @@ abstract contract Constants {
     address internal constant ETHEREUM_DAI = 0x6B175474E89094C44Da98b954EedeAC495271d0F;
     address internal constant ETHEREUM_EETH = 0x35fA164735182de50811E8e2E824cFb9B6118ac2;
     address internal constant ETHEREUM_ETHERFI_LIQUIDITY_POOL = 0x308861A430be4cce5502d0A12724771Fc6DaF216;
+    address internal constant ETHEREUM_ETH_X = 0xA35b1B31Ce002FBF2058D22F30f95D405200A15b;
     address internal constant ETHEREUM_LDO = 0x5A98FcBEA516Cf06857215779Fd812CA3beF1B32;
     address internal constant ETHEREUM_LINK = 0x514910771AF9Ca656af840dff83E8264EcF986CA;
     address internal constant ETHEREUM_LUSD = 0x5f98805A4E8be255a32880FDeC7F6728C6568bA0;
@@ -77,6 +78,7 @@ abstract contract Constants {
     address internal constant POLYGON_COMPOUND_V3_CUSDC = 0xF25212E676D1F7F89Cd72fFEe66158f541246445;
     address internal constant POLYGON_CRV = 0x172370d5Cd63279eFa6d502DAB29171933a610AF;
     address internal constant POLYGON_DAI = 0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063;
+    address internal constant POLYGON_MATIC_X = 0xfa68FB4628DFF1028CFEc22b4162FCcd0d45efb6;
     address internal constant POLYGON_LINK = 0x53E0bca35eC356BD5ddDFebbD1Fc0fD03FaBad39;
     address internal constant POLYGON_MLN = 0xa9f37D84c856fDa3812ad0519Dad44FA0a3Fe207;
     address internal constant POLYGON_USDC = 0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174;

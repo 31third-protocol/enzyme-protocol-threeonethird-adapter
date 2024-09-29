@@ -89,6 +89,10 @@ contract AaveV3DebtPositionParser is
                     amountsToTransfer_[i] = IERC20(debtToken).balanceOf(_externalPosition);
                 }
             }
+        } else if (_actionId == uint256(IAaveV3DebtPosition.Actions.ClaimRewards)) {
+            (,, address rewardToken) = __decodeClaimRewardsActionArgs(_encodedActionArgs);
+            assetsToReceive_ = new address[](1);
+            assetsToReceive_[0] = rewardToken;
         }
 
         // No validations or transferred assets passed for Actions.SetEMode, and Actions.SetUseReserveAsCollateral
