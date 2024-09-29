@@ -59,6 +59,7 @@ ISharePriceThrottledAssetManagerLib.sol: SharePriceThrottledAssetManagerLib.abi.
 ISharePriceThrottledAssetManagerFactory.sol: SharePriceThrottledAssetManagerFactory.abi.json
 
 # Utils
+IDispatcherOwnedBeaconFactory.sol: DispatcherOwnedBeaconFactory.abi.json
 IGSNRecipientMixinHarness.sol: GSNRecipientMixinHarness.abi.json
 
 #######################################################################################################################
