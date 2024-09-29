@@ -80,6 +80,8 @@ interface IAaveV3Pool {
         uint256 data;
     }
 
+    function FLASHLOAN_PREMIUM_TOTAL() external view returns (uint256 premiumInBps_);
+
     function getReserveData(address _asset) external view returns (ReserveData memory reserveData_);
 
     function getUserConfiguration(address _user)

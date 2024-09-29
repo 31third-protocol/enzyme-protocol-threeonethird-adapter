@@ -79,6 +79,16 @@ interface IAaveV3Pool {
         address _onBehalfOf
     ) external;
 
+    function flashLoan(
+        address _receiverAddress,
+        address[] calldata _assets,
+        uint256[] calldata _amounts,
+        uint256[] calldata _interestRateModes,
+        address _onBehalfOf,
+        bytes calldata _params,
+        uint16 _referralCode
+    ) external;
+
     function getReserveData(address _asset) external returns (ReserveData memory reserveData_);
 
     function repay(address _asset, uint256 _amount, uint256 _interestRateMode, address _onBehalfOf) external;
