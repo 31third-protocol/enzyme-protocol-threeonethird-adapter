@@ -53,6 +53,8 @@ abstract contract AdapterUtils is CoreUtilsBase {
 
     // MISC
 
+    /// @dev This doesn't work when the `_vaultProxy` value of `parseAssetsForAction` is used to query live balances,
+    /// since this assertion runs _after_ action and state changes have been made. `assertParseAssetsForAction()` should generally be preferred
     function assertAdapterAssetsForAction(
         VmSafe.Log[] memory _logs,
         uint8 _spendAssetsHandleTypeUint8,
@@ -78,40 +80,64 @@ abstract contract AdapterUtils is CoreUtilsBase {
 
         // Parse necessary data from event
         address vaultProxyAddress = IComptrollerLib(targetEvent.topics[1].toAddress()).getVaultProxy();
-        IIntegrationAdapter adapter = IIntegrationAdapter(targetEvent.topics[2].toAddress());
+        address adapterAddress = targetEvent.topics[2].toAddress();
         bytes4 actionSelector = targetEvent.topics[3].toBytes4();
         (, bytes memory integrationData,,,,) =
             abi.decode(targetEvent.data, (address, bytes, address[], uint256[], address[], uint256[]));
 
         // Simulate actually-called parseAssetsForAction()
+        assertParseAssetsForAction({
+            _vaultProxyAddress: vaultProxyAddress,
+            _adapterAddress: adapterAddress,
+            _actionSelector: actionSelector,
+            _integrationData: integrationData,
+            _expectedSpendAssetsHandleTypeUint8: _spendAssetsHandleTypeUint8,
+            _expectedSpendAssets: _spendAssets,
+            _expectedMaxSpendAssetAmounts: _maxSpendAssetAmounts,
+            _expectedIncomingAssets: _incomingAssets,
+            _expectedMinIncomingAssetAmounts: _minIncomingAssetAmounts
+        });
+    }
+
+    function assertParseAssetsForAction(
+        address _vaultProxyAddress,
+        address _adapterAddress,
+        bytes4 _actionSelector,
+        bytes memory _integrationData,
+        uint8 _expectedSpendAssetsHandleTypeUint8,
+        address[] memory _expectedSpendAssets,
+        uint256[] memory _expectedMaxSpendAssetAmounts,
+        address[] memory _expectedIncomingAssets,
+        uint256[] memory _expectedMinIncomingAssetAmounts
+    ) internal {
         (
             IIntegrationAdapter.SpendAssetsHandleType actualSpendAssetsHandleType,
             address[] memory actualSpendAssets,
             uint256[] memory actualMaxSpendAssetAmounts,
             address[] memory actualIncomingAssets,
             uint256[] memory actualMinIncomingAssetAmounts
-        ) = adapter.parseAssetsForAction({
-            _vaultProxy: vaultProxyAddress,
-            _selector: actionSelector,
-            _encodedCallArgs: integrationData
+        ) = IIntegrationAdapter(_adapterAddress).parseAssetsForAction({
+            _vaultProxy: _vaultProxyAddress,
+            _selector: _actionSelector,
+            _encodedCallArgs: _integrationData
         });
 
         assertEq(
-            _spendAssetsHandleTypeUint8,
+            _expectedSpendAssetsHandleTypeUint8,
             IIntegrationAdapter.SpendAssetsHandleType.unwrap(actualSpendAssetsHandleType),
-            "assertAdapterAssetsForAction: _spendAssetsHandleType mismatch"
+            "assertParseAssetsForAction: _spendAssetsHandleType mismatch"
         );
-        assertEq(_spendAssets, actualSpendAssets, "assertAdapterAssetsForAction: _spendAssets mismatch");
+        assertEq(_expectedSpendAssets, actualSpendAssets, "assertParseAssetsForAction: _spendAssets mismatch");
         assertEq(
-            _maxSpendAssetAmounts,
+            _expectedMaxSpendAssetAmounts,
             actualMaxSpendAssetAmounts,
-            "assertAdapterAssetsForAction: _maxSpendAssetAmounts mismatch"
+            "assertParseAssetsForAction: _maxSpendAssetAmounts mismatch"
         );
-        assertEq(_incomingAssets, actualIncomingAssets, "assertAdapterAssetsForAction: _incomingAssets mismatch");
+        assertEq(_expectedIncomingAssets, actualIncomingAssets, "assertParseAssetsForAction: _incomingAssets mismatch");
         assertEq(
-            _minIncomingAssetAmounts,
+            _expectedMinIncomingAssetAmounts,
             actualMinIncomingAssetAmounts,
-            "assertAdapterAssetsForAction: _minIncomingAssetAmounts mismatch"
+            "assertParseAssetsForAction: _minIncomingAssetAmounts mismatch"
         );
     }
 }

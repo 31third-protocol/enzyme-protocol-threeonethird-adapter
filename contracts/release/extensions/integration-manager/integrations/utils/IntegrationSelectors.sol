@@ -39,4 +39,7 @@ abstract contract IntegrationSelectors {
     // Wrapping
     bytes4 internal constant WRAP_SELECTOR = bytes4(keccak256("wrap(address,bytes,bytes)"));
     bytes4 internal constant UNWRAP_SELECTOR = bytes4(keccak256("unwrap(address,bytes,bytes)"));
+
+    // Transfers
+    bytes4 internal constant TRANSFER_SELECTOR = bytes4(keccak256("transfer(address,bytes,bytes)"));
 }
