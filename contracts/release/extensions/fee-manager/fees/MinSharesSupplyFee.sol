@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -16,7 +16,7 @@ import {IFeeManager} from "../IFeeManager.sol";
 import {FeeBase} from "./utils/FeeBase.sol";
 
 /// @title MinSharesSupplyFee Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Charges and permanently locks a one-time fee to ensure a minimum shares supply at all times
 contract MinSharesSupplyFee is FeeBase {
     event Settled(address indexed comptrollerProxy, address indexed payer, uint256 sharesQuantity);

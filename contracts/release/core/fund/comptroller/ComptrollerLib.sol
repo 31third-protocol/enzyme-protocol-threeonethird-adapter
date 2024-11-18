@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -26,7 +26,7 @@ import {IVault} from "../vault/IVault.sol";
 import {IComptroller} from "./IComptroller.sol";
 
 /// @title ComptrollerLib Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice The core logic library shared by all funds
 contract ComptrollerLib is IComptroller {
     using AddressArrayLib for address[];
@@ -83,8 +83,6 @@ contract ComptrollerLib is IComptroller {
 
     // Attempts to buy back protocol fee shares immediately after collection
     bool internal autoProtocolFeeSharesBuyback;
-    // A reverse-mutex, granting atomic permission for particular contracts to make vault calls
-    bool internal permissionedVaultActionAllowed;
     // A mutex to protect against reentrancy
     bool internal reentranceLocked;
     // A timelock after the last time shares were bought for an account
@@ -98,13 +96,6 @@ contract ComptrollerLib is IComptroller {
     ///////////////
     // MODIFIERS //
     ///////////////
-
-    modifier allowsPermissionedVaultAction() {
-        __assertPermissionedVaultActionNotAllowed();
-        permissionedVaultActionAllowed = true;
-        _;
-        permissionedVaultActionAllowed = false;
-    }
 
     modifier locksReentrance() {
         __assertNotReentranceLocked();
@@ -143,10 +134,6 @@ contract ComptrollerLib is IComptroller {
 
     function __assertNotReentranceLocked() private view {
         require(!reentranceLocked, "Re-entrance");
-    }
-
-    function __assertPermissionedVaultActionNotAllowed() private view {
-        require(!permissionedVaultActionAllowed, "Vault action re-entrance");
     }
 
     function __assertSharesActionNotTimelocked(address _vaultProxy, address _account) private view {
@@ -280,14 +267,11 @@ contract ComptrollerLib is IComptroller {
     /// @param _extension The Extension contract to call (e.g., FeeManager)
     /// @param _actionId An ID representing the action to take on the extension (see extension)
     /// @param _callArgs The encoded data for the call
-    /// @dev Used to route arbitrary calls, so that msg.sender is the ComptrollerProxy
-    /// (for access control). Uses a mutex of sorts that allows "permissioned vault actions"
-    /// during calls originating from this function.
+    /// @dev Used to route arbitrary calls, so that msg.sender is the ComptrollerProxy (for access control)
     function callOnExtension(address _extension, uint256 _actionId, bytes calldata _callArgs)
         external
         override
         locksReentrance
-        allowsPermissionedVaultAction
     {
         require(_extension == FEE_MANAGER || isExtension(_extension), "callOnExtension: _extension invalid");
 
@@ -297,12 +281,7 @@ contract ComptrollerLib is IComptroller {
     /// @notice Makes a permissioned, state-changing call on the VaultProxy contract
     /// @param _action The enum representing the VaultAction to perform on the VaultProxy
     /// @param _actionData The call data for the action to perform
-    /// @dev For an extension to act on the VaultProxy, a call must originate from this contract such that:
-    /// 1. User calls `this.callOnExtension()`, toggling `permissionedVaultActionAllowed` mutex
-    /// 2. Extension calls `this.permissionedVaultAction()`, which passes the action to the VaultProxy
     function permissionedVaultAction(IVault.VaultAction _action, bytes calldata _actionData) external override {
-        require(permissionedVaultActionAllowed, "permissionedVaultAction: No actions allowed");
-
         // Validate caller
         require(msg.sender == FEE_MANAGER || isExtension(msg.sender), "permissionedVaultAction: Unauthorized caller");
 
@@ -395,7 +374,7 @@ contract ComptrollerLib is IComptroller {
     /// @notice Wind down and destroy a ComptrollerProxy that is active
     /// @dev No need to assert anything beyond FundDeployer access.
     /// Uses the try/catch pattern throughout out of an abundance of caution for the function's success.
-    function deactivate() external override onlyFundDeployer allowsPermissionedVaultAction {
+    function deactivate() external override onlyFundDeployer {
         try IVault(getVaultProxy()).payProtocolFee() {}
         catch {
             emit PayProtocolFeeDuringDestructFailed();
@@ -553,7 +532,7 @@ contract ComptrollerLib is IComptroller {
         uint256 _minSharesQuantity,
         bool _hasSharesActionTimelock,
         address _canonicalSender
-    ) private locksReentrance allowsPermissionedVaultAction returns (uint256 sharesReceived_) {
+    ) private locksReentrance returns (uint256 sharesReceived_) {
         // Enforcing a _minSharesQuantity also validates `_investmentAmount > 0`
         // and guarantees the function cannot succeed while minting 0 shares
         require(_minSharesQuantity > 0, "__buyShares: _minSharesQuantity must be >0");
@@ -848,7 +827,7 @@ contract ComptrollerLib is IComptroller {
         uint256 _sharesToRedeem,
         bool _forSpecifiedAssets,
         uint256 _gavIfCalculated
-    ) private allowsPermissionedVaultAction {
+    ) private {
         try IFeeManager(getFeeManager()).invokeHook(
             IFeeManager.FeeHook.PreRedeemShares,
             abi.encode(_redeemer, _sharesToRedeem, _forSpecifiedAssets),

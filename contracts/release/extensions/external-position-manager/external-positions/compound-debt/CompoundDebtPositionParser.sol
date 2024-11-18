@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -18,7 +18,7 @@ import {ICompoundDebtPosition} from "./ICompoundDebtPosition.sol";
 pragma solidity 0.6.12;
 
 /// @title CompoundDebtPositionParser
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Parser for Compound Debt Positions
 contract CompoundDebtPositionParser is IExternalPositionParser {
     address private immutable COMP_TOKEN;

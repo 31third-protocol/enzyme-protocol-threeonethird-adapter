@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -17,7 +17,7 @@ import {KilnStakingPositionDataDecoder} from "./KilnStakingPositionDataDecoder.s
 pragma solidity 0.8.19;
 
 /// @title KilnStakingPositionParser
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Parser for Kiln Staking Positions
 contract KilnStakingPositionParser is KilnStakingPositionDataDecoder, IExternalPositionParser {
     uint256 public constant ETH_AMOUNT_PER_NODE = 32 ether;

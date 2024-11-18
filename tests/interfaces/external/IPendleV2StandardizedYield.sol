@@ -2,57 +2,20 @@
 pragma solidity >=0.6.0 <0.9.0;
 
 /// @title IPendleV2StandardizedYield Interface
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 interface IPendleV2StandardizedYield {
-    enum AssetType {
-        TOKEN,
-        LIQUIDITY
-    }
+    function accruedRewards(address _user) external view returns (uint256[] memory rewardAmounts_);
 
-    function deposit(address receiver, address tokenIn, uint256 amountTokenToDeposit, uint256 minSharesOut)
-        external
-        payable
-        returns (uint256 amountSharesOut);
+    function getRewardTokens() external view returns (address[] memory rewardTokens_);
 
-    function redeem(
-        address receiver,
-        uint256 amountSharesToRedeem,
-        address tokenOut,
-        uint256 minTokenOut,
-        bool burnFromInternalBalance
-    ) external returns (uint256 amountTokenOut);
+    function yieldToken() external view returns (address yieldToken_);
 
-    function exchangeRate() external view returns (uint256 res);
+    function isValidTokenIn(address _token) external view returns (bool isValid_);
 
-    function claimRewards(address user) external returns (uint256[] memory rewardAmounts);
+    function isValidTokenOut(address _token) external view returns (bool isValid_);
 
-    function accruedRewards(address user) external view returns (uint256[] memory rewardAmounts);
-
-    function rewardIndexesCurrent() external returns (uint256[] memory indexes);
-
-    function rewardIndexesStored() external view returns (uint256[] memory indexes);
-
-    function getRewardTokens() external view returns (address[] memory);
-
-    function yieldToken() external view returns (address);
-
-    function getTokensIn() external view returns (address[] memory res);
-
-    function getTokensOut() external view returns (address[] memory res);
-
-    function isValidTokenIn(address token) external view returns (bool);
-
-    function isValidTokenOut(address token) external view returns (bool);
-
-    function previewDeposit(address tokenIn, uint256 amountTokenToDeposit)
+    function previewRedeem(address _tokenOut, uint256 _amountSharesToRedeem)
         external
         view
-        returns (uint256 amountSharesOut);
-
-    function previewRedeem(address tokenOut, uint256 amountSharesToRedeem)
-        external
-        view
-        returns (uint256 amountTokenOut);
-
-    function assetInfo() external view returns (AssetType assetType, address assetAddress, uint8 assetDecimals);
+        returns (uint256 amountTokenOut_);
 }

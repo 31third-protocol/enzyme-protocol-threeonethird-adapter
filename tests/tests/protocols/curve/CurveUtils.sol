@@ -15,6 +15,7 @@ abstract contract CurveUtils is AddOnUtilsBase {
     address internal constant ETHEREUM_MINTER_ADDRESS = 0xd061D61a4d941c39E5453435B6345Dc261C2fcE0;
     address internal constant ETHEREUM_POOL_OWNER_ADDRESS = 0xeCb456EA5365865EbAb8a2661B0c503410e9B347;
     address internal constant POLYGON_POOL_OWNER_ADDRESS = 0x774D1Dba98cfBD1F2Bc3A1F59c494125e07C48F9;
+    address internal constant ARBITRUM_POOL_OWNER_ADDRESS = 0xd4F94D0aaa640BBb72b5EEc2D85F6D114D81a88E;
 
     // Pools: Ethereum
     // underlyings (aave-style)
@@ -25,15 +26,28 @@ abstract contract CurveUtils is AddOnUtilsBase {
     address internal constant ETHEREUM_STETH_NG_POOL_ADDRESS = 0x21E27a5E5513D6e65C4f830167390997aA84843a;
     address internal constant ETHEREUM_STETH_NG_POOL_GAUGE_TOKEN_ADDRESS = 0x79F21BC30632cd40d2aF8134B469a0EB4C9574AA;
     address internal constant ETHEREUM_STETH_NG_POOL_LP_TOKEN_ADDRESS = 0x21E27a5E5513D6e65C4f830167390997aA84843a;
-    // TODO: metapool
+    // metapool
+    address internal constant ETHEREUM_META_POOL_ADDRESS = 0xB30dA2376F63De30b42dC055C93fa474F31330A5;
+    address internal constant ETHEREUM_META_POOL_GAUGE_TOKEN_ADDRESS = 0x740BA8aa0052E07b925908B380248cb03f3DE5cB;
+    address internal constant ETHEREUM_META_POOL_LP_TOKEN_ADDRESS = 0xB30dA2376F63De30b42dC055C93fa474F31330A5;
+    // basepool
+    address internal constant ETHEREUM_BASE_POOL_ADDRESS = 0x0Ce6a5fF5217e38315f87032CF90686C96627CAA;
+    address internal constant ETHEREUM_BASE_POOL_GAUGE_TOKEN_ADDRESS = 0x90Bb609649E0451E5aD952683D64BD2d1f245840;
+    address internal constant ETHEREUM_BASE_POOL_LP_TOKEN_ADDRESS = 0x194eBd173F6cDacE046C53eACcE9B953F28411d1;
 
     // Pools: Polygon
     // underlyings (aave-style)
     address internal constant POLYGON_AAVE_POOL_ADDRESS = 0x445FE580eF8d70FF569aB36e80c647af338db351;
     address internal constant POLYGON_AAVE_POOL_GAUGE_TOKEN_ADDRESS = 0x19793B454D3AfC7b454F206Ffe95aDE26cA6912c;
     address internal constant POLYGON_AAVE_POOL_LP_TOKEN_ADDRESS = 0xE7a24EF0C5e95Ffb0f6684b813A78F2a3AD7D171;
+    // metapool
+    address internal constant POLYGON_META_POOL_ADDRESS = 0x53C38755748745e2dd7D0a136FBCC9fB1A5B83b2;
+    address internal constant POLYGON_META_POOL_LP_TOKEN_ADDRESS = 0x53C38755748745e2dd7D0a136FBCC9fB1A5B83b2;
     // TODO: native asset
-    // TODO: metapool
+
+    // Pools: Arbitrum
+    address internal constant ARBITRUM_2POOL_ADDRESS = 0x7f90122BF0700F9E7e1F688fe926940E8839F353;
+    address internal constant ARBITRUM_2POOL_LP_TOKEN_ADDRESS = 0x7f90122BF0700F9E7e1F688fe926940E8839F353;
 
     function deployPriceFeed(
         IFundDeployer _fundDeployer,

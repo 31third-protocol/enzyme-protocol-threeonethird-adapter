@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -17,7 +17,7 @@ import {FundDeployerOwnerMixin} from "../../../../utils/0.6.12/FundDeployerOwner
 import {IDerivativePriceFeed} from "../IDerivativePriceFeed.sol";
 
 /// @title CompoundPriceFeed Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Price source oracle for Compound Tokens (cTokens)
 contract CompoundPriceFeed is IDerivativePriceFeed, FundDeployerOwnerMixin {
     using SafeMath for uint256;

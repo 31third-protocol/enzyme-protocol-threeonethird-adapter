@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -12,7 +12,7 @@
 pragma solidity 0.8.19;
 
 /// @title MathHelpers Library
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Helper functions for common math operations
 library MathHelpersLib {
     /// @dev Calculates a proportional value relative to a known ratio.

@@ -87,7 +87,7 @@ contract ValueInterpreterTestPolygon is ValueInterpreterTest {
     }
 
     function test_wethPrice() public {
-        test_wethPrice(DAI, 1656907072121636490947); // 1647.056889690852 DAI
+        test_wethPrice(DAI, 1645828069426557950725); // 1645.828069426557950725 DAI
     }
 
     function test_InverseValuesAreEqual(uint256 _wethAmount) public {

@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -17,7 +17,7 @@ import {IMinMaxInvestmentPolicy} from "../interfaces/IMinMaxInvestmentPolicy.sol
 import {PolicyBase} from "../utils/0.6.12/PolicyBase.sol";
 
 /// @title MinMaxInvestmentPolicy Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice A policy that restricts the amount of the fund's denomination asset that a user can
 /// send in a single call to buy shares in a fund
 contract MinMaxInvestmentPolicy is IMinMaxInvestmentPolicy, PolicyBase {

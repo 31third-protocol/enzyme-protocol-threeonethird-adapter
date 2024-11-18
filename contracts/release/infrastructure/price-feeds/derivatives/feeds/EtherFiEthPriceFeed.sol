@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -15,7 +15,7 @@ import {IEtherFiWrappedEth} from "../../../../../external-interfaces/IEtherFiWra
 import {IDerivativePriceFeed} from "../IDerivativePriceFeed.sol";
 
 /// @title EtherFiEthPriceFeed Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Price feed for ether.fi ETH (eETH)
 contract EtherFiEthPriceFeed is IDerivativePriceFeed {
     IEtherFiWrappedEth private immutable WEETH_CONTRACT;
@@ -39,7 +39,7 @@ contract EtherFiEthPriceFeed is IDerivativePriceFeed {
         underlyings_[0] = address(WEETH_CONTRACT);
 
         underlyingAmounts_ = new uint256[](1);
-        underlyingAmounts_[0] = WEETH_CONTRACT.getEETHByWeETH({_weETHAmount: _derivativeAmount});
+        underlyingAmounts_[0] = WEETH_CONTRACT.getWeETHByeETH({_eETHAmount: _derivativeAmount});
 
         return (underlyings_, underlyingAmounts_);
     }

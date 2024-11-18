@@ -13,8 +13,10 @@ import {IERC20} from "tests/interfaces/external/IERC20.sol";
 import {IUniswapV3SwapRouter} from "tests/interfaces/external/IUniswapV3SwapRouter.sol";
 
 address constant ETHEREUM_FACTORY_ADDRESS = 0x1F98431c8aD98523631AE4a59f267346ea31F984;
+address constant ETHEREUM_NON_FUNGIBLE_TOKEN_MANAGER = 0xC36442b4a4522E871399CD717aBDD847Ab11FE88;
 address constant ETHEREUM_SWAP_ROUTER = 0xE592427A0AEce92De3Edee1F18E0157C05861564;
 address constant POLYGON_FACTORY_ADDRESS = ETHEREUM_FACTORY_ADDRESS;
+address constant POLYGON_NON_FUNGIBLE_TOKEN_MANAGER = ETHEREUM_NON_FUNGIBLE_TOKEN_MANAGER;
 address constant POLYGON_SWAP_ROUTER = ETHEREUM_SWAP_ROUTER;
 
 abstract contract UniswapV3Utils is AddOnUtilsBase {

@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -16,7 +16,7 @@ import {GSNRecipientMixin} from "../../../utils/0.8.19/gas-station-network/GSNRe
 import {IMultiCallAccountMixin} from "./interfaces/IMultiCallAccountMixin.sol";
 
 /// @title MultiCallAccountMixin Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice A basic smart account that allows its owner to execute multiple calls atomically
 /// @dev Owner must be set via by inheriting contracts via __setOwner()
 abstract contract MultiCallAccountMixin is IMultiCallAccountMixin, GSNRecipientMixin {

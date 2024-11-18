@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -12,7 +12,7 @@
 pragma solidity 0.8.19;
 
 /// @title NonUpgradableProxy Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice A proxy contract for use with non-upgradable libs
 /// @dev The recommended constructor-fallback pattern of a proxy in EIP-1822, updated for solc 0.8.19,
 /// and using an immutable lib value to save on gas (since not upgradable).

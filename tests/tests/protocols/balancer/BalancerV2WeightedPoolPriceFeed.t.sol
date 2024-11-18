@@ -97,7 +97,7 @@ abstract contract ValueTest is TestBase {
             target: address(priceFeed),
             data: abi.encodeWithSelector(
                 priceFeed.calcUnderlyingValues.selector, address(poolBpt), address(simulatedUsd), 1
-                )
+            )
         });
         BalancerV2Reenterer reenterer = new BalancerV2Reenterer(reentrantCall);
         increaseTokenBalance(joinAsset, address(reenterer), joinAmount);
@@ -190,7 +190,7 @@ abstract contract RegistryTest is TestBase {
 
 contract EthereumTest is ValueTest, RegistryTest {
     function setUp() public override {
-        setUpMainnetEnvironment(ETHEREUM_BLOCK_LATEST_TIME_SENSITIVE);
+        setUpMainnetEnvironment(ETHEREUM_BLOCK_TIME_SENSITIVE);
 
         // Price feed config
         intermediaryAsset = getCoreToken("WETH");
@@ -199,9 +199,9 @@ contract EthereumTest is ValueTest, RegistryTest {
         poolFactoryAddress = ETHEREUM_80_BAL_20_WETH_POOL_FACTORY_ADDRESS;
         poolId = ETHEREUM_80_BAL_20_WETH_POOL_ID;
         poolBpt = IERC20(ETHEREUM_80_BAL_20_WETH_POOL_ADDRESS);
-        // $14-15 on 2023-05-29
+        // $5 on Sep 9th, 2024
         // See: https://app.zerion.io/tokens/B-80BAL-20WETH-0x5c6ee304399dbdb9c8ef030ab642b10820db8f56
-        poolBptExpectedUsdIntegerPrice = 14;
+        poolBptExpectedUsdIntegerPrice = 5;
 
         super.setUp();
     }
@@ -209,7 +209,7 @@ contract EthereumTest is ValueTest, RegistryTest {
 
 contract PolygonTest is ValueTest, RegistryTest {
     function setUp() public override {
-        setUpPolygonEnvironment(POLYGON_BLOCK_LATEST_TIME_SENSITIVE);
+        setUpPolygonEnvironment(POLYGON_BLOCK_TIME_SENSITIVE);
 
         // Price feed config
         intermediaryAsset = getCoreToken("USD");
@@ -218,9 +218,9 @@ contract PolygonTest is ValueTest, RegistryTest {
         poolFactoryAddress = POLYGON_TRICRYPTO_POOL_FACTORY_ADDRESS;
         poolId = POLYGON_TRICRYPTO_POOL_ID;
         poolBpt = IERC20(POLYGON_TRICRYPTO_POOL_ADDRESS);
-        // $400 on 2023-05-29
+        // $690 on March 21st, 2024
         // See: https://app.apy.vision/pools/balancerv2_matic-WBTC-USDC-WETH-0x03cd191f589d12b0582a99808cf19851e468e6b5
-        poolBptExpectedUsdIntegerPrice = 401;
+        poolBptExpectedUsdIntegerPrice = 690;
 
         super.setUp();
     }

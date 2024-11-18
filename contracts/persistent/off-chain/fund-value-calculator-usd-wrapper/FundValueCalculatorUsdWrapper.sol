@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -15,13 +15,13 @@ import "openzeppelin-solc-0.6/math/SafeMath.sol";
 import "../fund-value-calculator/FundValueCalculatorRouter.sol";
 
 /// @title IChainlinkAggregatorFundValueCalculatorUsdWrapper Interface
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 interface IChainlinkAggregatorFundValueCalculatorUsdWrapper {
     function latestRoundData() external view returns (uint80, int256, uint256, uint256, uint80);
 }
 
 /// @title FundValueCalculatorUsdWrapper Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Wraps the FundValueCalculatorRouter to get fund values with USD as the quote asset
 /// @dev USD values are normalized to a precision of 18 decimals.
 /// These values should generally only be consumed from off-chain,

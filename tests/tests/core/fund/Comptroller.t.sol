@@ -96,7 +96,7 @@ contract ComptrollerTest is IntegrationTest {
             callee: address(core.release.feeManager),
             data: abi.encodeWithSelector(
                 IExtension.setConfigForFund.selector, _testVars.comptrollerConfig.feeManagerConfigData
-                ),
+            ),
             count: 1
         });
 
@@ -105,7 +105,7 @@ contract ComptrollerTest is IntegrationTest {
             callee: address(core.release.policyManager),
             data: abi.encodeWithSelector(
                 IExtension.setConfigForFund.selector, _testVars.comptrollerConfig.policyManagerConfigData
-                ),
+            ),
             count: 1
         });
 
@@ -329,10 +329,6 @@ contract ComptrollerTest is IntegrationTest {
     // TESTS: EXTENSIONS //
     ///////////////////////
 
-    // PERMISSIONED VAULT ACTION PATHWAY
-
-    // TODO: if we keep `allowsPermissionedVaultAction` check, test modifier behavior
-
     struct CallOnExtensionTestVars {
         address extensionAddress;
         uint256 actionId;
@@ -381,7 +377,7 @@ contract ComptrollerTest is IntegrationTest {
             callee: testVars.extensionAddress,
             data: abi.encodeWithSelector(
                 IExtension.receiveCallFromComptroller.selector, caller, testVars.actionId, testVars.callArgs
-                ),
+            ),
             count: 1
         });
 
@@ -396,8 +392,8 @@ contract ComptrollerTest is IntegrationTest {
     struct PermissionedVaultActionTestVars {
         IComptrollerLib comptrollerProxy;
         IVaultLib vaultProxy;
-        MockAddTrackedAssetExtension mockAddTrackedAssetExtension;
-        IVaultProd.VaultAction vaultAction;
+        MockDefaultExtension mockExtension;
+        IComptrollerLib.VaultAction vaultAction;
         bytes actionData;
         address assetAddressToTrack;
     }
@@ -406,37 +402,39 @@ contract ComptrollerTest is IntegrationTest {
         private
         returns (PermissionedVaultActionTestVars memory testVars_)
     {
-        // Setup a fund with a mock extension that, when called via callOnExtension(),
-        // will callback to permissionedVaultAction() with an attempt to add a tracked asset
+        // Setup a fund with a mock extension that can be used to make a permissioned VaultAction,
+        // and define the vaultAction to be executed
 
-        MockAddTrackedAssetExtension mockAddTrackedAssetExtension = new MockAddTrackedAssetExtension();
-        address assetAddressToTrack = mockAddTrackedAssetExtension.assetToTrack();
+        MockDefaultExtension mockExtension = new MockDefaultExtension();
 
         (IComptrollerLib comptrollerProxy, IVaultLib vaultProxy,) = createFundWithExtension({
             _fundDeployer: core.release.fundDeployer,
             _denominationAsset: wrappedNativeToken,
-            _extensionAddress: address(mockAddTrackedAssetExtension),
+            _extensionAddress: address(mockExtension),
             _extensionConfigData: bytes("")
         });
+
+        address assetAddressToTrack = address(1234);
 
         return PermissionedVaultActionTestVars({
             comptrollerProxy: comptrollerProxy,
             vaultProxy: vaultProxy,
-            mockAddTrackedAssetExtension: mockAddTrackedAssetExtension,
-            vaultAction: IVaultProd.VaultAction.AddTrackedAsset,
+            mockExtension: mockExtension,
+            vaultAction: formatVaultActionForComptroller(IVaultProd.VaultAction.AddTrackedAsset),
             actionData: abi.encode(assetAddressToTrack),
             assetAddressToTrack: assetAddressToTrack
         });
     }
 
-    function test_permissionedVaultAction_failsWithoutPermissionedVaultActionAllowedFlag() public {
+    function test_permissionedVaultAction_failsWithUnauthorizedCaller() public {
         PermissionedVaultActionTestVars memory testVars = __test_permissionedVaultAction_setup();
+        address randomCaller = makeAddr("RandomCaller");
 
-        // Calling directly from the extension should fail
-        vm.expectRevert("permissionedVaultAction: No actions allowed");
-        vm.prank(address(testVars.mockAddTrackedAssetExtension));
+        // Calling from a random user should fail
+        vm.expectRevert("permissionedVaultAction: Unauthorized caller");
+        vm.prank(randomCaller);
         testVars.comptrollerProxy.permissionedVaultAction({
-            _action: formatVaultActionForComptroller(testVars.vaultAction),
+            _action: testVars.vaultAction,
             _actionData: testVars.actionData
         });
     }
@@ -444,26 +442,17 @@ contract ComptrollerTest is IntegrationTest {
     function test_permissionedVaultAction_success() public {
         PermissionedVaultActionTestVars memory testVars = __test_permissionedVaultAction_setup();
 
-        // Calling via the Comptroller should succeed
-        testVars.comptrollerProxy.callOnExtension({
-            _extension: address(testVars.mockAddTrackedAssetExtension),
-            _actionId: 0,
-            _callArgs: ""
+        // Confirm that the asset is not already tracked
+        assertFalse(testVars.vaultProxy.isTrackedAsset(testVars.assetAddressToTrack), "asset already tracked");
+
+        // Calling from the extension should succeed
+        vm.prank(address(testVars.mockExtension));
+        testVars.comptrollerProxy.permissionedVaultAction({
+            _action: testVars.vaultAction,
+            _actionData: testVars.actionData
         });
 
         // Test that the VaultAction was executed
         assertTrue(testVars.vaultProxy.isTrackedAsset(testVars.assetAddressToTrack), "asset not tracked");
-    }
-}
-
-/// @dev IExtension implementation that executes VaultAction.AddTrackedAsset upon any call to receiveCallFromComptroller()
-contract MockAddTrackedAssetExtension is MockDefaultExtension, CoreUtils {
-    address public assetToTrack = address(1234);
-
-    function receiveCallFromComptroller(address, uint256, bytes calldata) external override {
-        IComptrollerLib(msg.sender).permissionedVaultAction({
-            _action: formatVaultActionForComptroller(IVaultProd.VaultAction.AddTrackedAsset),
-            _actionData: abi.encode(assetToTrack)
-        });
     }
 }

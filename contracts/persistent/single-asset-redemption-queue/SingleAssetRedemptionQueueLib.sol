@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -21,7 +21,7 @@ import {IVaultCore} from "../vault/interfaces/IVaultCore.sol";
 import {ISingleAssetRedemptionQueue} from "./ISingleAssetRedemptionQueue.sol";
 
 /// @title SingleAssetRedemptionQueueLib Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice A release-agnostic peripheral contract for redeeming Enzyme vault shares for a single asset,
 /// via a first-come first-served queue
 contract SingleAssetRedemptionQueueLib is ISingleAssetRedemptionQueue, GSNRecipientMixin {

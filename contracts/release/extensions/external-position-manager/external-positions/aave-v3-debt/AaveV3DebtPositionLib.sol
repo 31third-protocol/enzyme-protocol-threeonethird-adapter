@@ -2,7 +2,7 @@
 
 /*
     This file is part of the Enzyme Protocol.
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
 */
@@ -13,6 +13,7 @@ import {IAaveAToken} from "../../../../../external-interfaces/IAaveAToken.sol";
 import {IAaveV3Pool} from "../../../../../external-interfaces/IAaveV3Pool.sol";
 import {IAaveV3PoolAddressProvider} from "../../../../../external-interfaces/IAaveV3PoolAddressProvider.sol";
 import {IAaveV3ProtocolDataProvider} from "../../../../../external-interfaces/IAaveV3ProtocolDataProvider.sol";
+import {IAaveV3RewardsController} from "../../../../../external-interfaces/IAaveV3RewardsController.sol";
 import {IERC20} from "../../../../../external-interfaces/IERC20.sol";
 import {AddressArrayLib} from "../../../../../utils/0.8.19/AddressArrayLib.sol";
 import {AssetHelpers} from "../../../../../utils/0.8.19/AssetHelpers.sol";
@@ -22,7 +23,7 @@ import {AaveV3DebtPositionDataDecoder} from "./AaveV3DebtPositionDataDecoder.sol
 import {IAaveV3DebtPosition} from "./IAaveV3DebtPosition.sol";
 
 /// @title AaveV3DebtPositionLib Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice An External Position library contract for Aave V3 debt positions
 contract AaveV3DebtPositionLib is
     AaveV3DebtPositionLibBase1,
@@ -38,15 +39,18 @@ contract AaveV3DebtPositionLib is
     IAaveV3ProtocolDataProvider private immutable DATA_PROVIDER_CONTRACT;
     IAaveV3PoolAddressProvider private immutable LENDING_POOL_ADDRESS_PROVIDER_CONTRACT;
     uint16 private immutable REFERRAL_CODE;
+    IAaveV3RewardsController private immutable REWARDS_CONTROLLER;
 
     constructor(
         IAaveV3ProtocolDataProvider _dataProvider,
         IAaveV3PoolAddressProvider _lendingPoolAddressProvider,
-        uint16 _referralCode
+        uint16 _referralCode,
+        IAaveV3RewardsController _rewardsController
     ) {
         DATA_PROVIDER_CONTRACT = _dataProvider;
         LENDING_POOL_ADDRESS_PROVIDER_CONTRACT = _lendingPoolAddressProvider;
         REFERRAL_CODE = _referralCode;
+        REWARDS_CONTROLLER = _rewardsController;
     }
 
     /// @notice Initializes the external position
@@ -70,6 +74,8 @@ contract AaveV3DebtPositionLib is
             __setEMode(actionArgs);
         } else if (actionId == uint256(Actions.SetUseReserveAsCollateral)) {
             __setUseReserveAsCollateral(actionArgs);
+        } else if (actionId == uint256(Actions.ClaimRewards)) {
+            __claimRewards(actionArgs);
         } else {
             revert("receiveCallFromVault: Invalid actionId");
         }
@@ -210,6 +216,13 @@ contract AaveV3DebtPositionLib is
             _asset: underlying,
             _useAsCollateral: useAsCollateral
         });
+    }
+
+    /// @dev Claims rewards
+    function __claimRewards(bytes memory actionArgs) private {
+        (address[] memory assets, uint256 amount, address rewardToken) = __decodeClaimRewardsActionArgs(actionArgs);
+
+        REWARDS_CONTROLLER.claimRewards({_assets: assets, _amount: amount, _rewardToken: rewardToken, _to: msg.sender});
     }
 
     ////////////////////

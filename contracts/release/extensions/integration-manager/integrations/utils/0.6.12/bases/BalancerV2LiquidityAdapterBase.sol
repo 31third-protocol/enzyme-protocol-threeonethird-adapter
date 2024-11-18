@@ -2,7 +2,7 @@
 
 /*
     This file is part of the Enzyme Protocol.
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
 */
@@ -18,7 +18,7 @@ import {BalancerV2ActionsMixin} from "../actions/BalancerV2ActionsMixin.sol";
 import {AdapterBase} from "../AdapterBase.sol";
 
 /// @title BalancerV2LiquidityAdapterBase Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Base adapter for liquidity provision in Balancer V2 pools.
 /// Implementing contracts can allow staking via Balancer gauges, Aura, etc.
 /// @dev Rewards tokens are not included as incoming assets for claimRewards()

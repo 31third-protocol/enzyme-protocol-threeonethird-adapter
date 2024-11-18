@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -21,7 +21,7 @@ import {IProtocolFeeTracker} from "../infrastructure/protocol-fees/IProtocolFeeT
 import {IValueInterpreter} from "../infrastructure/value-interpreter/IValueInterpreter.sol";
 
 /// @title FundValueCalculator Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice A peripheral contract for serving fund value calculation requests from the FundValueCalculatorRouter
 /// @dev These are convenience functions intended for off-chain consumption,
 /// some of which involve potentially expensive state transitions.

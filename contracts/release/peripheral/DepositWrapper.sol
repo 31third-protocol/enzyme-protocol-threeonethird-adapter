@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -20,7 +20,7 @@ import {WrappedSafeERC20 as SafeERC20} from "../../utils/0.8.19/open-zeppelin/Wr
 import {IComptroller} from "../core/fund/comptroller/IComptroller.sol";
 
 /// @title DepositWrapper Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Logic related to wrapping deposit actions
 contract DepositWrapper is AssetHelpers {
     using SafeERC20 for IERC20;

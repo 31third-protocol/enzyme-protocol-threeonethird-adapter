@@ -2,7 +2,7 @@
 
 /*
     This file is part of the Enzyme Protocol.
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
 */
@@ -13,7 +13,7 @@ import "../../../utils/0.6.12/NominatedOwnerMixin.sol";
 import "../IArbitraryValueOracle.sol";
 
 /// @title ManualValueOracleLib Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Library contract for ManualValueOracleProxy instances
 contract ManualValueOracleLib is IArbitraryValueOracle, NominatedOwnerMixin {
     event Initialized(bytes32 description);

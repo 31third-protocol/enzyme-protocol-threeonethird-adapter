@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -20,7 +20,7 @@ import {OneInchV5ActionsMixin} from "../utils/0.6.12/actions/OneInchV5ActionsMix
 import {AdapterBase} from "../utils/0.6.12/AdapterBase.sol";
 
 /// @title OneInchV5Adapter Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Adapter for interacting with OneInch V5
 contract OneInchV5Adapter is AdapterBase, OneInchV5ActionsMixin {
     using AddressArrayLib for address[];

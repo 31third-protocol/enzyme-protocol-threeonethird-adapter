@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -16,7 +16,7 @@ import {IComptroller} from "../../../../../core/fund/comptroller/IComptroller.so
 import {PolicyBase} from "./PolicyBase.sol";
 
 /// @title AddressListRegistryPolicyBase Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Base contract inheritable by any policy that uses the AddressListRegistry
 abstract contract AddressListRegistryPolicyBase is PolicyBase {
     event ListsSetForFund(address indexed comptrollerProxy, uint256[] listIds);

@@ -2,7 +2,7 @@
 
 /*
     This file is part of the Enzyme Protocol.
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
 */
@@ -12,7 +12,7 @@ pragma solidity >=0.6.0 <0.9.0;
 import {IExternalPositionLibCore} from "../../../persistent/external-positions/IExternalPositionLibCore.sol";
 
 /// @title IExternalPosition Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 interface IExternalPosition is IExternalPositionLibCore {
     function getDebtAssets() external returns (address[] memory assets_, uint256[] memory amounts_);
 

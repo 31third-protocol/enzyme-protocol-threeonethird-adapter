@@ -7,7 +7,7 @@ import {CurveLiquidityActionsMixin} from "../actions/CurveLiquidityActionsMixin.
 import {AdapterBase} from "../AdapterBase.sol";
 
 /// @title CurveLiquidityAdapterBase Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Base adapter for liquidity provision in Curve pools that adhere to pool templates,
 /// as well as some old pools that have almost the same required interface (e.g., 3pool).
 /// Implementing contracts can allow staking via Curve gauges, Convex, etc.

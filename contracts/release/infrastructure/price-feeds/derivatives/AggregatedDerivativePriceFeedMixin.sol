@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -15,7 +15,7 @@ import {IAggregatedDerivativePriceFeedMixin} from "./IAggregatedDerivativePriceF
 import {IDerivativePriceFeed} from "./IDerivativePriceFeed.sol";
 
 /// @title AggregatedDerivativePriceFeedMixin Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Aggregates multiple derivative price feeds (e.g., Compound, Chai) and dispatches
 /// rate requests to the appropriate feed
 abstract contract AggregatedDerivativePriceFeedMixin is IAggregatedDerivativePriceFeedMixin {

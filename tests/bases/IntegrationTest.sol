@@ -10,18 +10,21 @@ import {TestChainlinkAggregator} from "tests/utils/core/AssetUniverseUtils.sol";
 import {
     Contracts as PersistentContracts,
     getMainnetDeployment as getMainnetPersistentContracts,
-    getPolygonDeployment as getPolygonPersistentContracts
+    getPolygonDeployment as getPolygonPersistentContracts,
+    getArbitrumDeployment as getArbitrumPersistentContracts
 } from "tests/utils/core/deployment/PersistentContracts.sol";
 import {ReleaseConfig} from "tests/utils/core/deployment/DeploymentUtils.sol";
 import {
     Contracts as V4ReleaseContracts,
     getMainnetDeployment as getV4MainnetReleaseContracts,
-    getPolygonDeployment as getV4PolygonReleaseContracts
+    getPolygonDeployment as getV4PolygonReleaseContracts,
+    getArbitrumDeployment as getV4ArbitrumReleaseContracts
 } from "tests/utils/core/deployment/V4ReleaseContracts.sol";
 import {
     Contracts as ReleaseContracts,
     getMainnetDeployment as getMainnetReleaseContracts,
-    getPolygonDeployment as getPolygonReleaseContracts
+    getPolygonDeployment as getPolygonReleaseContracts,
+    getArbitrumDeployment as getArbitrumReleaseContracts
 } from "tests/utils/core/deployment/V5ReleaseContracts.sol";
 
 import {IERC20} from "tests/interfaces/external/IERC20.sol";
@@ -92,6 +95,16 @@ abstract contract IntegrationTest is CoreUtils {
         // core.release = getPolygonReleaseContracts();
     }
 
+    function setUpLiveArbitrumEnvironment(uint256 _forkBlock) internal {
+        vm.createSelectFork("polygon", _forkBlock);
+
+        core.persistent = getArbitrumPersistentContracts();
+        v4ReleaseContracts = getV4ArbitrumReleaseContracts();
+
+        // No v5 release live
+        // core.release = getArbitrumReleaseContracts();
+    }
+
     // Partially-live deployments (persistent layer only)
 
     function setUpLiveMainnetEnvironmentWithNewRelease(uint256 _forkBlock) internal {
@@ -110,12 +123,22 @@ abstract contract IntegrationTest is CoreUtils {
         __setUpEnvironment({_config: getDefaultPolygonConfig(), _persistentContractsAlreadySet: true});
     }
 
+    function setUpLiveArbitrumEnvironmentWithNewRelease(uint256 _forkBlock) internal {
+        vm.createSelectFork("arbitrum", _forkBlock);
+
+        core.persistent = getArbitrumPersistentContracts();
+
+        __setUpEnvironment({_config: getDefaultArbitrumConfig(), _persistentContractsAlreadySet: true});
+    }
+
     // New deployments
     function setUpNetworkEnvironment(uint256 _chainId) internal {
         if (_chainId == ETHEREUM_CHAIN_ID) {
             setUpMainnetEnvironment();
         } else if (_chainId == POLYGON_CHAIN_ID) {
             setUpPolygonEnvironment();
+        } else if (_chainId == ARBITRUM_CHAIN_ID) {
+            setUpArbitrumEnvironment();
         } else {
             revert("setUpNetworkEnvironment: Unsupported network");
         }
@@ -126,6 +149,8 @@ abstract contract IntegrationTest is CoreUtils {
             setUpMainnetEnvironment(_forkBlock);
         } else if (_chainId == POLYGON_CHAIN_ID) {
             setUpPolygonEnvironment(_forkBlock);
+        } else if (_chainId == ARBITRUM_CHAIN_ID) {
+            setUpArbitrumEnvironment(_forkBlock);
         } else {
             revert("setUpNetworkEnvironment: Unsupported network");
         }
@@ -139,8 +164,12 @@ abstract contract IntegrationTest is CoreUtils {
         setUpPolygonEnvironment(POLYGON_BLOCK_LATEST);
     }
 
+    function setUpArbitrumEnvironment() internal {
+        setUpArbitrumEnvironment(ARBITRUM_BLOCK_LATEST);
+    }
+
     function setUpMainnetEnvironment(uint256 _forkBlock) internal {
-        vm.createSelectFork("mainnet", _forkBlock);
+        vm.createSelectFork({urlOrAlias: "mainnet", blockNumber: _forkBlock});
 
         v4ReleaseContracts = getV4MainnetReleaseContracts();
 
@@ -216,7 +245,7 @@ abstract contract IntegrationTest is CoreUtils {
 
         address simulatedUsdAddress = address(deployUsdEthSimulatedAggregator(config.chainlinkEthUsdAggregatorAddress));
 
-        CorePrimitiveInput[] memory corePrimitives = new CorePrimitiveInput[](5);
+        CorePrimitiveInput[] memory corePrimitives = new CorePrimitiveInput[](7);
         // System primitives
         corePrimitives[0] = CorePrimitiveInput({
             symbol: "WMATIC",
@@ -247,6 +276,85 @@ abstract contract IntegrationTest is CoreUtils {
             symbol: "WBTC",
             assetAddress: POLYGON_WBTC,
             aggregatorAddress: POLYGON_WBTC_USD_AGGREGATOR,
+            rateAsset: IChainlinkPriceFeedMixinProd.RateAsset.USD
+        });
+        corePrimitives[5] = CorePrimitiveInput({
+            symbol: "DAI",
+            assetAddress: POLYGON_DAI,
+            aggregatorAddress: POLYGON_DAI_ETH_AGGREGATOR,
+            rateAsset: IChainlinkPriceFeedMixinProd.RateAsset.ETH
+        });
+        corePrimitives[6] = CorePrimitiveInput({
+            symbol: "USDT",
+            assetAddress: POLYGON_USDT,
+            aggregatorAddress: POLYGON_USDT_ETH_AGGREGATOR,
+            rateAsset: IChainlinkPriceFeedMixinProd.RateAsset.ETH
+        });
+
+        __addCorePrimitives(corePrimitives);
+    }
+
+    function setUpArbitrumEnvironment(uint256 _forkBlock) internal {
+        vm.createSelectFork("arbitrum", _forkBlock);
+
+        // solves issue with Arbtrum fork that is not available to read L2 block number https://github.com/foundry-rs/foundry/issues/5085
+        vm.mockCall({
+            callee: address(0x64), // precompiled ArbSys address
+            data: abi.encodeWithSignature("arbBlockNumber()"),
+            returnData: abi.encode(_forkBlock)
+        });
+
+        v4ReleaseContracts = getV4ArbitrumReleaseContracts();
+
+        ReleaseConfig memory config = getDefaultArbitrumConfig();
+
+        __setUpEnvironment({_config: config, _persistentContractsAlreadySet: false});
+
+        // Deploy minimal asset universe
+
+        // Treat WETH specially and directly add to coreTokens storage (does not require an aggregator)
+        symbolToCoreToken["WETH"] = IERC20(wethToken);
+        tokenToIsCore[IERC20(wethToken)] = true;
+
+        address simulatedUsdAddress = address(deployUsdEthSimulatedAggregator(config.chainlinkEthUsdAggregatorAddress));
+
+        CorePrimitiveInput[] memory corePrimitives = new CorePrimitiveInput[](6);
+        // System primitives
+        corePrimitives[0] = CorePrimitiveInput({
+            symbol: "MLN",
+            assetAddress: ARBITRUM_MLN,
+            aggregatorAddress: ARBITRUM_MLN_ETH_AGGREGATOR,
+            rateAsset: IChainlinkPriceFeedMixinProd.RateAsset.ETH
+        });
+        // Extra primitives
+        corePrimitives[1] = CorePrimitiveInput({
+            symbol: "USD",
+            assetAddress: simulatedUsdAddress,
+            aggregatorAddress: simulatedUsdAddress,
+            rateAsset: IChainlinkPriceFeedMixinProd.RateAsset.ETH
+        });
+        corePrimitives[2] = CorePrimitiveInput({
+            symbol: "USDC",
+            assetAddress: ARBITRUM_USDC,
+            aggregatorAddress: ARBITRUM_USDC_USD_AGGREGATOR,
+            rateAsset: IChainlinkPriceFeedMixinProd.RateAsset.USD
+        });
+        corePrimitives[3] = CorePrimitiveInput({
+            symbol: "BAL",
+            assetAddress: ARBITRUM_BAL,
+            aggregatorAddress: ARBITRUM_BAL_USD_AGGREGATOR,
+            rateAsset: IChainlinkPriceFeedMixinProd.RateAsset.USD
+        });
+        corePrimitives[4] = CorePrimitiveInput({
+            symbol: "USDT",
+            assetAddress: ARBITRUM_USDT,
+            aggregatorAddress: ARBITRUM_USDT_USD_AGGREGATOR,
+            rateAsset: IChainlinkPriceFeedMixinProd.RateAsset.USD
+        });
+        corePrimitives[5] = CorePrimitiveInput({
+            symbol: "DAI",
+            assetAddress: ARBITRUM_DAI,
+            aggregatorAddress: ARBITRUM_DAI_USD_AGGREGATOR,
             rateAsset: IChainlinkPriceFeedMixinProd.RateAsset.USD
         });
 
@@ -401,6 +509,30 @@ abstract contract IntegrationTest is CoreUtils {
             mlnTokenAddress: POLYGON_MLN,
             wethTokenAddress: POLYGON_WETH,
             wrappedNativeTokenAddress: POLYGON_WMATIC,
+            // Gas relayer
+            gasRelayDepositCooldown: 1 days,
+            gasRelayDepositMaxTotal: 1 ether,
+            gasRelayFeeMaxPercent: 10,
+            gasRelayHubAddress: address(0), // TODO: lookup real value
+            gasRelayRelayFeeMaxBase: 0,
+            gasRelayTrustedForwarderAddress: address(0), // TODO: lookup real value
+            // Vault settings
+            vaultMlnBurner: mlnBurner,
+            vaultPositionsLimit: 20
+        });
+    }
+
+    function getDefaultArbitrumConfig() internal returns (ReleaseConfig memory) {
+        address mlnBurner = makeAddr("MlnBurner");
+
+        return ReleaseConfig({
+            // Chainlink
+            chainlinkEthUsdAggregatorAddress: ARBITRUM_ETH_USD_AGGREGATOR,
+            chainlinkStaleRateThreshold: 3650 days,
+            // Tokens
+            mlnTokenAddress: ARBITRUM_MLN,
+            wethTokenAddress: ARBITRUM_WETH,
+            wrappedNativeTokenAddress: ARBITRUM_WETH,
             // Gas relayer
             gasRelayDepositCooldown: 1 days,
             gasRelayDepositMaxTotal: 1 ether,
@@ -656,6 +788,18 @@ abstract contract IntegrationTest is CoreUtils {
         }
     }
 
+    function getUsdEthSimulatedAggregatorForVersion(EnzymeVersion _version)
+        internal
+        view
+        returns (address usdEthSimulatedAggregator_)
+    {
+        if (_version == EnzymeVersion.V4) {
+            return address(v4ReleaseContracts.usdEthSimulatedAggregator);
+        }
+
+        return address(symbolToCoreToken["USD"]);
+    }
+
     // v4 actions: fund creation
 
     // Create simple fund that can trade, but no fees or policies
@@ -717,5 +861,21 @@ abstract contract IntegrationTest is CoreUtils {
         }
 
         return aggregators_;
+    }
+
+    // Versioned routers: value interpreter helpers
+
+    function assertValueInUSDForVersion(EnzymeVersion _version, address _asset, uint256 _amount, uint256 _expected)
+        internal
+    {
+        IValueInterpreter valueInterpreter = IValueInterpreter(getValueInterpreterAddressForVersion(_version));
+
+        uint256 actual = valueInterpreter.calcCanonicalAssetValue({
+            _baseAsset: _asset,
+            _amount: _amount,
+            _quoteAsset: getUsdEthSimulatedAggregatorForVersion(_version)
+        });
+
+        assertEq(actual, _expected, "assertValueInUSDForVersion: Value not equal");
     }
 }

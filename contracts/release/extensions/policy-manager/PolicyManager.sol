@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -19,7 +19,7 @@ import {IPolicy} from "./IPolicy.sol";
 import {IPolicyManager} from "./IPolicyManager.sol";
 
 /// @title PolicyManager Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Manages policies for funds
 /// @dev Any arbitrary fee is allowed by default, so all participants must be aware of
 /// their fund's configuration, especially whether they use official policies only.

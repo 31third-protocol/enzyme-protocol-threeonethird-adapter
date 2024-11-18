@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -15,7 +15,7 @@ import {IAaveV3Pool} from "../../../../../../../external-interfaces/IAaveV3Pool.
 import {AssetHelpers} from "../../../../../../../utils/0.6.12/AssetHelpers.sol";
 
 /// @title AaveV3ActionsMixin Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Mixin contract for interacting with the Aave v3 lending functions
 abstract contract AaveV3ActionsMixin is AssetHelpers {
     IAaveV3Pool internal immutable AAVE_V3_POOL_CONTRACT;

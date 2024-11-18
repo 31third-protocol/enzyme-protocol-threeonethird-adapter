@@ -2,7 +2,7 @@
 
 /*
     This file is part of the Enzyme Protocol.
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
 */
@@ -13,7 +13,7 @@ pragma experimental ABIEncoderV2;
 import {IVotiumMultiMerkleStash} from "../../../../../external-interfaces/IVotiumMultiMerkleStash.sol";
 
 /// @title ConvexVotingPositionDataDecoder Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Abstract contract containing data decodings for ConvexVotingPosition payloads
 abstract contract ConvexVotingPositionDataDecoder {
     /// @dev Helper to decode args used during the ClaimRewards action

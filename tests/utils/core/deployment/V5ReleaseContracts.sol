@@ -36,3 +36,8 @@ function getPolygonDeployment() pure returns (Contracts memory contracts_) {
     // placeholder
     return contracts_;
 }
+
+function getArbitrumDeployment() pure returns (Contracts memory contracts_) {
+    // placeholder
+    return contracts_;
+}

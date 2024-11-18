@@ -8,7 +8,7 @@ Currently, all active development happens in a private development repo, which i
 
 We are working on a structure for general community contributions.
 
-In the meantime, those who wish to contribute to Enzyme should reach out to the Enzyme Council with a proposal for how they would like to contribute: [council@enzyme.finance](mailto:council@enzyme.finance)
+In the meantime, those who wish to contribute to Enzyme should reach out to the Enzyme Council with a proposal for how they would like to contribute: [security@enzyme.finance](mailto:security@enzyme.finance)
 
 All pull requests must be made against the private development repo.
 
@@ -133,3 +133,7 @@ function __calcNewBalance(uint256 _oldBalance) private
 - Data types should be explicitly defined, e.g., `uint256` instead of `uint`
 
 Should there no explicitly mentioned rule please follow the _[GOLDEN RULE](https://github.com/ethereum/cpp-ethereum/blob/b6218fc1da39994043f1c43185bb24e364382d84/CodingStandards.txt#L3): Follow the style of the existing code when you make changes._
+
+#### Tests
+
+See the [tests README](/tests/README.md) for further conventions used in test suites.

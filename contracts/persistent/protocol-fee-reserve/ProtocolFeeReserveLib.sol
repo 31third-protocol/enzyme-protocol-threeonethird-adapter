@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -16,7 +16,7 @@ import "./bases/ProtocolFeeReserveLibBase1.sol";
 import "./interfaces/IProtocolFeeReserve1.sol";
 
 /// @title ProtocolFeeReserveLib Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice The proxiable library contract for ProtocolFeeReserveProxy
 contract ProtocolFeeReserveLib is IProtocolFeeReserve1, ProtocolFeeReserveLibBase1 {
     using SafeMath for uint256;

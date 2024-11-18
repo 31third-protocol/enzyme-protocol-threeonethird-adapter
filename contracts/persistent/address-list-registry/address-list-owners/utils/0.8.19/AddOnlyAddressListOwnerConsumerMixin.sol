@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -15,7 +15,7 @@ import "../../../IAddressListRegistry.sol";
 import "../IAddOnlyAddressListOwner.sol";
 
 /// @title AddOnlyAddressListOwnerConsumerMixin Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Mixin contract for interacting with a contract that inherits `AddOnlyAddressListOwnerBase`
 abstract contract AddOnlyAddressListOwnerConsumerMixin {
     IAddressListRegistry internal immutable ADDRESS_LIST_REGISTRY_CONTRACT;

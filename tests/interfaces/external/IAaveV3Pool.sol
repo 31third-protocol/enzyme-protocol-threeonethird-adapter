@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -13,7 +13,7 @@ pragma solidity >=0.6.0 <0.9.0;
 pragma experimental ABIEncoderV2;
 
 /// @title IAaveV3Pool interface
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 interface IAaveV3Pool {
     struct ReserveData {
         //stores the reserve configuration
@@ -79,6 +79,8 @@ interface IAaveV3Pool {
          */
         uint256 data;
     }
+
+    function FLASHLOAN_PREMIUM_TOTAL() external view returns (uint256 premiumInBps_);
 
     function getReserveData(address _asset) external view returns (ReserveData memory reserveData_);
 

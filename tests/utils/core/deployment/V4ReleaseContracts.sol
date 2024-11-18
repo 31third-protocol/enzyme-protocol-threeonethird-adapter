@@ -8,6 +8,7 @@ import {IGasRelayPaymasterFactory} from "tests/interfaces/internal/v4/IGasRelayP
 import {IIntegrationManager} from "tests/interfaces/internal/v4/IIntegrationManager.sol";
 import {IPolicyManager} from "tests/interfaces/internal/v4/IPolicyManager.sol";
 import {IProtocolFeeTracker} from "tests/interfaces/internal/v4/IProtocolFeeTracker.sol";
+import {IUsdEthSimulatedAggregator} from "tests/interfaces/internal/v4/IUsdEthSimulatedAggregator.sol";
 import {IValueInterpreter} from "tests/interfaces/internal/v4/IValueInterpreter.sol";
 
 struct Contracts {
@@ -24,6 +25,7 @@ struct Contracts {
     IGasRelayPaymasterFactory gasRelayPaymasterFactory;
     IProtocolFeeTracker protocolFeeTracker;
     IValueInterpreter valueInterpreter;
+    IUsdEthSimulatedAggregator usdEthSimulatedAggregator;
 }
 
 function getMainnetDeployment() pure returns (Contracts memory) {
@@ -40,7 +42,8 @@ function getMainnetDeployment() pure returns (Contracts memory) {
         // Infrastructure
         gasRelayPaymasterFactory: IGasRelayPaymasterFactory(0x846bbe1925047023651de7EC289f329c24ded3a8),
         protocolFeeTracker: IProtocolFeeTracker(0xe97980f1D43C4CD4F1EeF0277a2DeA7ddBc2Cd13),
-        valueInterpreter: IValueInterpreter(0xD7B0610dB501b15Bfb9B7DDad8b3869de262a327)
+        valueInterpreter: IValueInterpreter(0xD7B0610dB501b15Bfb9B7DDad8b3869de262a327),
+        usdEthSimulatedAggregator: IUsdEthSimulatedAggregator(0x9579f735d0C93B5eef064Fe312CA3509BD695206)
     });
 }
 
@@ -58,6 +61,12 @@ function getPolygonDeployment() pure returns (Contracts memory) {
         // Infrastructure
         gasRelayPaymasterFactory: IGasRelayPaymasterFactory(0xeD05786Ef7b5e5bf909512f0Ad46eb8f22cDC4Ca),
         protocolFeeTracker: IProtocolFeeTracker(0xB8E6EDa0cE8fddD21F0b0268A43a57b9296E23d5),
-        valueInterpreter: IValueInterpreter(0x66De7e286Aae66f7f3Daf693c22d16EEa48a0f45)
+        valueInterpreter: IValueInterpreter(0x66De7e286Aae66f7f3Daf693c22d16EEa48a0f45),
+        usdEthSimulatedAggregator: IUsdEthSimulatedAggregator(0x51e75b5E0eef2d40B4D70C5dAa2666E1eA30F0Bd)
     });
+}
+
+// TODO: Replace with actual values
+function getArbitrumDeployment() pure returns (Contracts memory contracts_) {
+    return contracts_;
 }

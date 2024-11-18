@@ -2,7 +2,7 @@
 
 /*
     This file is part of the Enzyme Protocol.
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
 */
@@ -14,7 +14,7 @@ import {ITheGraphDelegationPosition} from "./ITheGraphDelegationPosition.sol";
 pragma solidity 0.6.12;
 
 /// @title TheGraphDelegationPositionParser
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Parser for The Graph Delegation positions
 contract TheGraphDelegationPositionParser is IExternalPositionParser, TheGraphDelegationPositionDataDecoder {
     address private immutable GRT_TOKEN;

@@ -53,12 +53,14 @@ ISingleAssetRedemptionQueueFactory.sol: SingleAssetRedemptionQueueFactory.abi.js
 ISingleAssetRedemptionQueueLib.sol: SingleAssetRedemptionQueueLib.abi.json
 
 # Smart accounts
+IAaveV3FlashLoanAssetManager.sol: AaveV3FlashLoanAssetManagerLib.abi.json
 IMultiCallAccountMixin.sol: MultiCallAccountMixin.abi.json
 IMultiCallAccountMixinHarness.sol: MultiCallAccountMixinHarness.abi.json
 ISharePriceThrottledAssetManagerLib.sol: SharePriceThrottledAssetManagerLib.abi.json
 ISharePriceThrottledAssetManagerFactory.sol: SharePriceThrottledAssetManagerFactory.abi.json
 
 # Utils
+IDispatcherOwnedBeaconFactory.sol: DispatcherOwnedBeaconFactory.abi.json
 IGSNRecipientMixinHarness.sol: GSNRecipientMixinHarness.abi.json
 
 #######################################################################################################################
@@ -108,7 +110,6 @@ IIntegrationManager.sol: IntegrationManager.abi.json
 IUniswapV2LiquidityAdapter.sol: UniswapV2LiquidityAdapter.abi.json
 IAaveV3Adapter.sol: AaveV3Adapter.abi.json
 IUniswapV3Adapter.sol: UniswapV3Adapter.abi.json
-IIdleAdapter.sol: IdleAdapter.abi.json
 ICurveLiquidityAdapter.sol: CurveLiquidityAdapter.abi.json
 IUniswapV2ExchangeAdapter.sol: UniswapV2ExchangeAdapter.abi.json
 ICompoundV3Adapter.sol: CompoundV3Adapter.abi.json
@@ -119,12 +120,13 @@ IBalancerV2LiquidityAdapter.sol: BalancerV2LiquidityAdapter.abi.json
 ICurveExchangeAdapter.sol: CurveExchangeAdapter.abi.json
 ICompoundAdapter.sol: CompoundAdapter.abi.json
 IERC4626Adapter.sol: ERC4626Adapter.abi.json
-IArrakisV2Adapter.sol: ArrakisV2Adapter.abi.json
 IZeroExV4Adapter.sol: ZeroExV4Adapter.abi.json
 ISwellStakingAdapter.sol: SwellStakingAdapter.abi.json
 IDivaStakingAdapter.sol: DivaStakingAdapter.abi.json
 IGenericWrappingAdapterBase.sol: GenericWrappingAdapterBase.abi.json
 IThreeOneThirdAdapter.sol: ThreeOneThirdAdapter.abi.json
+IOneInchV5Adapter.sol: OneInchV5Adapter.abi.json
+ITransferAssetsAdapter.sol: TransferAssetsAdapter.abi.json
 
 # External positions
 IExternalPositionManager.sol: ExternalPositionManager.abi.json
@@ -139,6 +141,8 @@ ICompoundDebtPositionLib.sol: CompoundDebtPositionLib.abi.json
 ICompoundDebtPositionParser.sol: CompoundDebtPositionParser.abi.json
 IConvexVotingPositionLib.sol: ConvexVotingPositionLib.abi.json
 IConvexVotingPositionParser.sol: ConvexVotingPositionParser.abi.json
+IGMXV2LeverageTradingPositionLib.sol: GMXV2LeverageTradingPositionLib.abi.json
+IGMXV2LeverageTradingPositionParser.sol: GMXV2LeverageTradingPositionParser.abi.json
 IKilnStakingPositionLib.sol: KilnStakingPositionLib.abi.json
 IKilnStakingPositionParser.sol: KilnStakingPositionParser.abi.json
 ILidoWithdrawalsPositionLib.sol:LidoWithdrawalsPositionLib.abi.json
@@ -146,10 +150,6 @@ ILiquityDebtPositionLib.sol: LiquityDebtPositionLib.abi.json
 ILiquityDebtPositionParser.sol: LiquityDebtPositionParser.abi.json
 IMapleLiquidityPositionLib.sol: MapleLiquidityPositionLib.abi.json
 IMapleLiquidityPositionParser.sol: MapleLiquidityPositionParser.abi.json
-ISolvV2BondBuyerPositionLib.sol: SolvV2BondBuyerPositionLib.abi.json
-ISolvV2BondBuyerPositionParser.sol: SolvV2BondBuyerPositionParser.abi.json
-ISolvV2BondIssuerPositionLib.sol: SolvV2BondIssuerPositionLib.abi.json
-ISolvV2BondIssuerPositionParser.sol: SolvV2BondIssuerPositionParser.abi.json
 IStakeWiseV3StakingPositionLib.sol: StakeWiseV3StakingPositionLib.abi.json
 IStakeWiseV3StakingPositionParser.sol: StakeWiseV3StakingPositionParser.abi.json
 ITheGraphDelegationPositionLib.sol: TheGraphDelegationPositionLib.abi.json
@@ -158,8 +158,13 @@ IUniswapV3LiquidityPositionLib.sol: UniswapV3LiquidityPositionLib.abi.json
 IUniswapV3LiquidityPositionParser.sol: UniswapV3LiquidityPositionParser.abi.json
 ITermFinanceV1LendingPositionLib.sol: TermFinanceV1LendingPositionLib.abi.json
 ITermFinanceV1LendingPositionParser.sol: TermFinanceV1LendingPositionParser.abi.json
+IPendleV2MarketRegistry.sol: PendleV2MarketRegistry.abi.json
 IPendleV2PositionLib.sol: PendleV2PositionLib.abi.json
 IPendleV2PositionParser.sol: PendleV2PositionParser.abi.json
+IMorphoBluePositionLib.sol: MorphoBluePositionLib.abi.json
+IMorphoBluePositionParser.sol: MorphoBluePositionParser.abi.json
+IAlicePositionLib.sol: AlicePositionLib.abi.json
+IAlicePositionParser.sol: AlicePositionParser.abi.json
 
 # Value interpreter
 IValueInterpreter.sol: ValueInterpreter.abi.json
@@ -173,13 +178,14 @@ IWstethPriceFeed.sol: WstethPriceFeed.abi.json
 ICompoundPriceFeed.sol: CompoundPriceFeed.abi.json
 IUniswapV2PoolPriceFeed.sol: UniswapV2PoolPriceFeed.abi.json
 IBalancerV2GaugeTokenPriceFeed.sol: BalancerV2GaugeTokenPriceFeed.abi.json
-IIdlePriceFeed.sol: IdlePriceFeed.abi.json
 IRevertingPriceFeed.sol: RevertingPriceFeed.abi.json
 IYearnVaultV2PriceFeed.sol: YearnVaultV2PriceFeed.abi.json
 IChainlinkPriceFeedMixin.sol: ChainlinkPriceFeedMixin.abi.json
 IERC4626PriceFeed.sol: ERC4626PriceFeed.abi.json
-IArrakisV2PriceFeed.sol: ArrakisV2PriceFeed.abi.json
 IEtherFiEthPriceFeed.sol: EtherFiEthPriceFeed.abi.json
+IUsdEthSimulatedAggregator.sol: UsdEthSimulatedAggregator.abi.json
+IPeggedDerivativesPriceFeed.sol: PeggedDerivativesPriceFeed.abi.json
+IStaderSDPriceFeed.sol: StaderSDPriceFeed.abi.json
 
 # Protocol fee
 IProtocolFeeTracker.sol: ProtocolFeeTracker.abi.json
@@ -191,9 +197,6 @@ IGasRelayPaymasterFactory.sol: GasRelayPaymasterFactory.abi.json
 # Peripheral
 IDepositWrapper.sol: DepositWrapper.abi.json
 IUnpermissionedActionsWrapper.sol: UnpermissionedActionsWrapper.abi.json
-IArbitraryTokenPhasedSharesWrapperFactory.sol: ArbitraryTokenPhasedSharesWrapperFactory.abi.json
-IArbitraryTokenPhasedSharesWrapperProxy.sol: ArbitraryTokenPhasedSharesWrapperProxy.abi.json
-IArbitraryTokenPhasedSharesWrapperLib.sol: ArbitraryTokenPhasedSharesWrapperLib.abi.json
 
 # Off-chain
 IFundValueCalculator.sol: IFundValueCalculator.abi.json

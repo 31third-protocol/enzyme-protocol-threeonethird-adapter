@@ -980,7 +980,7 @@ abstract contract TermFinanceV1LendingPositionTest is
 
 contract TermFinanceV1LendingPositionTestEthereum is TermFinanceV1LendingPositionTest {
     function setUp() public virtual override {
-        setUpMainnetEnvironment(ETHEREUM_BLOCK_TERM_FINANCE_TIME_SENSITIVE);
+        setUpMainnetEnvironment(ETHEREUM_BLOCK_TIME_SENSITIVE_TERM_FINANCE);
         super.setUp();
     }
 }

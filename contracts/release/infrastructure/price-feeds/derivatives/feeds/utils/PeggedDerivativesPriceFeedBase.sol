@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -16,7 +16,7 @@ import {IDerivativePriceFeed} from "../../IDerivativePriceFeed.sol";
 import {SingleUnderlyingDerivativeRegistryMixin} from "./SingleUnderlyingDerivativeRegistryMixin.sol";
 
 /// @title PeggedDerivativesPriceFeedBase Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Price feed base for multiple derivatives that are pegged 1:1 to their underlyings,
 /// and have the same decimals as their underlying
 abstract contract PeggedDerivativesPriceFeedBase is IDerivativePriceFeed, SingleUnderlyingDerivativeRegistryMixin {

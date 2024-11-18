@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -15,7 +15,7 @@ import {IComptroller} from "../../core/fund/comptroller/IComptroller.sol";
 import {IVault} from "../../core/fund/vault/IVault.sol";
 
 /// @title PermissionedVaultActionMixin Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice A mixin contract for extensions that can make permissioned vault calls
 abstract contract PermissionedVaultActionMixin {
     /// @notice Adds an external position to active external positions

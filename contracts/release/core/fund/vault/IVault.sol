@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -18,7 +18,7 @@ import {IMigratableVault} from "../../../../persistent/vault/interfaces/IMigrata
 import {IVaultCore} from "../../../../persistent/vault/interfaces/IVaultCore.sol";
 
 /// @title IVault Interface
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 interface IVault is IVaultCore, IMigratableVault, IFreelyTransferableSharesVault, IExternalPositionVault {
     enum VaultAction {
         None,

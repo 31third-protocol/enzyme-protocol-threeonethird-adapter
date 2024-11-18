@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -20,7 +20,7 @@ import {IAaveV3DebtPosition} from "./IAaveV3DebtPosition.sol";
 pragma solidity 0.8.19;
 
 /// @title AaveV3DebtPositionParser
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Parser for Aave Debt Positions
 contract AaveV3DebtPositionParser is
     IExternalPositionParser,
@@ -89,6 +89,10 @@ contract AaveV3DebtPositionParser is
                     amountsToTransfer_[i] = IERC20(debtToken).balanceOf(_externalPosition);
                 }
             }
+        } else if (_actionId == uint256(IAaveV3DebtPosition.Actions.ClaimRewards)) {
+            (,, address rewardToken) = __decodeClaimRewardsActionArgs(_encodedActionArgs);
+            assetsToReceive_ = new address[](1);
+            assetsToReceive_[0] = rewardToken;
         }
 
         // No validations or transferred assets passed for Actions.SetEMode, and Actions.SetUseReserveAsCollateral

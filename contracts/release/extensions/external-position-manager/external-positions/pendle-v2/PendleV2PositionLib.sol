@@ -2,7 +2,7 @@
 
 /*
     This file is part of the Enzyme Protocol.
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
 */
@@ -11,28 +11,33 @@ pragma solidity 0.8.19;
 
 import {IERC20} from "../../../../../external-interfaces/IERC20.sol";
 import {IPendleV2Market} from "../../../../../external-interfaces/IPendleV2Market.sol";
-import {IPendleV2MarketFactory} from "../../../../../external-interfaces/IPendleV2MarketFactory.sol";
 import {IPendleV2PrincipalToken} from "../../../../../external-interfaces/IPendleV2PrincipalToken.sol";
-import {IPendleV2PtOracle} from "../../../../../external-interfaces/IPendleV2PtOracle.sol";
+import {IPendleV2PyYtLpOracle} from "../../../../../external-interfaces/IPendleV2PyYtLpOracle.sol";
 import {IPendleV2Router} from "../../../../../external-interfaces/IPendleV2Router.sol";
 import {IPendleV2StandardizedYield} from "../../../../../external-interfaces/IPendleV2StandardizedYield.sol";
 import {IWETH} from "../../../../../external-interfaces/IWETH.sol";
 import {IAddressListRegistry} from "../../../../../persistent/address-list-registry/IAddressListRegistry.sol";
+import {IExternalPositionProxy} from "../../../../../persistent/external-positions/IExternalPositionProxy.sol";
 import {AddressArrayLib} from "../../../../../utils/0.8.19/AddressArrayLib.sol";
 import {AssetHelpers} from "../../../../../utils/0.8.19/AssetHelpers.sol";
-import {PendleLpOracleLib} from "../../../../../utils/0.8.19/pendle/adapted-libs/PendleLpOracleLib.sol";
-import {PendlePtOracleLib} from "../../../../../utils/0.8.19/pendle/adapted-libs/PendlePtOracleLib.sol";
-import {IPendleV2Market as IOracleLibPendleMarket} from
-    "../../../../../utils/0.8.19/pendle/adapted-libs/interfaces/IPendleV2Market.sol";
 import {WrappedSafeERC20 as SafeERC20} from "../../../../../utils/0.8.19/open-zeppelin/WrappedSafeERC20.sol";
 import {PendleV2PositionLibBase1} from "./bases/PendleV2PositionLibBase1.sol";
+import {IPendleV2MarketRegistry} from "./markets-registry/IPendleV2MarketRegistry.sol";
 import {IPendleV2Position} from "./IPendleV2Position.sol";
 import {PendleV2PositionDataDecoder} from "./PendleV2PositionDataDecoder.sol";
 
 /// @title PendleV2PositionLib Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice An External Position library contract for Pendle V2 Positions
-/// @dev See "POSITION VALUE" section for notes on pricing mechanism that must be considered by funds
+/// @dev In order to take a particular Pendle V2 position (PT or LP),
+/// the fund owner must first register it on the PendleV2MarketsRegistry contract, via the VaultProxy,
+/// i.e., by calling ComptrollerProxy.vaultCallOnContract().
+/// The actions allowed in this position follow the following rules based on the registry:
+///   - Can buy PT from MarketA: MarketA is the market oracle for PT
+///   - Can sell PT on MarketA: MarketA is the market oracle for PT
+///   - Can provide liquidity to MarketA: MarketA has a non-zero TWAP duration
+///   - Can remove liquidity from MarketA: always allowed if LP token was acquired via this contract
+/// See "POSITION VALUE" section for notes on pricing mechanism that must be considered by funds.
 contract PendleV2PositionLib is
     IPendleV2Position,
     PendleV2PositionDataDecoder,
@@ -47,27 +52,24 @@ contract PendleV2PositionLib is
     address internal constant PENDLE_NATIVE_ASSET_ADDRESS = address(0);
 
     IAddressListRegistry internal immutable ADDRESS_LIST_REGISTRY;
-    uint32 internal immutable MINIMUM_PRICING_DURATION;
-    uint32 internal immutable MAXIMUM_PRICING_DURATION;
-    uint256 internal immutable PENDLE_MARKET_FACTORIES_LIST_ID;
+    IPendleV2MarketRegistry internal immutable PENDLE_MARKET_REGISTRY;
+    IPendleV2PyYtLpOracle internal immutable PENDLE_ORACLE;
+    uint256 internal immutable PENDLE_PEGGED_SY_TOKENS_LIST_ID;
     IPendleV2Router internal immutable PENDLE_ROUTER;
-    IPendleV2PtOracle internal immutable PRINCIPAL_TOKEN_ORACLE;
     IWETH private immutable WRAPPED_NATIVE_ASSET;
 
     constructor(
-        address _addressListRegistry,
-        uint32 _minimumPricingDuration,
-        uint32 _maximumPricingDuration,
-        uint256 _pendleMarketFactoriesListId,
-        address _pendlePtOracleAddress,
+        address _addressListRegistryAddress,
+        address _pendleMarketsRegistryAddress,
+        address _pendleOracleAddress,
+        uint256 _pendlePeggedSyTokensListId,
         address _pendleRouterAddress,
         address _wrappedNativeAssetAddress
     ) {
-        ADDRESS_LIST_REGISTRY = IAddressListRegistry(_addressListRegistry);
-        MINIMUM_PRICING_DURATION = _minimumPricingDuration;
-        MAXIMUM_PRICING_DURATION = _maximumPricingDuration;
-        PENDLE_MARKET_FACTORIES_LIST_ID = _pendleMarketFactoriesListId;
-        PRINCIPAL_TOKEN_ORACLE = IPendleV2PtOracle(_pendlePtOracleAddress);
+        ADDRESS_LIST_REGISTRY = IAddressListRegistry(_addressListRegistryAddress);
+        PENDLE_MARKET_REGISTRY = IPendleV2MarketRegistry(_pendleMarketsRegistryAddress);
+        PENDLE_ORACLE = IPendleV2PyYtLpOracle(_pendleOracleAddress);
+        PENDLE_PEGGED_SY_TOKENS_LIST_ID = _pendlePeggedSyTokensListId;
         PENDLE_ROUTER = IPendleV2Router(_pendleRouterAddress);
         WRAPPED_NATIVE_ASSET = IWETH(_wrappedNativeAssetAddress);
     }
@@ -97,19 +99,22 @@ contract PendleV2PositionLib is
     function __buyPrincipalToken(bytes memory _actionArgs) private {
         // Decode the actionArgs
         (
-            address principalTokenAddress,
             IPendleV2Market market,
-            uint32 pricingDuration,
             address depositTokenAddress,
             uint256 depositAmount,
             IPendleV2Router.ApproxParams memory guessPtOut,
             uint256 minPtOut
         ) = __decodeBuyPrincipalTokenActionArgs(_actionArgs);
 
-        __handlePrincipalTokenInput({_principalTokenAddress: principalTokenAddress, _marketAddress: address(market)});
-        __handleMarketAndDurationInput({_marketAddress: address(market), _duration: pricingDuration});
+        (IPendleV2StandardizedYield syToken, IPendleV2PrincipalToken principalToken,) = market.readTokens();
 
-        (IPendleV2StandardizedYield syToken,,) = market.readTokens();
+        __validateMarketForPt({_ptAddress: address(principalToken), _marketAddress: address(market)});
+
+        // Add principal token to storage as-needed
+        if (!principalTokens.contains(address(principalToken))) {
+            principalTokens.push(address(principalToken));
+            emit PrincipalTokenAdded(address(principalToken));
+        }
 
         // We can safely pass in 0 for minIncomingShares since we validate the final minPtOut.
         (uint256 syTokenAmount) = __mintSYToken({
@@ -143,19 +148,13 @@ contract PendleV2PositionLib is
     /// @dev Helper to sell a Pendle principal token for an underlying token
     function __sellPrincipalToken(bytes memory _actionArgs) private {
         // Decode the actionArgs
-        (
-            IPendleV2PrincipalToken principalToken,
-            IPendleV2Market market,
-            address withdrawalTokenAddress,
-            uint256 withdrawalAmount,
-            uint256 minIncomingAmount
-        ) = __decodeSellPrincipalTokenActionArgs(_actionArgs);
+        (IPendleV2Market market, address withdrawalTokenAddress, uint256 withdrawalAmount, uint256 minIncomingAmount) =
+            __decodeSellPrincipalTokenActionArgs(_actionArgs);
 
-        // Validate that the principal token is in storage
-        require(
-            getMarketForPrincipalToken(address(principalToken)) == address(market),
-            "__sellPrincipalToken: invalid market address"
-        );
+        (IPendleV2StandardizedYield syToken, IPendleV2PrincipalToken principalToken, address yieldTokenAddress) =
+            IPendleV2Market(market).readTokens();
+
+        __validateMarketForPt({_ptAddress: address(principalToken), _marketAddress: address(market)});
 
         // Approve the principal token to be spent by the market
         __approveAssetMaxAsNeeded({
@@ -163,8 +162,6 @@ contract PendleV2PositionLib is
             _target: address(PENDLE_ROUTER),
             _neededAmount: withdrawalAmount
         });
-
-        (IPendleV2StandardizedYield syToken,, address yieldTokenAddress) = IPendleV2Market(market).readTokens();
 
         // Convert PT to SY
         // We can safely pass 0 as _minSyOut because we validate the final minIncomingAmount
@@ -198,10 +195,8 @@ contract PendleV2PositionLib is
         });
 
         if (IERC20(address(principalToken)).balanceOf(address(this)) == 0) {
-            // Remove the principal token from storage
-            // Also clears the mapping to enable its use in verifying storage presence
+            // Remove the principal token from storage if no balance remains
             principalTokens.removeStorageItem(address(principalToken));
-            principalTokenToMarket[address(principalToken)] = address(0);
 
             emit PrincipalTokenRemoved(address(principalToken));
         }
@@ -212,14 +207,18 @@ contract PendleV2PositionLib is
         // Decode the actionArgs
         (
             IPendleV2Market market,
-            uint32 pricingDuration,
             address depositTokenAddress,
             uint256 depositAmount,
             IPendleV2Router.ApproxParams memory guessPtReceived,
             uint256 minLpOut
         ) = __decodeAddLiquidityActionArgs(_actionArgs);
 
-        __handleMarketAndDurationInput({_marketAddress: address(market), _duration: pricingDuration});
+        // Validate that the market has a non-zero duration (i.e, is registered)
+        require(
+            PENDLE_MARKET_REGISTRY.getMarketOracleDurationForUser({_user: msg.sender, _marketAddress: address(market)})
+                > 0,
+            "__addLiquidity: Unsupported market"
+        );
 
         (IPendleV2StandardizedYield syToken,,) = market.readTokens();
 
@@ -270,7 +269,8 @@ contract PendleV2PositionLib is
             uint256 minIncomingAmount
         ) = __decodeRemoveLiquidityActionArgs(_actionArgs);
 
-        __validatePendleMarket(market);
+        // Validate that the LP token is tracked in this position (i.e., was acquired via this contract)
+        require(lpTokens.contains(address(market)), "__removeLiquidity: Unsupported market");
 
         // Approve the router to spend the LP token
         __approveAssetMaxAsNeeded({
@@ -323,45 +323,19 @@ contract PendleV2PositionLib is
         }
 
         // Send the rewards back to the vault.
-        __pushFullAssetBalances(msg.sender, rewardTokenAddresses);
-    }
+        // Ignore any PT and LP tokens held by this contract, as a precaution.
+        for (uint256 i; i < rewardTokenAddresses.length; i++) {
+            IERC20 rewardToken = IERC20(rewardTokenAddresses[i]);
+            uint256 rewardTokenBalance = rewardToken.balanceOf(address(this));
 
-    /// @dev Helper to handle market and duration input
-    function __handleMarketAndDurationInput(address _marketAddress, uint32 _duration) private {
-        // Check whether or not the market is already in storage.
-        // If market is in storage, make sure that the provided duration matches the stored duration.
-        uint32 storedDuration = getOraclePricingDurationForMarket(_marketAddress);
+            if (
+                rewardTokenBalance == 0 || principalTokens.contains(address(rewardToken))
+                    || lpTokens.contains(address(rewardToken))
+            ) {
+                continue;
+            }
 
-        if (storedDuration != 0) {
-            require(storedDuration == _duration, "__handleMarketAndDurationInput: stored duration mismatch");
-        } else {
-            // If market is not in storage, validate market/duration and add it to storage.
-            __validateMarketAndDuration({_marketAddress: _marketAddress, _duration: _duration});
-
-            marketToOraclePricingDuration[_marketAddress] = _duration;
-            emit OracleDurationForMarketAdded(_marketAddress, _duration);
-        }
-    }
-
-    /// @dev Helper to handle principal token input
-    function __handlePrincipalTokenInput(address _principalTokenAddress, address _marketAddress) private {
-        // Check whether or not the principalToken is already in storage.
-        // If PT is in storage, make sure that the provided config matches the stored config.
-        address storedMarket = getMarketForPrincipalToken(_principalTokenAddress);
-
-        if (storedMarket != address(0)) {
-            require(storedMarket == _marketAddress, "__handlePrincipalTokenInput: stored market address mismatch");
-        } else {
-            // If PT is not in storage, validate that it matches the Pendle market.
-            (, IPendleV2PrincipalToken retrievedPrincipalToken,) = IPendleV2Market(_marketAddress).readTokens();
-            require(
-                address(retrievedPrincipalToken) == _principalTokenAddress,
-                "__handlePrincipalTokenInput: principal token and market mismatch"
-            );
-
-            principalTokens.push(_principalTokenAddress);
-            principalTokenToMarket[_principalTokenAddress] = _marketAddress;
-            emit PrincipalTokenAdded(_principalTokenAddress, _marketAddress);
+            rewardToken.safeTransfer(msg.sender, rewardTokenBalance);
         }
     }
 
@@ -373,6 +347,8 @@ contract PendleV2PositionLib is
         uint256 _minIncomingShares,
         address _receiver
     ) private returns (uint256 syTokenAmount_) {
+        __validateSyToken({_syTokenAddress: address(_syToken)});
+
         // Deposit the underlying token into the SY token
         uint256 nativeAssetDepositValue;
         address tokenIn = __parseNativeAssetInput(_depositTokenAddress);
@@ -419,41 +395,20 @@ contract PendleV2PositionLib is
         });
     }
 
-    /// @dev Helper to validate the market and duration
-    /// Throws if invalid
-    function __validateMarketAndDuration(address _marketAddress, uint32 _duration) private view {
-        __validatePendleMarket({_market: IPendleV2Market(_marketAddress)});
-
-        // For safety, we require that the specified duration falls between some boundaries.
+    /// @dev Helper to validate the market a PT can be traded on
+    function __validateMarketForPt(address _ptAddress, address _marketAddress) private view {
         require(
-            MINIMUM_PRICING_DURATION <= _duration && _duration <= MAXIMUM_PRICING_DURATION,
-            "__validateMarketAndDuration: out-of-bounds duration"
-        );
-
-        // We validate that the oracle duration is valid as recommended by the Pendle docs.
-        // src: https://docs.pendle.finance/Developers/Integration/PTOracle#oracle-preparation
-        (bool increaseCardinalityRequired,, bool oldestObservationSatisfied) =
-            PRINCIPAL_TOKEN_ORACLE.getOracleState({_market: _marketAddress, _duration: _duration});
-        require(
-            increaseCardinalityRequired == false && oldestObservationSatisfied == true,
-            "__validateMarketAndDuration: invalid pricing duration"
+            _marketAddress
+                == PENDLE_MARKET_REGISTRY.getPtOracleMarketForUser({_user: msg.sender, _ptAddress: _ptAddress}),
+            "__validateMarketForPt: Unsupported market"
         );
     }
 
-    /// @dev Helper to validate that the market is a canonical Pendle market
-    /// Also checks that the market's rate asset is in the list of supported assets
-    /// Throws if invalid
-    function __validatePendleMarket(IPendleV2Market _market) private view {
-        IPendleV2MarketFactory pendleMarketFactory = IPendleV2MarketFactory(_market.factory());
-
+    /// @dev Helper to validate whether a SY Token is allowed
+    function __validateSyToken(address _syTokenAddress) private view {
         require(
-            ADDRESS_LIST_REGISTRY.isInList(PENDLE_MARKET_FACTORIES_LIST_ID, address(pendleMarketFactory)),
-            "__validatePendleMarket: invalid market factory"
-        );
-
-        require(
-            pendleMarketFactory.isValidMarket({_market: address(_market)}),
-            "__validatePendleMarket: invalid market address"
+            ADDRESS_LIST_REGISTRY.isInList(PENDLE_PEGGED_SY_TOKENS_LIST_ID, _syTokenAddress),
+            "__validateSyToken: Unsupported SY Token"
         );
     }
 
@@ -463,12 +418,18 @@ contract PendleV2PositionLib is
 
     // CONSIDERATIONS FOR FUND MANAGERS:
     // 1. The pricing of Pendle Principal Tokens and LP tokens is TWAP-based.
-    //    Managers can specify which on-chain market and duration they want to use for pricing.
-    //    The market and duration is stored in the EP. Once set, a market/duration pair cannot be changed.
-    //    For more information on Pendle Principal Tokens pricing, see https://docs.pendle.finance/Developers/Integration/PTOracle
-    //    For more information on Pendle LP Tokens pricing, see https://docs.pendle.finance/Developers/Integration/LPOracle
+    //    Fund owners provide the TWAP duration to use for each position, via a registry contract (see contract-level natspec).
+    //    Position pricing security and correctness will vary according to market liquidity and TWAP duration.
+    //    Fund owners must consider these factors along with their fund's risk tolerance for share price deviations.
+    //    For more information on Pendle Principal Tokens pricing, see https://docs.pendle.finance/Developers/Oracles/IntroductionOfPtOracle
+    //    For more information on Pendle LP Tokens pricing, see https://docs.pendle.finance/Developers/Oracles/IntroductionOfLpOracle
     // 2. The valuation of the External Positions fully excludes accrued rewards.
     //    To prevent significant underpricing, managers should claim rewards regularly.
+    // 3. Principal Tokens and LP Tokens are priced in Pendle StandardizedYield (SY) Tokens, which are then converted to the underlying yield asset.
+    //    It is assumed that the SY Token will always be 1:1 redeemable for the underlying yield asset.
+    //    The Enzyme technical council maintains an onchain list of theses SY Tokens.
+    //    If a SY Token is held by the position but is not part of the list, pricing will revert.
+    //    For the Pendle-maintained list of pegged SY Tokens, see https://docs.pendle.finance/Developers/Contracts/StandardizedYield
 
     /// @notice Retrieves the debt assets (negative value) of the external position
     /// @return assets_ Debt assets
@@ -484,6 +445,8 @@ contract PendleV2PositionLib is
     /// 1. Principal token (PT) holdings
     /// 2. LP token holdings
     function getManagedAssets() external view override returns (address[] memory assets_, uint256[] memory amounts_) {
+        address vaultProxyAddress = IExternalPositionProxy(address(this)).getVaultProxy();
+
         address[] memory principalTokensMem = principalTokens;
         uint256 principalTokensLength = principalTokensMem.length;
 
@@ -499,13 +462,17 @@ contract PendleV2PositionLib is
         uint256[] memory rawAmounts = new uint256[](principalTokensLength + lpTokensLength);
 
         for (uint256 i; i < principalTokensLength; i++) {
-            (rawAssets[i], rawAmounts[i]) = __getPrincipalTokenValue(principalTokensMem[i]);
+            (rawAssets[i], rawAmounts[i]) = __getPrincipalTokenValue({
+                _vaultProxyAddress: vaultProxyAddress,
+                _principalTokenAddress: principalTokensMem[i]
+            });
         }
 
         for (uint256 i; i < lpTokensLength; i++) {
             // Start assigning from the subarray that follows the assigned principalTokens
             uint256 nextEmptyIndex = principalTokensLength + i;
-            (rawAssets[nextEmptyIndex], rawAmounts[nextEmptyIndex]) = __getLpTokenValue(lpTokensMem[i]);
+            (rawAssets[nextEmptyIndex], rawAmounts[nextEmptyIndex]) =
+                __getLpTokenValue({_vaultProxyAddress: vaultProxyAddress, _lpTokenAddress: lpTokensMem[i]});
         }
 
         // Does not remove 0-amount items
@@ -513,7 +480,7 @@ contract PendleV2PositionLib is
     }
 
     /// @dev Helper to get the value, in the underlying asset, of a lpToken holding
-    function __getLpTokenValue(address _lpTokenAddress)
+    function __getLpTokenValue(address _vaultProxyAddress, address _lpTokenAddress)
         private
         view
         returns (address underlyingToken_, uint256 value_)
@@ -522,23 +489,31 @@ contract PendleV2PositionLib is
 
         // Get the underlying token address
         (IPendleV2StandardizedYield syToken,,) = IPendleV2Market(_lpTokenAddress).readTokens();
-        (, underlyingToken_,) = syToken.assetInfo();
+
+        __validateSyToken({_syTokenAddress: address(syToken)});
+
+        underlyingToken_ = syToken.yieldToken();
+
+        // Retrieve the registered oracle duration for the market
+        uint32 duration = PENDLE_MARKET_REGISTRY.getMarketOracleDurationForUser({
+            _user: _vaultProxyAddress,
+            _marketAddress: _lpTokenAddress
+        });
+        require(duration > 0, "__getLpTokenValue: Duration not registered");
+
+        uint256 rate = PENDLE_ORACLE.getLpToSyRate({_market: _lpTokenAddress, _duration: duration});
+
+        // We always assume 1:1 SYToken:YieldToken redeemability
+        value_ = lpTokenBalance * rate / ORACLE_RATE_PRECISION;
 
         // If underlying is the native asset, replace with the wrapped native asset for pricing purposes
         if (underlyingToken_ == PENDLE_NATIVE_ASSET_ADDRESS) {
             underlyingToken_ = address(WRAPPED_NATIVE_ASSET);
         }
-
-        uint256 rate = PendleLpOracleLib.getLpToAssetRate({
-            market: IOracleLibPendleMarket(_lpTokenAddress),
-            duration: getOraclePricingDurationForMarket(_lpTokenAddress)
-        });
-
-        value_ = lpTokenBalance * rate / ORACLE_RATE_PRECISION;
     }
 
     /// @dev Helper to get the value, in the underlying asset, of a principal token holding
-    function __getPrincipalTokenValue(address _principalTokenAddress)
+    function __getPrincipalTokenValue(address _vaultProxyAddress, address _principalTokenAddress)
         private
         view
         returns (address underlyingToken_, uint256 value_)
@@ -546,23 +521,35 @@ contract PendleV2PositionLib is
         uint256 principalTokenBalance = IERC20(_principalTokenAddress).balanceOf(address(this));
 
         // Get the underlying token address
-        (, underlyingToken_,) =
-            IPendleV2StandardizedYield(IPendleV2PrincipalToken(_principalTokenAddress).SY()).assetInfo();
+        IPendleV2StandardizedYield syToken =
+            IPendleV2StandardizedYield(IPendleV2PrincipalToken(_principalTokenAddress).SY());
+
+        __validateSyToken({_syTokenAddress: address(syToken)});
+
+        underlyingToken_ = syToken.yieldToken();
+
+        // Retrieve the registered oracle market and its duration
+        (address marketAddress, uint32 duration) = PENDLE_MARKET_REGISTRY.getPtOracleMarketAndDurationForUser({
+            _ptAddress: _principalTokenAddress,
+            _user: _vaultProxyAddress
+        });
+        require(duration > 0, "__getPrincipalTokenValue: Duration not registered");
+
+        uint256 rate = PENDLE_ORACLE.getPtToSyRate({
+            _market: marketAddress,
+            _duration: PENDLE_MARKET_REGISTRY.getMarketOracleDurationForUser({
+                _user: _vaultProxyAddress,
+                _marketAddress: marketAddress
+            })
+        });
+
+        // We always assume 1:1 SYToken:YieldToken redeemability
+        value_ = principalTokenBalance * rate / ORACLE_RATE_PRECISION;
 
         // If underlying is the native asset, replace with the wrapped native asset for pricing purposes
         if (underlyingToken_ == PENDLE_NATIVE_ASSET_ADDRESS) {
             underlyingToken_ = address(WRAPPED_NATIVE_ASSET);
         }
-
-        // Retrieve the stored market and its duration
-        IOracleLibPendleMarket market = IOracleLibPendleMarket(getMarketForPrincipalToken(_principalTokenAddress));
-
-        uint256 rate = PendlePtOracleLib.getPtToAssetRate({
-            market: market,
-            duration: getOraclePricingDurationForMarket(address(market))
-        });
-
-        value_ = principalTokenBalance * rate / ORACLE_RATE_PRECISION;
 
         return (underlyingToken_, value_);
     }
@@ -575,30 +562,6 @@ contract PendleV2PositionLib is
     /// @return lpTokenAddresses_ The Pendle LPToken addresses
     function getLPTokens() public view override returns (address[] memory lpTokenAddresses_) {
         return lpTokens;
-    }
-
-    /// @notice Gets the market used for pricing a particular Principal Token
-    /// @param _principalTokenAddress The Principal token address
-    /// @return marketAddress_ The market address for a Pendle principal token address
-    function getMarketForPrincipalToken(address _principalTokenAddress)
-        public
-        view
-        override
-        returns (address marketAddress_)
-    {
-        return principalTokenToMarket[_principalTokenAddress];
-    }
-
-    /// @notice Gets the oracle duration for pricing tokens of a particular Pendle market
-    /// @param _marketAddress The address of the Pendle market
-    /// @return pricingDuration_ The oracle duration
-    function getOraclePricingDurationForMarket(address _marketAddress)
-        public
-        view
-        override
-        returns (uint32 pricingDuration_)
-    {
-        return marketToOraclePricingDuration[_marketAddress];
     }
 
     /// @notice Gets the Principal Tokens held

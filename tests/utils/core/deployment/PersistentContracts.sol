@@ -38,3 +38,8 @@ function getPolygonDeployment() pure returns (Contracts memory) {
         uintListRegistry: IUintListRegistry(0x6DdD871C1607348eBb5BE250F882255390166519)
     });
 }
+
+// TODO: Replace with actual values
+function getArbitrumDeployment() pure returns (Contracts memory contracts_) {
+    return contracts_;
+}

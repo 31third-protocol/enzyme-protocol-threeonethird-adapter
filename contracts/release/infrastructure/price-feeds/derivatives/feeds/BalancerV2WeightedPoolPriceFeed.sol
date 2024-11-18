@@ -2,7 +2,7 @@
 
 /*
     This file is part of the Enzyme Protocol.
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
 */
@@ -22,7 +22,7 @@ import {IValueInterpreter} from "../../../value-interpreter/IValueInterpreter.so
 import {IDerivativePriceFeed} from "../IDerivativePriceFeed.sol";
 
 /// @title BalancerV2WeightedPoolPriceFeed Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Price source oracle for Balancer Pool Tokens (BPT) of weighted pools
 contract BalancerV2WeightedPoolPriceFeed is IDerivativePriceFeed, FundDeployerOwnerMixin {
     using AddressArrayLib for address[];

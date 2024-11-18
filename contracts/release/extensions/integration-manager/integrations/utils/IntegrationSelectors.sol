@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -12,7 +12,7 @@
 pragma solidity >=0.6.0 <0.9.0;
 
 /// @title IntegrationSelectors Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Selectors for integration actions
 /// @dev Selectors are created from their signatures rather than hardcoded for easy verification
 abstract contract IntegrationSelectors {
@@ -39,4 +39,7 @@ abstract contract IntegrationSelectors {
     // Wrapping
     bytes4 internal constant WRAP_SELECTOR = bytes4(keccak256("wrap(address,bytes,bytes)"));
     bytes4 internal constant UNWRAP_SELECTOR = bytes4(keccak256("unwrap(address,bytes,bytes)"));
+
+    // Transfers
+    bytes4 internal constant TRANSFER_SELECTOR = bytes4(keccak256("transfer(address,bytes,bytes)"));
 }

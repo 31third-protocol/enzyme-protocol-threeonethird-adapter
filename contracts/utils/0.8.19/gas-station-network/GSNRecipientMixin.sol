@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -14,7 +14,7 @@ pragma solidity 0.8.19;
 import {IAddressListRegistry} from "../../../persistent/address-list-registry/IAddressListRegistry.sol";
 
 /// @title GSNRecipientMixin Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Mixin for contracts that will receive relayable calls via Gas Station Network
 /// @dev Uses an AddressListRegistry list as a beacon for the trusted forwarder address
 abstract contract GSNRecipientMixin {

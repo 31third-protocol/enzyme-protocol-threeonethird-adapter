@@ -482,7 +482,7 @@ abstract contract AaveV2DebtPositionTest is
 
 contract AaveV2DebtPositionTestEthereum is AaveV2DebtPositionTest {
     function setUp() public virtual override {
-        setUpMainnetEnvironment(ETHEREUM_BLOCK_TEMP_TIME_SENSITIVE);
+        setUpMainnetEnvironment();
 
         poolAddressProvider = IAaveV2LendingPoolAddressProvider(ETHEREUM_LENDING_POOL_ADDRESS_PROVIDER_ADDRESS);
         protocolDataProvider = IAaveV2ProtocolDataProvider(ETHEREUM_PROTOCOL_DATA_PROVIDER);
@@ -491,7 +491,7 @@ contract AaveV2DebtPositionTestEthereum is AaveV2DebtPositionTest {
         super.setUp();
 
         // set up all underlyings used in test cases
-        __registerUnderlyingsAndATokensForThem(toArray(ETHEREUM_WBTC, ETHEREUM_LINK, ETHEREUM_DAI, ETHEREUM_USDC));
+        __registerUnderlyingsAndATokensForThem(toArray(ETHEREUM_WBTC, ETHEREUM_WETH, ETHEREUM_DAI, ETHEREUM_USDC));
     }
 
     function test_addCollateral_success() public {
@@ -508,8 +508,8 @@ contract AaveV2DebtPositionTestEthereum is AaveV2DebtPositionTest {
     function test_removeCollateral_success() public {
         address[] memory aTokens = new address[](5);
         aTokens[0] = __getATokenAddress(ETHEREUM_WBTC);
-        aTokens[1] = __getATokenAddress(ETHEREUM_LINK);
-        aTokens[2] = __getATokenAddress(ETHEREUM_LINK);
+        aTokens[1] = __getATokenAddress(ETHEREUM_WETH);
+        aTokens[2] = __getATokenAddress(ETHEREUM_WETH);
         aTokens[3] = __getATokenAddress(ETHEREUM_DAI);
         aTokens[4] = __getATokenAddress(ETHEREUM_USDC);
 
@@ -598,7 +598,7 @@ contract AaveV2DebtPositionTestEthereum is AaveV2DebtPositionTest {
             _amounts: toArray(
                 1 * assetUnit(IERC20(__getATokenAddress(ETHEREUM_WBTC))),
                 1 * assetUnit(IERC20(__getATokenAddress(ETHEREUM_DAI)))
-                ),
+            ),
             _rewardToken: ETHEREUM_STKAAVE
         });
     }
@@ -722,7 +722,7 @@ contract AaveV2DebtPositionTestPolygon is AaveV2DebtPositionTest {
             _amounts: toArray(
                 1 * assetUnit(IERC20(__getATokenAddress(POLYGON_WBTC))),
                 1 * assetUnit(IERC20(__getATokenAddress(POLYGON_DAI)))
-                ),
+            ),
             _rewardToken: POLYGON_WMATIC
         });
     }

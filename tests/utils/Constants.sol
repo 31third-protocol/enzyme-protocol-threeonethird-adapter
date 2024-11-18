@@ -18,6 +18,7 @@ abstract contract Constants {
     // Network ChainIDs
     uint256 internal constant ETHEREUM_CHAIN_ID = 1;
     uint256 internal constant POLYGON_CHAIN_ID = 137;
+    uint256 internal constant ARBITRUM_CHAIN_ID = 42161;
 
     // Miscellaneous
     uint8 internal constant CHAINLINK_AGGREGATOR_DECIMALS_ETH = 18;
@@ -30,15 +31,18 @@ abstract contract Constants {
     // expected exchange rates, etc.
     // `ETHEREUM_BLOCK_LATEST` can be increased as-needed, and should be used in all tests
     // that should generally continue to pass regardless of block.
-    uint256 internal constant ETHEREUM_BLOCK_LATEST = 18040000; // Sept 1st, 2023
-    uint256 internal constant ETHEREUM_BLOCK_PENDLE_TIME_SENSITIVE = 19300000; // Feb 3rd, 2024
-    uint256 internal constant ETHEREUM_BLOCK_TERM_FINANCE_TIME_SENSITIVE = 18554000; // Nov 12th, 2023
-    uint256 internal constant ETHEREUM_BLOCK_TEMP_TIME_SENSITIVE = 17500000; // June 17th, 2023
-    uint256 internal constant ETHEREUM_BLOCK_LATEST_TIME_SENSITIVE = 17345000; // May 26, 2023
-    uint256 internal constant ETHEREUM_BLOCK_2023_01_13 = 16400000;
+    uint256 internal constant ETHEREUM_BLOCK_LATEST = 20711624; // Sep 9th, 2024
+    uint256 internal constant ETHEREUM_BLOCK_TIME_SENSITIVE = 20711624; // Sep 9th, 2024
+    uint256 internal constant ETHEREUM_BLOCK_TIME_SENSITIVE_ONE_INCH_V5 = 19518890; // March 26th, 2024
+    uint256 internal constant ETHEREUM_BLOCK_TIME_SENSITIVE_PENDLE = 20100000; // June 15th, 2024
+    uint256 internal constant ETHEREUM_BLOCK_TIME_SENSITIVE_STAKEWISE = 18656282; // Nov 26th, 2023
+    uint256 internal constant ETHEREUM_BLOCK_TIME_SENSITIVE_TERM_FINANCE = 18554000; // Nov 12th, 2023
 
-    uint256 internal constant POLYGON_BLOCK_LATEST = 47020000; // September 1st, 2023
-    uint256 internal constant POLYGON_BLOCK_LATEST_TIME_SENSITIVE = 43179000; // May 26, 2023
+    uint256 internal constant POLYGON_BLOCK_LATEST = 61606585; // Sep 9th, 2024
+    uint256 internal constant POLYGON_BLOCK_TIME_SENSITIVE = 54900000; // March 21st, 2024
+
+    uint256 internal constant ARBITRUM_BLOCK_LATEST = 251655669; // Sep 9th, 2024
+    uint256 internal constant ARBITRUM_BLOCK_TIME_SENSITIVE = 231099000; // July 11th, 2024
 
     // Network assets
     address internal constant NATIVE_ASSET_ADDRESS = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
@@ -57,6 +61,7 @@ abstract contract Constants {
     address internal constant ETHEREUM_DAI = 0x6B175474E89094C44Da98b954EedeAC495271d0F;
     address internal constant ETHEREUM_EETH = 0x35fA164735182de50811E8e2E824cFb9B6118ac2;
     address internal constant ETHEREUM_ETHERFI_LIQUIDITY_POOL = 0x308861A430be4cce5502d0A12724771Fc6DaF216;
+    address internal constant ETHEREUM_ETH_X = 0xA35b1B31Ce002FBF2058D22F30f95D405200A15b;
     address internal constant ETHEREUM_LDO = 0x5A98FcBEA516Cf06857215779Fd812CA3beF1B32;
     address internal constant ETHEREUM_LINK = 0x514910771AF9Ca656af840dff83E8264EcF986CA;
     address internal constant ETHEREUM_LUSD = 0x5f98805A4E8be255a32880FDeC7F6728C6568bA0;
@@ -73,6 +78,7 @@ abstract contract Constants {
     address internal constant POLYGON_COMPOUND_V3_CUSDC = 0xF25212E676D1F7F89Cd72fFEe66158f541246445;
     address internal constant POLYGON_CRV = 0x172370d5Cd63279eFa6d502DAB29171933a610AF;
     address internal constant POLYGON_DAI = 0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063;
+    address internal constant POLYGON_MATIC_X = 0xfa68FB4628DFF1028CFEc22b4162FCcd0d45efb6;
     address internal constant POLYGON_LINK = 0x53E0bca35eC356BD5ddDFebbD1Fc0fD03FaBad39;
     address internal constant POLYGON_MLN = 0xa9f37D84c856fDa3812ad0519Dad44FA0a3Fe207;
     address internal constant POLYGON_USDC = 0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174;
@@ -81,17 +87,41 @@ abstract contract Constants {
     address internal constant POLYGON_WETH = 0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619;
     address internal constant POLYGON_WMATIC = 0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270;
 
+    address internal constant ARBITRUM_BAL = 0x040d1EdC9569d4Bab2D15287Dc5A4F10F56a56B8;
+    address internal constant ARBITRUM_CRV = 0x11cDb42B0EB46D95f990BeDD4695A6e3fA034978;
+    address internal constant ARBITRUM_DAI = 0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1;
+    address internal constant ARBITRUM_EETH = 0x35fA164735182de50811E8e2E824cFb9B6118ac2;
+    address internal constant ARBITRUM_LINK = 0xf97f4df75117a78c1A5a0DBb814Af92458539FB4;
+    address internal constant ARBITRUM_MLN = 0x8f5c1A99b1df736Ad685006Cb6ADCA7B7Ae4b514;
+    address internal constant ARBITRUM_USDC = 0xaf88d065e77c8cC2239327C5EDb3A432268e5831;
+    address internal constant ARBITRUM_USDT = 0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9;
+    address internal constant ARBITRUM_WBTC = 0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f;
+    address internal constant ARBITRUM_WETH = 0x82aF49447D8a07e3bd95BD0d56f35241523fBab1;
+
     // Network Chainlink aggregators
     address internal constant ETHEREUM_BAL_ETH_AGGREGATOR = 0xC1438AA3823A6Ba0C159CfA8D98dF5A994bA120b;
     address internal constant ETHEREUM_DAI_ETH_AGGREGATOR = 0x773616E4d11A78F511299002da57A0a94577F1f4;
     address internal constant ETHEREUM_ETH_USD_AGGREGATOR = 0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419;
     address internal constant ETHEREUM_MLN_ETH_AGGREGATOR = 0xDaeA8386611A157B08829ED4997A8A62B557014C;
+    address internal constant ETHEREUM_STETH_ETH_AGGREGATOR = 0x86392dC19c0b719886221c78AB11eb8Cf5c52812;
     address internal constant ETHEREUM_USDC_ETH_AGGREGATOR = 0x986b5E1e1755e3C2440e960477f25201B0a8bbD4;
     address internal constant ETHEREUM_USDT_ETH_AGGREGATOR = 0xEe9F2375b4bdF6387aa8265dD4FB8F16512A1d46;
+    address internal constant ETHEREUM_WEETH_ETH_AGGREGATOR = 0x5c9C449BbC9a6075A2c061dF312a35fd1E05fF22;
 
     address internal constant POLYGON_ETH_USD_AGGREGATOR = 0xF9680D99D6C9589e2a93a78A04A279e509205945;
+    address internal constant POLYGON_DAI_ETH_AGGREGATOR = 0xFC539A559e170f848323e19dfD66007520510085;
     address internal constant POLYGON_MATIC_USD_AGGREGATOR = 0xAB594600376Ec9fD91F8e885dADF0CE036862dE0;
     address internal constant POLYGON_MLN_ETH_AGGREGATOR = 0xB89D583B72aBF9C3a7e6e093251C2fCad3365312;
     address internal constant POLYGON_USDC_USD_AGGREGATOR = 0xfE4A8cc5b5B2366C1B58Bea3858e81843581b2F7;
+    address internal constant POLYGON_USDT_ETH_AGGREGATOR = 0xf9d5AAC6E5572AEFa6bd64108ff86a222F69B64d;
     address internal constant POLYGON_WBTC_USD_AGGREGATOR = 0xDE31F8bFBD8c84b5360CFACCa3539B938dd78ae6;
+
+    address internal constant ARBITRUM_ETH_USD_AGGREGATOR = 0x639Fe6ab55C921f74e7fac1ee960C0B6293ba612;
+    address internal constant ARBITRUM_BAL_USD_AGGREGATOR = 0xBE5eA816870D11239c543F84b71439511D70B94f;
+    address internal constant ARBITRUM_CRV_USD_AGGREGATOR = 0xaebDA2c976cfd1eE1977Eac079B4382acb849325;
+    address internal constant ARBITRUM_DAI_USD_AGGREGATOR = 0xc5C8E77B397E531B8EC06BFb0048328B30E9eCfB;
+    // TODO: Replace with actual MLN/ETH aggregator.
+    address internal constant ARBITRUM_MLN_ETH_AGGREGATOR = 0xb7c8Fb1dB45007F98A68Da0588e1AA524C317f27;
+    address internal constant ARBITRUM_USDC_USD_AGGREGATOR = 0x50834F3163758fcC1Df9973b6e91f0F0F0434aD3;
+    address internal constant ARBITRUM_USDT_USD_AGGREGATOR = 0x3f3f5dF88dC9F13eac63DF89EC16ef6e7E25DdE7;
 }

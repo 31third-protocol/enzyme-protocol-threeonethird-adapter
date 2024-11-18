@@ -9,9 +9,13 @@ import {IIntegrationManager as IIntegrationManagerProd} from
 import {IntegrationTest} from "tests/bases/IntegrationTest.sol";
 
 import {IERC20} from "tests/interfaces/external/IERC20.sol";
+import {IMorphoSupplyVault} from "tests/interfaces/external/IMorphoSupplyVault.sol";
+import {IMorphoMorpho} from "tests/interfaces/external/IMorphoMorpho.sol";
+
 import {IComptrollerLib} from "tests/interfaces/internal/IComptrollerLib.sol";
 import {IERC4626Adapter} from "tests/interfaces/internal/IERC4626Adapter.sol";
 import {IVaultLib} from "tests/interfaces/internal/IVaultLib.sol";
+
 import {
     ETHEREUM_MORPHO_MAWETH_VAULT_ADDRESS,
     ETHEREUM_MORPHO_MA3WETH_VAULT_ADDRESS,
@@ -59,6 +63,16 @@ abstract contract ERC4626AdapterTestBase is IntegrationTest {
         bytes memory args = abi.encode(getIntegrationManagerAddressForVersion(version));
         address addr = deployCode("ERC4626Adapter.sol", args);
         return IERC4626Adapter(addr);
+    }
+
+    // MISC HELPERS
+
+    function __unpauseMorphoSupply(address _morphoSupplyVault) internal {
+        IMorphoMorpho morpho = IMorphoSupplyVault(_morphoSupplyVault).morpho();
+        address poolToken = IMorphoSupplyVault(_morphoSupplyVault).poolToken();
+
+        vm.prank(morpho.owner());
+        morpho.setIsSupplyPaused({_poolToken: poolToken, _isPaused: false});
     }
 
     // ACTION HELPERS
@@ -174,6 +188,8 @@ contract MorphoAaveV3Test is ERC4626AdapterTestBase {
 contract MorphoCompoundTest is ERC4626AdapterTestBase {
     function setUp() public override {
         __initialize({_version: EnzymeVersion.Current, _erc4626VaultAddress: ETHEREUM_MORPHO_MCWETH_VAULT_ADDRESS});
+
+        __unpauseMorphoSupply(ETHEREUM_MORPHO_MCWETH_VAULT_ADDRESS);
     }
 }
 
@@ -198,6 +214,8 @@ contract MorphoAaveV3TestV4 is ERC4626AdapterTestBase {
 contract MorphoCompoundTestV4 is ERC4626AdapterTestBase {
     function setUp() public override {
         __initialize({_version: EnzymeVersion.V4, _erc4626VaultAddress: ETHEREUM_MORPHO_MCWETH_VAULT_ADDRESS});
+
+        __unpauseMorphoSupply(ETHEREUM_MORPHO_MCWETH_VAULT_ADDRESS);
     }
 }
 

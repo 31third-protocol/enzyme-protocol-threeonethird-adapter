@@ -9,6 +9,7 @@ bytecode_hash = "none"
 cbor_metadata = false
 verbosity = 3
 fs_permissions = [{ access = "read", path = "./artifacts"}]
+optimizer=true
 
 # Ignore compiler warnings that should be intentionally-skipped
 ignored_warnings_from = ["contracts/release/extensions/integration-manager/integrations/utils/0.8.19/bases/GenericWrappingAdapterBase.sol"]
@@ -16,26 +17,16 @@ ignored_warnings_from = ["contracts/release/extensions/integration-manager/integ
 # NOTE: Specifying shanghai as the evm_version seems required for the Goerli tests to pass
 evm_version = "shanghai"
 
-# NOTE: Remappings are somewhat limited right now as there's no way to apply them to specific contexts: https://github.com/foundry-rs/foundry/issues/1855
-remappings = [
-  # Used by us directly.
-  "forge-std/=lib/forge-std/src/",
-  "openzeppelin-solc-0.6/=lib/openzeppelin-solc-0.6/contracts/",
-  "openzeppelin-solc-0.7/=lib/openzeppelin-solc-0.7/contracts/",
-  "openzeppelin-solc-0.8/=lib/openzeppelin-solc-0.8/contracts/",
-  "uniswap-v3-periphery/=lib/uniswap-v3-periphery/contracts/",
-
-  # Used by uniswap v3 internally.
-  "@uniswap/v3-core/=lib/uniswap-v3-core/",
-  "@openzeppelin/contracts/=lib/openzeppelin-solc-0.6/contracts/",
-]
-
 [profile.default.optimizer_details]
-yul = false
+yul = true
+
+[profile.dev]
+optimizer=false
 
 [rpc_endpoints]
 mainnet = "${ETHEREUM_NODE_MAINNET}"
 polygon = "${ETHEREUM_NODE_POLYGON}"
+arbitrum = "${ETHEREUM_NODE_ARBITRUM}"
 
 [etherscan]
 mainnet = { key = "${ETHERSCAN_API_KEY_MAINNET}", chain = "mainnet" }

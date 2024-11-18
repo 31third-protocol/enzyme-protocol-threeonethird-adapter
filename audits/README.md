@@ -1,9 +1,7 @@
 # Audit Reports
 
-This directory contains audit reports delivered for the contracts contained in this repo, beginning with the core protocol work for v2.
+This directory contains audit reports relevant to Enzyme.
 
-_Reports prior to the "protocol-v4" audits are being gathered and will be added shortly._
+The main directory contains audits of contracts within this repo, beginning with the core protocol work for v2.
 
-## Scope per report
-
-_In progress..._
+`/external-teams` contains reports on plugin contracts built by external teams, with code hosted elsewhere, as noted in the report.

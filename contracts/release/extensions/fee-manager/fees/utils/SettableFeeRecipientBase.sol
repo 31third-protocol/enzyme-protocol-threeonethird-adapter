@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -12,7 +12,7 @@
 pragma solidity 0.6.12;
 
 /// @title SettableFeeRecipientBase Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice A base contract to set and get a fee recipient for the inheriting fee
 abstract contract SettableFeeRecipientBase {
     event RecipientSetForFund(address indexed comptrollerProxy, address indexed recipient);

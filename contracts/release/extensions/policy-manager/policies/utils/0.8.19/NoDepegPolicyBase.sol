@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -17,7 +17,7 @@ import {INoDepegPolicyBase} from "../interfaces/INoDepegPolicyBase.sol";
 import {PolicyBase} from "./PolicyBase.sol";
 
 /// @title NoDepegPolicyBase Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice A base policy that validates when one of a list of assets has a price that
 /// deviates significantly from its expected peg
 abstract contract NoDepegPolicyBase is INoDepegPolicyBase, PolicyBase {

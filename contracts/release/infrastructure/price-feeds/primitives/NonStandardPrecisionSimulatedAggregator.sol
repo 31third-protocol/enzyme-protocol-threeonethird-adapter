@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -15,7 +15,7 @@ import {IChainlinkAggregator} from "../../../../external-interfaces/IChainlinkAg
 import {IChainlinkPriceFeedMixin} from "./IChainlinkPriceFeedMixin.sol";
 
 /// @title NonStandardPrecisionSimulatedAggregator Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice A simulated aggregator to support a Chainlink-like aggregator that uses
 /// a non-standard number of decimals for precision
 contract NonStandardPrecisionSimulatedAggregator {

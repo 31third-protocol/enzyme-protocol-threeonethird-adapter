@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -17,7 +17,7 @@ import {IVault} from "../../../../../core/fund/vault/IVault.sol";
 import {IValueInterpreter} from "../../../../../infrastructure/value-interpreter/IValueInterpreter.sol";
 
 /// @title PricelessAssetBypassMixin Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice A mixin that facilitates timelocked actions for an asset that does not have a valid price
 abstract contract PricelessAssetBypassMixin {
     using SafeMath for uint256;

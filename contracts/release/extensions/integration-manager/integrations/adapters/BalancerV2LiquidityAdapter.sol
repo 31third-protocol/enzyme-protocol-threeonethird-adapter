@@ -2,7 +2,7 @@
 
 /*
     This file is part of the Enzyme Protocol.
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
 */
@@ -19,7 +19,7 @@ import {CurveGaugeV2RewardsHandlerMixin} from "../utils/0.6.12/actions/CurveGaug
 import {BalancerV2LiquidityAdapterBase} from "../utils/0.6.12/bases/BalancerV2LiquidityAdapterBase.sol";
 
 /// @title BalancerV2LiquidityAdapter Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Adapter for Balancer V2 pool liquidity provision and native staking
 contract BalancerV2LiquidityAdapter is BalancerV2LiquidityAdapterBase, CurveGaugeV2RewardsHandlerMixin {
     using SafeERC20 for IERC20;

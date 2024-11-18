@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -21,7 +21,7 @@ import {CompoundV3ActionsMixin} from "../utils/0.6.12/actions/CompoundV3ActionsM
 import {AdapterBase} from "../utils/0.6.12/AdapterBase.sol";
 
 /// @title CompoundV3Adapter Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Adapter for Compound v3 Lending <https://compound.finance/>
 /// @dev When lending and redeeming, a small `ROUNDING_BUFFER` is subtracted from the min incoming asset amount.
 /// This is a workaround for problematic quirks in `cTokenV3` balance rounding (due to rebasing logic),

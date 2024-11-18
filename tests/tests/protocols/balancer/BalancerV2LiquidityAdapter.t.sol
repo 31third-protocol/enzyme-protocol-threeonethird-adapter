@@ -8,6 +8,7 @@ import {IntegrationTest} from "tests/bases/IntegrationTest.sol";
 import {AddressArrayLib} from "tests/utils/libs/AddressArrayLib.sol";
 import {Uint256ArrayLib} from "tests/utils/libs/Uint256ArrayLib.sol";
 
+import {IBalancerV2LiquidityGauge} from "tests/interfaces/external/IBalancerV2LiquidityGauge.sol";
 import {IBalancerV2Vault} from "tests/interfaces/external/IBalancerV2Vault.sol";
 import {ICurveGaugeController} from "tests/interfaces/external/ICurveGaugeController.sol";
 import {ICurveMinter} from "tests/interfaces/external/ICurveMinter.sol";
@@ -53,7 +54,6 @@ abstract contract PoolTestBase is IntegrationTest, BalancerV2Utils {
 
     // Vars defined by child contract
     IIntegrationAdapter internal adapter;
-    bool internal isAura;
     IERC20 internal balToken;
     IERC20 internal poolBpt;
     bytes32 internal poolId;
@@ -75,6 +75,15 @@ abstract contract PoolTestBase is IntegrationTest, BalancerV2Utils {
         if (version == EnzymeVersion.V4) {
             v4AddPrimitivesWithTestAggregator({_tokenAddresses: tokensToRegister, _skipIfRegistered: true});
         }
+    }
+
+    // DEPLOYMENT HELPERS
+
+    function __deployAdapter(address _minterAddress) internal returns (address adapterAddress_) {
+        bytes memory args =
+            abi.encode(getIntegrationManagerAddressForVersion(version), balancerVault, _minterAddress, balToken);
+
+        return deployCode("BalancerV2LiquidityAdapter.sol", args);
     }
 
     // ACTION HELPERS
@@ -153,6 +162,25 @@ abstract contract PoolTestBase is IntegrationTest, BalancerV2Utils {
             _comptrollerProxyAddress: comptrollerProxyAddress,
             _adapterAddress: address(adapter),
             _selector: IBalancerV2LiquidityAdapter.unstakeAndRedeem.selector,
+            _actionArgs: actionArgs
+        });
+    }
+
+    function __takeOrder(
+        IBalancerV2Vault.SwapKind _kind,
+        IBalancerV2Vault.BatchSwapStep[] memory _swaps,
+        address[] memory _assets,
+        int256[] memory _limits,
+        address[] memory _stakingTokens
+    ) internal {
+        bytes memory actionArgs = abi.encode(_kind, _swaps, _assets, _limits, _stakingTokens);
+
+        vm.prank(fundOwner);
+        callOnIntegrationForVersion({
+            _version: version,
+            _comptrollerProxyAddress: comptrollerProxyAddress,
+            _adapterAddress: address(adapter),
+            _selector: IBalancerV2LiquidityAdapter.takeOrder.selector,
             _actionArgs: actionArgs
         });
     }
@@ -284,11 +312,11 @@ abstract contract PoolTestBase is IntegrationTest, BalancerV2Utils {
 
     // Quickly identify if a test is Balancer on mainnet, or Aura/sidechain
     function __isBalancerMainnetTest() internal view returns (bool isBalancerMainnet_) {
-        return !isAura && address(balToken) == ETHEREUM_BAL;
+        return address(balToken) == ETHEREUM_BAL;
     }
 }
 
-abstract contract BalancerAndAuraPoolTest is PoolTestBase {
+abstract contract BalancerPoolTest is PoolTestBase {
     using AddressArrayLib for address[];
     using Uint256ArrayLib for uint256[];
 
@@ -434,9 +462,7 @@ abstract contract BalancerAndAuraPoolTest is PoolTestBase {
         // Test parseAssetsForAction encoding
         assertAdapterAssetsForAction({
             _logs: vm.getRecordedLogs(),
-            _spendAssetsHandleTypeUint8: isAura
-                ? uint8(IIntegrationManagerProd.SpendAssetsHandleType.Approve)
-                : uint8(IIntegrationManagerProd.SpendAssetsHandleType.Transfer),
+            _spendAssetsHandleTypeUint8: uint8(IIntegrationManagerProd.SpendAssetsHandleType.Transfer),
             _spendAssets: toArray(address(stakingToken)),
             _maxSpendAssetAmounts: toArray(bptToUnstake),
             _incomingAssets: toArray(address(poolBpt)),
@@ -496,9 +522,7 @@ abstract contract BalancerAndAuraPoolTest is PoolTestBase {
         // Test parseAssetsForAction encoding
         assertAdapterAssetsForAction({
             _logs: vm.getRecordedLogs(),
-            _spendAssetsHandleTypeUint8: isAura
-                ? uint8(IIntegrationManagerProd.SpendAssetsHandleType.Approve)
-                : uint8(IIntegrationManagerProd.SpendAssetsHandleType.Transfer),
+            _spendAssetsHandleTypeUint8: uint8(IIntegrationManagerProd.SpendAssetsHandleType.Transfer),
             _spendAssets: toArray(address(stakingToken)),
             _maxSpendAssetAmounts: toArray(unstakeAmount),
             _incomingAssets: incomingAssetAddressesWithoutBpt,
@@ -522,18 +546,333 @@ abstract contract BalancerAndAuraPoolTest is PoolTestBase {
         assertEq(poolBpt.balanceOf(address(adapter)), 0, "adapter still has bpt");
     }
 
-    // TODO: takeOrder() tests
-}
+    function test_takeOrderBPTMismatch_failure() public {
+        address outgoingAsset = poolAssetAddresses[0];
+        address incomingAsset = poolAssetAddresses[1];
 
-abstract contract BalancerPoolTest is BalancerAndAuraPoolTest {
-    function __deployAdapter(address _minterAddress) internal returns (address adapterAddress_) {
-        bytes memory args =
-            abi.encode(getIntegrationManagerAddressForVersion(version), balancerVault, _minterAddress, balToken);
+        uint256 outgoingAssetAmount = assetUnit(IERC20(outgoingAsset)) * 3;
 
-        return deployCode("BalancerV2LiquidityAdapter.sol", args);
+        address[] memory assets = toArray(outgoingAsset, incomingAsset);
+
+        int256[] memory limits = new int256[](2);
+        limits[0] = int256(outgoingAssetAmount);
+        limits[1] = -1;
+
+        IBalancerV2Vault.BatchSwapStep[] memory swaps = new IBalancerV2Vault.BatchSwapStep[](0);
+
+        address fakeStakingToken = makeAddr("Fake BPT");
+        vm.mockCall({
+            callee: fakeStakingToken,
+            data: abi.encodeWithSelector(IBalancerV2LiquidityGauge.lp_token.selector),
+            returnData: abi.encode(makeAddr("Fake lp token"))
+        });
+
+        vm.expectRevert("__parseAssetsForTakeOrder: BPT mismatch");
+        __takeOrder({
+            _kind: IBalancerV2Vault.SwapKind.GIVEN_IN,
+            _swaps: swaps,
+            _assets: assets,
+            _limits: limits,
+            _stakingTokens: toArray(fakeStakingToken, address(0))
+        });
     }
 
-    // TODO: add Balancer-only tests here
+    function test_takeOrderLeftover_failure() public {
+        address outgoingAsset = poolAssetAddresses[0];
+        address incomingAsset = poolAssetAddresses[1];
+
+        uint256 outgoingAssetAmount = assetUnit(IERC20(outgoingAsset)) * 2;
+        increaseTokenBalance({_token: IERC20(outgoingAsset), _to: vaultProxyAddress, _amount: outgoingAssetAmount});
+
+        address[] memory assets = toArray(outgoingAsset, incomingAsset);
+
+        int256[] memory limits = new int256[](2);
+        limits[0] = int256(outgoingAssetAmount);
+        limits[1] = 0; // limit of 0 for the incoming asset should fail
+
+        IBalancerV2Vault.BatchSwapStep[] memory swaps = new IBalancerV2Vault.BatchSwapStep[](1);
+        swaps[0] = IBalancerV2Vault.BatchSwapStep({
+            poolId: poolId,
+            assetInIndex: 0,
+            assetOutIndex: 1,
+            amount: outgoingAssetAmount,
+            userData: ""
+        });
+
+        vm.expectRevert(formatError("takeOrder: leftover intermediary"));
+        __takeOrder({
+            _kind: IBalancerV2Vault.SwapKind.GIVEN_IN,
+            _swaps: swaps,
+            _assets: assets,
+            _limits: limits,
+            _stakingTokens: toArray(address(0), address(0))
+        });
+    }
+
+    function test_takeOrderOneSwap_success() public {
+        address outgoingAsset = poolAssetAddresses[0];
+        address incomingAsset = poolAssetAddresses[1];
+
+        uint256 outgoingAssetAmount = assetUnit(IERC20(outgoingAsset));
+        increaseTokenBalance({_token: IERC20(outgoingAsset), _to: vaultProxyAddress, _amount: outgoingAssetAmount});
+
+        uint256 preTakeOrderOutgoingAssetBalance = IERC20(outgoingAsset).balanceOf(vaultProxyAddress);
+        uint256 preTakeOrderIncomingAssetBalance = IERC20(incomingAsset).balanceOf(vaultProxyAddress);
+
+        address[] memory assets = toArray(outgoingAsset, incomingAsset);
+
+        int256[] memory limits = new int256[](2);
+        limits[0] = int256(outgoingAssetAmount);
+        limits[1] = -1;
+
+        IBalancerV2Vault.BatchSwapStep[] memory swaps = new IBalancerV2Vault.BatchSwapStep[](1);
+        swaps[0] = IBalancerV2Vault.BatchSwapStep({
+            poolId: poolId,
+            assetInIndex: 0,
+            assetOutIndex: 1,
+            amount: outgoingAssetAmount,
+            userData: ""
+        });
+
+        vm.recordLogs();
+
+        __takeOrder({
+            _kind: IBalancerV2Vault.SwapKind.GIVEN_IN,
+            _swaps: swaps,
+            _assets: assets,
+            _limits: limits,
+            _stakingTokens: toArray(address(0), address(0))
+        });
+
+        assertAdapterAssetsForAction({
+            _logs: vm.getRecordedLogs(),
+            _spendAssetsHandleTypeUint8: uint8(IIntegrationManagerProd.SpendAssetsHandleType.Transfer),
+            _spendAssets: toArray(address(outgoingAsset)),
+            _maxSpendAssetAmounts: toArray(outgoingAssetAmount),
+            _incomingAssets: toArray(incomingAsset),
+            _minIncomingAssetAmounts: toArray(1)
+        });
+
+        uint256 postTakeOrderOutgoingAssetBalance = IERC20(outgoingAsset).balanceOf(vaultProxyAddress);
+        uint256 postTakeOrderIncomingAssetBalance = IERC20(incomingAsset).balanceOf(vaultProxyAddress);
+
+        assertEq(
+            postTakeOrderOutgoingAssetBalance,
+            preTakeOrderOutgoingAssetBalance - outgoingAssetAmount,
+            "Incorrect final outgoing asset balance"
+        );
+        assertGt(
+            postTakeOrderIncomingAssetBalance,
+            preTakeOrderIncomingAssetBalance,
+            "Incorrect final incoming asset balance"
+        );
+    }
+
+    function test_takeOrderMultiStepSwap_success() public {
+        address outgoingAsset = poolAssetAddresses[0];
+        address intermediaryAsset = poolAssetAddresses[1];
+        address incomingAsset = poolAssetAddresses[2];
+
+        uint256 outgoingAssetAmount = assetUnit(IERC20(outgoingAsset));
+        increaseTokenBalance({_token: IERC20(outgoingAsset), _to: vaultProxyAddress, _amount: outgoingAssetAmount});
+
+        uint256 preTakeOrderOutgoingAssetBalance = IERC20(outgoingAsset).balanceOf(vaultProxyAddress);
+        uint256 preTakeOrderIntermediaryAssetBalance = IERC20(intermediaryAsset).balanceOf(vaultProxyAddress);
+        uint256 preTakeOrderIncomingAssetBalance = IERC20(incomingAsset).balanceOf(vaultProxyAddress);
+
+        address[] memory assets = toArray(outgoingAsset, intermediaryAsset, incomingAsset);
+
+        int256[] memory limits = new int256[](3);
+        limits[0] = int256(outgoingAssetAmount);
+        limits[1] = 0;
+        limits[2] = -1;
+
+        IBalancerV2Vault.BatchSwapStep[] memory swaps = new IBalancerV2Vault.BatchSwapStep[](2);
+        swaps[0] = IBalancerV2Vault.BatchSwapStep({
+            poolId: poolId,
+            assetInIndex: 0,
+            assetOutIndex: 1,
+            amount: outgoingAssetAmount,
+            userData: ""
+        });
+        swaps[1] =
+            IBalancerV2Vault.BatchSwapStep({poolId: poolId, assetInIndex: 1, assetOutIndex: 2, amount: 0, userData: ""});
+
+        vm.recordLogs();
+
+        __takeOrder({
+            _kind: IBalancerV2Vault.SwapKind.GIVEN_IN,
+            _swaps: swaps,
+            _assets: assets,
+            _limits: limits,
+            _stakingTokens: toArray(address(0), address(0), address(0))
+        });
+
+        assertAdapterAssetsForAction({
+            _logs: vm.getRecordedLogs(),
+            _spendAssetsHandleTypeUint8: uint8(IIntegrationManagerProd.SpendAssetsHandleType.Transfer),
+            _spendAssets: toArray(address(outgoingAsset)),
+            _maxSpendAssetAmounts: toArray(outgoingAssetAmount),
+            _incomingAssets: toArray(incomingAsset),
+            _minIncomingAssetAmounts: toArray(1)
+        });
+
+        uint256 postTakeOrderOutgoingAssetBalance = IERC20(outgoingAsset).balanceOf(vaultProxyAddress);
+        uint256 postTakeOrderIntermediaryAssetBalance = IERC20(intermediaryAsset).balanceOf(vaultProxyAddress);
+        uint256 postTakeOrderIncomingAssetBalance = IERC20(incomingAsset).balanceOf(vaultProxyAddress);
+
+        assertEq(
+            postTakeOrderOutgoingAssetBalance,
+            preTakeOrderOutgoingAssetBalance - outgoingAssetAmount,
+            "Incorrect final outgoing asset balance"
+        );
+        assertEq(
+            postTakeOrderIntermediaryAssetBalance,
+            preTakeOrderIntermediaryAssetBalance,
+            "Incorrect final intermediary asset balance"
+        );
+        assertGt(
+            postTakeOrderIncomingAssetBalance,
+            preTakeOrderIncomingAssetBalance,
+            "Incorrect final incoming asset balance"
+        );
+    }
+
+    function test_takeOrderSwapAndStake_success() public {
+        if (poolType != PoolType.ComposableStable) {
+            return;
+        }
+
+        address outgoingAsset;
+        for (uint256 i; i < poolAssetAddresses.length; i++) {
+            if (poolAssetAddresses[i] != address(poolBpt)) {
+                outgoingAsset = poolAssetAddresses[i];
+                break;
+            }
+        }
+        assertNotEq(outgoingAsset, address(0), "No outgoing asset found");
+
+        uint256 outgoingAssetAmount = assetUnit(IERC20(outgoingAsset)) * 120;
+        increaseTokenBalance({_token: IERC20(outgoingAsset), _to: vaultProxyAddress, _amount: outgoingAssetAmount});
+
+        uint256 preTakeOrderOutgoingAssetBalance = IERC20(outgoingAsset).balanceOf(vaultProxyAddress);
+        uint256 preTakeOrderStakingTokenBalance = stakingToken.balanceOf(vaultProxyAddress);
+
+        address[] memory assets = toArray(outgoingAsset, address(poolBpt));
+
+        int256[] memory limits = new int256[](2);
+        limits[0] = int256(outgoingAssetAmount);
+        limits[1] = -1;
+
+        IBalancerV2Vault.BatchSwapStep[] memory swaps = new IBalancerV2Vault.BatchSwapStep[](1);
+        swaps[0] = IBalancerV2Vault.BatchSwapStep({
+            poolId: poolId,
+            assetInIndex: 0,
+            assetOutIndex: 1,
+            amount: outgoingAssetAmount,
+            userData: ""
+        });
+
+        vm.recordLogs();
+
+        __takeOrder({
+            _kind: IBalancerV2Vault.SwapKind.GIVEN_IN,
+            _swaps: swaps,
+            _assets: assets,
+            _limits: limits,
+            _stakingTokens: toArray(address(0), address(stakingToken))
+        });
+
+        assertAdapterAssetsForAction({
+            _logs: vm.getRecordedLogs(),
+            _spendAssetsHandleTypeUint8: uint8(IIntegrationManagerProd.SpendAssetsHandleType.Transfer),
+            _spendAssets: toArray(address(outgoingAsset)),
+            _maxSpendAssetAmounts: toArray(outgoingAssetAmount),
+            _incomingAssets: toArray(address(stakingToken)),
+            _minIncomingAssetAmounts: toArray(1)
+        });
+
+        uint256 postTakeOrderOutgoingAssetBalance = IERC20(outgoingAsset).balanceOf(vaultProxyAddress);
+        uint256 postTakeOrderStakingTokenBalance = stakingToken.balanceOf(vaultProxyAddress);
+
+        assertEq(
+            postTakeOrderOutgoingAssetBalance,
+            preTakeOrderOutgoingAssetBalance - outgoingAssetAmount,
+            "Incorrect final outgoing asset balance"
+        );
+        assertGt(
+            postTakeOrderStakingTokenBalance, preTakeOrderStakingTokenBalance, "Incorrect final incoming asset balance"
+        );
+    }
+
+    function test_takeOrderSwapAndUnstake_success() public {
+        if (poolType != PoolType.ComposableStable) {
+            return;
+        }
+
+        address incomingAsset;
+        for (uint256 i; i < poolAssetAddresses.length; i++) {
+            if (poolAssetAddresses[i] != address(poolBpt)) {
+                incomingAsset = poolAssetAddresses[i];
+                break;
+            }
+        }
+        assertNotEq(incomingAsset, address(0), "No outgoing asset found");
+
+        uint256 stakingTokenAmount = assetUnit(stakingToken) * 120;
+        increaseTokenBalance({_token: stakingToken, _to: vaultProxyAddress, _amount: stakingTokenAmount});
+
+        uint256 preTakeOrderStakingTokenBalance = stakingToken.balanceOf(vaultProxyAddress);
+        uint256 preTakeOrderIncomingAssetBalance = IERC20(incomingAsset).balanceOf(vaultProxyAddress);
+
+        address[] memory assets = toArray(address(poolBpt), incomingAsset);
+
+        int256[] memory limits = new int256[](2);
+        limits[0] = int256(stakingTokenAmount);
+        limits[1] = -1;
+
+        IBalancerV2Vault.BatchSwapStep[] memory swaps = new IBalancerV2Vault.BatchSwapStep[](1);
+        swaps[0] = IBalancerV2Vault.BatchSwapStep({
+            poolId: poolId,
+            assetInIndex: 0,
+            assetOutIndex: 1,
+            amount: stakingTokenAmount,
+            userData: ""
+        });
+
+        vm.recordLogs();
+
+        __takeOrder({
+            _kind: IBalancerV2Vault.SwapKind.GIVEN_IN,
+            _swaps: swaps,
+            _assets: assets,
+            _limits: limits,
+            _stakingTokens: toArray(address(stakingToken), address(0))
+        });
+
+        assertAdapterAssetsForAction({
+            _logs: vm.getRecordedLogs(),
+            _spendAssetsHandleTypeUint8: uint8(IIntegrationManagerProd.SpendAssetsHandleType.Transfer),
+            _spendAssets: toArray(address(stakingToken)),
+            _maxSpendAssetAmounts: toArray(stakingTokenAmount),
+            _incomingAssets: toArray(incomingAsset),
+            _minIncomingAssetAmounts: toArray(1)
+        });
+
+        uint256 postTakeOrderStakingTokenBalance = stakingToken.balanceOf(vaultProxyAddress);
+        uint256 postTakeOrderIncomingAssetBalance = IERC20(incomingAsset).balanceOf(vaultProxyAddress);
+
+        assertEq(
+            postTakeOrderStakingTokenBalance,
+            preTakeOrderStakingTokenBalance - stakingTokenAmount,
+            "Incorrect final staking token balance"
+        );
+        assertGt(
+            postTakeOrderIncomingAssetBalance,
+            preTakeOrderIncomingAssetBalance,
+            "Incorrect final incoming asset balance"
+        );
+    }
 }
 
 abstract contract EthereumBalancerPoolTest is BalancerPoolTest {

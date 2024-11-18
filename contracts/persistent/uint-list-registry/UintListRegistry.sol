@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -16,7 +16,7 @@ import "../dispatcher/IDispatcher.sol";
 import "./IUintListRegistry.sol";
 
 /// @title UintListRegistry Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice A contract for creating and updating lists of uint256 items
 contract UintListRegistry is IUintListRegistry {
     event ItemAddedToList(uint256 indexed id, uint256 item);

@@ -2,7 +2,7 @@
 
 /*
     This file is part of the Enzyme Protocol.
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
 */
@@ -13,7 +13,7 @@ import "../../../persistent/dispatcher/IDispatcher.sol";
 import "../utils/ProxiableGlobalConfigLib.sol";
 
 /// @title GlobalConfigLibBaseCore Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice The core implementation of GlobalConfigLib
 /// @dev To be inherited by the first GlobalConfigLibBase implementation only.
 /// DO NOT EDIT CONTRACT.

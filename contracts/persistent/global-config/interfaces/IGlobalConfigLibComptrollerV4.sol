@@ -2,7 +2,7 @@
 
 /*
     This file is part of the Enzyme Protocol.
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
 */
@@ -10,7 +10,7 @@
 pragma solidity >=0.6.0 <0.9.0;
 
 /// @title IGlobalConfigLibComptrollerV4 Interface
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Limited interface for GlobalConfigLib's required Enzyme v4 ComptrollerLib calls
 interface IGlobalConfigLibComptrollerV4 {
     function buyShares(uint256 _investmentAmount, uint256 _minSharesQuantity)

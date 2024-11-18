@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -16,7 +16,7 @@ import {PendleV2PositionDataDecoder} from "./PendleV2PositionDataDecoder.sol";
 pragma solidity 0.8.19;
 
 /// @title PendleV2PositionParser
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice Parser for Pendle V2 Positions
 contract PendleV2PositionParser is PendleV2PositionDataDecoder, IExternalPositionParser {
     address private constant NATIVE_ASSET_ADDRESS = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
@@ -43,7 +43,7 @@ contract PendleV2PositionParser is PendleV2PositionDataDecoder, IExternalPositio
         )
     {
         if (_actionId == uint256(IPendleV2Position.Actions.BuyPrincipalToken)) {
-            (,,, address depositTokenAddress, uint256 depositAmount,,) =
+            (, address depositTokenAddress, uint256 depositAmount,,) =
                 __decodeBuyPrincipalTokenActionArgs(_encodedActionArgs);
 
             assetsToTransfer_ = new address[](1);
@@ -51,12 +51,12 @@ contract PendleV2PositionParser is PendleV2PositionDataDecoder, IExternalPositio
             amountsToTransfer_ = new uint256[](1);
             amountsToTransfer_[0] = depositAmount;
         } else if (_actionId == uint256(IPendleV2Position.Actions.SellPrincipalToken)) {
-            (,, address withdrawalTokenAddress,,) = __decodeSellPrincipalTokenActionArgs(_encodedActionArgs);
+            (, address withdrawalTokenAddress,,) = __decodeSellPrincipalTokenActionArgs(_encodedActionArgs);
 
             assetsToReceive_ = new address[](1);
             assetsToReceive_[0] = __parseTokenAddressInput(withdrawalTokenAddress);
         } else if (_actionId == uint256(IPendleV2Position.Actions.AddLiquidity)) {
-            (,, address depositTokenAddress, uint256 depositAmount,,) =
+            (, address depositTokenAddress, uint256 depositAmount,,) =
                 __decodeAddLiquidityActionArgs(_encodedActionArgs);
 
             assetsToTransfer_ = new address[](1);

@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -19,7 +19,7 @@ import {PolicyBase} from "../utils/0.6.12/PolicyBase.sol";
 import {PricelessAssetBypassMixin} from "../utils/0.6.12/PricelessAssetBypassMixin.sol";
 
 /// @title OnlyUntrackDustOrPricelessAssetsPolicy Contract
-/// @author Enzyme Council <security@enzyme.finance>
+/// @author Enzyme Foundation <security@enzyme.finance>
 /// @notice A policy that only allows untracking assets whose value can be considered negligible,
 /// or assets that do not have a valid price and for which the manager has signaled prior intent to remove
 contract OnlyUntrackDustOrPricelessAssetsPolicy is PolicyBase, DustEvaluatorMixin, PricelessAssetBypassMixin {
