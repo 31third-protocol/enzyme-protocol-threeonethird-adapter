@@ -261,7 +261,7 @@ abstract contract ThreeOneThirdAdapterTestBase is IntegrationTest, UniswapV3Util
             _incomingAssets: toArray(address(externalAsset1)),
             _minIncomingAssetAmounts: toArray(
                 Math.ceilDiv(toAmount * (10000 - threeOneThirdBatchTrade.feeBasisPoints()), (10000))
-                )
+            )
         });
 
         assertEq(
@@ -321,7 +321,7 @@ abstract contract ThreeOneThirdAdapterTestBase is IntegrationTest, UniswapV3Util
             _minIncomingAssetAmounts: toArray(
                 Math.ceilDiv(toAmount1 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()), (10000)),
                 Math.ceilDiv(toAmount1 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()), (10000))
-                )
+            )
         });
 
         assertEq(
@@ -409,7 +409,7 @@ abstract contract ThreeOneThirdAdapterTestBase is IntegrationTest, UniswapV3Util
                 Math.ceilDiv(toAmount1 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()), (10000)),
                 Math.ceilDiv(toAmount2 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()), (10000)),
                 Math.ceilDiv(toAmount3 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()), (10000))
-                )
+            )
         });
 
         assertEq(
@@ -494,11 +494,11 @@ abstract contract ThreeOneThirdAdapterTestBase is IntegrationTest, UniswapV3Util
             _maxSpendAssetAmounts: toArray(
                 fromAmount1,
                 fromAmount2 - Math.ceilDiv(toAmount1 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()), (10000))
-                ),
+            ),
             _incomingAssets: toArray(address(externalAsset2)),
             _minIncomingAssetAmounts: toArray(
                 Math.ceilDiv(toAmount2 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()), (10000))
-                )
+            )
         });
 
         assertEq(
@@ -522,11 +522,7 @@ abstract contract ThreeOneThirdAdapterTestBase is IntegrationTest, UniswapV3Util
         );
 
         // asset2 is a spend asset but receivedAmount - minToReceiveAmount should still be returned to vault
-        assertEq(
-            vaultAsset2.balanceOf(address(threeOneThirdAdapter)),
-            0,
-            "Spend asset stuck in ThreeOneThirdAdapter"
-        );
+        assertEq(vaultAsset2.balanceOf(address(threeOneThirdAdapter)), 0, "Spend asset stuck in ThreeOneThirdAdapter");
     }
 }
 
