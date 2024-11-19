@@ -521,7 +521,7 @@ abstract contract ThreeOneThirdAdapterTestBase is IntegrationTest, UniswapV3Util
             "Mismatch between received and expected maker asset amount (Trade 2)"
         );
 
-        // asset2 is a spend asset but; receivedAmount - minToReceive should still be returned to vault
+        // asset2 is a spend asset but receivedAmount - minToReceiveAmount should still be returned to vault
         assertEq(
             vaultAsset2.balanceOf(address(threeOneThirdAdapter)),
             0,
