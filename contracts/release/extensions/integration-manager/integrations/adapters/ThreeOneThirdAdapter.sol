@@ -3,7 +3,7 @@
 /*
     This file is part of the Enzyme Protocol.
 
-    (c) Enzyme Council <council@enzyme.finance>
+    (c) Enzyme Foundation <security@enzyme.finance>
 
     For the full license information, please view the LICENSE
     file that was distributed with this source code.
@@ -45,6 +45,7 @@ contract ThreeOneThirdAdapter is AdapterBase, ThreeOneThirdActionsMixin {
     function takeOrder(address _vaultProxy, bytes calldata _actionData, bytes calldata _assetData)
         external
         postActionIncomingAssetsTransferHandler(_vaultProxy, _assetData)
+        postActionSpendAssetsTransferHandler(_vaultProxy, _assetData)
     {
         (IThreeOneThird.Trade[] memory trades, bool checkFeelessWallets) = __decodeTakeOrderCallArgs(_actionData);
 
