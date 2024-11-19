@@ -507,8 +507,9 @@ abstract contract ThreeOneThirdAdapterTestBase is IntegrationTest, UniswapV3Util
             "Mismatch between sent and expected taker asset amount (Trade 1)"
         );
 
-        // asset2 is bought in trade 1; the pre trade vault balance of asset2 + 1 is sold in trade 2
-        assertEq(
+        // asset2 is bought in trade 1; the pre trade vault balance of asset2 + 1 is sold in trade 2;
+        //   received value might be greater then minToReceive
+        assertGt(
             vaultAsset2.balanceOf(vaultProxyAddress),
             Math.ceilDiv(toAmount1 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()), (10000)) - 1,
             "Mismatch between received and expected asset amount (Trade 1 incoming; Trade 2 spend)"
@@ -518,6 +519,13 @@ abstract contract ThreeOneThirdAdapterTestBase is IntegrationTest, UniswapV3Util
             externalAsset2.balanceOf(vaultProxyAddress) - externalAsset2BalancePre,
             Math.ceilDiv(toAmount2 * (10000 - threeOneThirdBatchTrade.feeBasisPoints()), (10000)),
             "Mismatch between received and expected maker asset amount (Trade 2)"
+        );
+
+        // asset2 is a spend asset but; receivedAmount - minToReceive should still be returned to vault
+        assertEq(
+            vaultAsset2.balanceOf(address(threeOneThirdAdapter)),
+            0,
+            "Spend asset stuck in ThreeOneThirdAdapter"
         );
     }
 }
