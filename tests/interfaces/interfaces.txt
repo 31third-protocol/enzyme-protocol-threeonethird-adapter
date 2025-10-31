@@ -165,6 +165,8 @@ IMorphoBluePositionLib.sol: MorphoBluePositionLib.abi.json
 IMorphoBluePositionParser.sol: MorphoBluePositionParser.abi.json
 IAlicePositionLib.sol: AlicePositionLib.abi.json
 IAlicePositionParser.sol: AlicePositionParser.abi.json
+IAsync31ThirdPositionLib.sol: Async31ThirdPositionLib.abi.json
+IAsync31ThirdPositionParser.sol: Async31ThirdPositionParser.abi.json
 
 # Value interpreter
 IValueInterpreter.sol: ValueInterpreter.abi.json

@@ -38,7 +38,8 @@ abstract contract Constants {
     uint256 internal constant ETHEREUM_BLOCK_TIME_SENSITIVE_STAKEWISE = 18656282; // Nov 26th, 2023
     uint256 internal constant ETHEREUM_BLOCK_TIME_SENSITIVE_TERM_FINANCE = 18554000; // Nov 12th, 2023
 
-    uint256 internal constant POLYGON_BLOCK_LATEST = 61606585; // Sep 9th, 2024
+    // TODO: check also other values - required for AsyncBasketTrade tests
+    uint256 internal constant POLYGON_BLOCK_LATEST = 75475405; // Aug 21st, 2025
     uint256 internal constant POLYGON_BLOCK_TIME_SENSITIVE = 54900000; // March 21st, 2024
 
     uint256 internal constant ARBITRUM_BLOCK_LATEST = 251655669; // Sep 9th, 2024
